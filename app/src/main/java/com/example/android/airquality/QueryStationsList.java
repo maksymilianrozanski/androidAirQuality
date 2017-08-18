@@ -22,13 +22,13 @@ import java.util.List;
  * Created by Max on 16.08.2017.
  */
 
-public class QueryUtils {
+public class QueryStationsList {
 
     //Tag for log messages
-    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    private static final String LOG_TAG = QueryStationsList.class.getSimpleName();
 
     //private constructor
-    private QueryUtils() {
+    private QueryStationsList() {
     }
 
     public static List<Station> fetchStationData(String requestUrl) {
@@ -93,7 +93,7 @@ public class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -183,16 +183,17 @@ public class QueryUtils {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the books JSON results", e);
+            Log.e("QueryStationsList", "Problem parsing the JSON results", e);
         }
         return stations;
     }
 
     /**
-     *  Check for null values and JSONException
-     * @param jsonObject    JSONObject from which String value is taken
-     * @param jsonKey   Key in JSONObject - name of the value taken
-     * @return  String acquired form JSONObject, or "not specified" value if exception or null
+     * Check for null values and JSONException
+     *
+     * @param jsonObject JSONObject from which String value is taken
+     * @param jsonKey    Key in JSONObject - name of the value taken
+     * @return String acquired form JSONObject, or "not specified" value if exception or null
      */
     private static String passJSONString(JSONObject jsonObject, String jsonKey) {
         String stringToReturn;

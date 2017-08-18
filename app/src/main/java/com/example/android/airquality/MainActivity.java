@@ -52,9 +52,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
-        //    refresh button OnClick
+        //TODO: make toast when data isn't loaded properly
+        // refresh button
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener((View v) -> {
+            Log.v("Info", "Refresh button pressed");
             //remove default view showing start info
             TextView defaultItemTextView = (TextView) findViewById(R.id.on_start_text_view);
             defaultItemTextView.setVisibility(View.GONE);
@@ -76,20 +78,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Station>> loader, List<Station> data) {
+        Log.v("Info", "Inside onLoaderFinished - start");
         //clear adapter of previous search data
         stationAdapter.clear();
-
+        Log.v("Info", "Inside onLoaderFinished - after .clear");
         //If there is valid list of stations add them to adapter's data set.
         // This will trigger the ListView to update
         if (data != null && !data.isEmpty()) {
             stationAdapter.addAll(data);
+            Log.v("Info", "Inside onLoaderFinished - after .addAll(data)");
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
+        Log.v("Info", "Inside onLoaderReset - before .clear");
         // Loader reset, so we can clear out our existing data.
         stationAdapter.clear();
+        Log.v("Info", "Inside onLoaderReset - after .clear");
     }
 
     //for checking is device connected to the Internet

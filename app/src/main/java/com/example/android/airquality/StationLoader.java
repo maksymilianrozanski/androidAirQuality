@@ -40,7 +40,7 @@ public class StationLoader extends AsyncTaskLoader<List<Station>> {
             return null;
         }
         // Perform the network request, parse the response, and extract a list of stations
-        return QueryUtils.fetchStationData(url);
+        return QueryStationsList.fetchStationData(url);
     }
 }
 

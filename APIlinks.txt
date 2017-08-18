@@ -1,0 +1,11 @@
+➡ Lista wszystkich stacji pomiarowych (weź sobie stąd ID)
+http://api.gios.gov.pl/pjp-api/rest/station/findAll
+
+➡ Odczytanie listy sensorów stacji na krakowskich alejach (400 to ID stacji)
+http://api.gios.gov.pl/pjp-api/rest/station/sensors/400
+
+➡ Historyczne dane na temat PM 2.5 (parametr to ID czujnika z linka powyżej):
+http://api.gios.gov.pl/pjp-api/rest/data/getData/2752
+
+➡ Sprawdzenie jakości powietrza dla alei (ID znów pobrane z pierwszego linka)
+http://api.gios.gov.pl/pjp-api/rest/aqindex/getIndex/400
