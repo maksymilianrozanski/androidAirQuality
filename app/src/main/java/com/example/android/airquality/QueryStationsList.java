@@ -18,6 +18,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import xdroid.toaster.Toaster;
+
 /**
  * Created by Max on 16.08.2017.
  */
@@ -94,6 +96,7 @@ public class QueryStationsList {
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
+            Toaster.toast("An error occured.");
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -184,6 +187,7 @@ public class QueryStationsList {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
+            Toaster.toast("An error occured.");
         }
         return stations;
     }
