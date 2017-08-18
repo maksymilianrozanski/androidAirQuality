@@ -1,7 +1,10 @@
-package com.example.android.airquality;
+package com.example.android.airquality.vieweditors;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+
+import com.example.android.airquality.utility.QueryStationsList;
+import com.example.android.airquality.dataholders.Station;
 
 import java.util.List;
 

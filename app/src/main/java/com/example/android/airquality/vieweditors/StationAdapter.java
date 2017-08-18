@@ -1,4 +1,4 @@
-package com.example.android.airquality;
+package com.example.android.airquality.vieweditors;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.android.airquality.R;
+import com.example.android.airquality.dataholders.Station;
 
 import java.util.List;
 

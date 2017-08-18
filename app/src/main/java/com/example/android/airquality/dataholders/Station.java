@@ -1,4 +1,4 @@
-package com.example.android.airquality;
+package com.example.android.airquality.dataholders;
 
 /**
  * Created by Max on 16.08.2017.

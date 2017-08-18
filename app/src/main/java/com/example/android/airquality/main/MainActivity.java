@@ -1,4 +1,4 @@
-package com.example.android.airquality;
+package com.example.android.airquality.main;
 
 import android.app.LoaderManager;
 import android.content.Context;
@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.airquality.R;
+import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.vieweditors.StationAdapter;
+import com.example.android.airquality.vieweditors.StationLoader;
 
 import java.util.ArrayList;
 import java.util.List;

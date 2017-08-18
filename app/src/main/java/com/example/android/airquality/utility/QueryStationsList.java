@@ -1,7 +1,9 @@
-package com.example.android.airquality;
+package com.example.android.airquality.utility;
 
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.android.airquality.dataholders.Station;
 
 import org.json.JSONArray;
 import org.json.JSONException;
