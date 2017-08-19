@@ -11,6 +11,14 @@ public class Sensor {
     private String value;
     private String lastDate;
 
+    public Sensor(int id, String param) {
+        this.id = id;
+        this.param = param;
+    }
+
+    public Sensor() {
+    }
+
     public int getId() {
         return id;
     }

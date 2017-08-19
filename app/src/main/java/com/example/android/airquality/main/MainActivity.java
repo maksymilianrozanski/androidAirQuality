@@ -2,6 +2,7 @@ package com.example.android.airquality.main;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //adapter for list of stations
     private StationAdapter stationAdapter;
-
+    //TODO: Disable automatic reload of content every time
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //find reference to ListView in the layout
         ListView stationListView = (ListView) findViewById(R.id.list);
 
-        //create new adapter, that takes empty book list as input
+        //create new adapter, that takes empty station list as input
         stationAdapter = new StationAdapter(this, new ArrayList<Station>());
 
         //set the adapter, the list can be populated in the user's interface
@@ -57,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
-        //TODO: make toast when data isn't loaded properly
         // refresh button
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener((View v) -> {
@@ -71,6 +72,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }else {
                 Log.v("info", "No Internet connection");
                 Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //OnClickListener - redirects to SingleStationActivity
+        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //find station that was clicked
+                Station station = stationAdapter.getItem(position);
+
+                Log.v(LOG_TAG, "Station id to pass in the intent: " + station.getId());
+
+                //get id of the station that was clicked
+                int currentStationId = Integer.parseInt(station.getId());
+
+                //create new intent, add StationId as extra, start new activity
+                Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
+                intent.putExtra("StationId", currentStationId);
+                startActivity(intent);
             }
         });
     }

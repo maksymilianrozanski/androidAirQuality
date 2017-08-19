@@ -59,7 +59,7 @@ public class QueryStationsList {
     /**
      * Returns new URL object from the given string URL.
      */
-    private static URL createUrl(String stringUrl) {
+    protected static URL createUrl(String stringUrl) {
         URL url = null;
         try {
             url = new URL(stringUrl);
@@ -72,7 +72,7 @@ public class QueryStationsList {
     /**
      * Make an HTTP request to the given URL and return a String as the response.
      */
-    private static String makeHttpRequest(URL url) throws IOException {
+    protected static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
         // If the URL is null, then return early.
@@ -117,7 +117,7 @@ public class QueryStationsList {
      * Convert the {@link InputStream} into a String which contains the
      * whole JSON response from the server.
      */
-    private static String readFromStream(InputStream inputStream) throws IOException {
+    protected static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
@@ -150,7 +150,8 @@ public class QueryStationsList {
 
             //for each station create a single Station object
             for (int i = 0; i < stationsArray.length(); i++) {
-                //get a single station at position i
+                //TODO: delete this comment and next two lines
+                // get a single station at position i
                 JSONObject currentStation = stationsArray.getJSONObject(i);
 
                 //get "i" element of stationsArray and cast to JSONObject
@@ -187,7 +188,7 @@ public class QueryStationsList {
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
+            // with the message from the exception, and show a toast to the user.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
             Toaster.toast("An error occured.");
         }
@@ -201,7 +202,7 @@ public class QueryStationsList {
      * @param jsonKey    Key in JSONObject - name of the value taken
      * @return String acquired form JSONObject, or "not specified" value if exception or null
      */
-    private static String passJSONString(JSONObject jsonObject, String jsonKey) {
+    protected static String passJSONString(JSONObject jsonObject, String jsonKey) {
         String stringToReturn;
         try {
             if (jsonObject.getString(jsonKey) != null) {
