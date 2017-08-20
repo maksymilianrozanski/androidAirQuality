@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Sensor;
@@ -15,7 +16,7 @@ import com.example.android.airquality.vieweditors.SensorLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>>{
+public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>> {
 
     //id of loader, only matter when multiple loaders
     private static final int SENSOR_LOADER_ID = 2;
@@ -24,7 +25,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
     private SensorAdapter sensorAdapter;
 
     Integer stationId;
-
+    String stationName;
 
 
     @Override
@@ -35,6 +36,11 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         //get Intent
         Intent intent = getIntent();
         stationId = intent.getIntExtra("StationId", 0);
+        stationName = intent.getStringExtra("StationName");
+
+        //find reference to TextView which displays name of the station
+        TextView stationNameTextView = (TextView) findViewById(R.id.sensorsViewStationName);
+        stationNameTextView.setText(stationName);
 
         //find reference to ListView in the layout
         ListView sensorListView = (ListView) findViewById(R.id.listViewOfSensors);
@@ -57,24 +63,24 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
     }
 
     @Override
-    public Loader<List<Sensor>> onCreateLoader(int id, Bundle args){
+    public Loader<List<Sensor>> onCreateLoader(int id, Bundle args) {
         //create a new loader for given StationId
         return new SensorLoader(this, stationId);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Sensor>> loader, List<Sensor> data){
+    public void onLoadFinished(Loader<List<Sensor>> loader, List<Sensor> data) {
         //clear adapter of previous data
         sensorAdapter.clear();
         //If there is valid list of sensors add them to adapter's data set.
         //This will trigger the ListView to update
-        if (data != null && !data.isEmpty()){
+        if (data != null && !data.isEmpty()) {
             sensorAdapter.addAll(data);
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Sensor>> loader){
+    public void onLoaderReset(Loader<List<Sensor>> loader) {
         sensorAdapter.clear();
     }
 

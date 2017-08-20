@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //adapter for list of stations
     private StationAdapter stationAdapter;
+
     //TODO: Disable automatic reload of content every time
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,27 +70,30 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (this.isConnected(getApplicationContext())) {
                 Log.v("Info", "Connected to the internet");
                 loaderManager.restartLoader(STATION_LOADER_ID, null, this);
-            }else {
+            } else {
                 Log.v("info", "No Internet connection");
                 Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
             }
         });
 
         //OnClickListener - redirects to SingleStationActivity
-        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //find station that was clicked
                 Station station = stationAdapter.getItem(position);
 
-                Log.v(LOG_TAG, "Station id to pass in the intent: " + station.getId());
-
+//TODO: Check for NullPointerException (station.getId());
                 //get id of the station that was clicked
                 int currentStationId = Integer.parseInt(station.getId());
+                //get name of the station that was clicked
+                String currentStationName = station.getName();
 
-                //create new intent, add StationId as extra, start new activity
+                //create new intent, add current StationId and currentStationName as extra,
+                // start new activity
                 Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
                 intent.putExtra("StationId", currentStationId);
+                intent.putExtra("StationName", currentStationName);
                 startActivity(intent);
             }
         });
