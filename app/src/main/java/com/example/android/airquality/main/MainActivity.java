@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String LOG_TAG = MainActivity.class.getName();
 
     //url for data - list of stations
-    private static String urlQuery = "http://api.gios.gov.pl/pjp-api/rest/station/findAll";
+    private static final String URL_QUERY = "http://api.gios.gov.pl/pjp-api/rest/station/findAll";
 
     //id of loader, only matter when multiple loaders
     private static final int STATION_LOADER_ID = 1;
@@ -83,11 +83,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //find station that was clicked
                 Station station = stationAdapter.getItem(position);
 
-//TODO: Check for NullPointerException (station.getId());
-                //get id of the station that was clicked
-                int currentStationId = Integer.parseInt(station.getId());
-                //get name of the station that was clicked
-                String currentStationName = station.getName();
+                int currentStationId;
+                try {
+                    //get id of the station that was clicked
+                    currentStationId = Integer.parseInt(station.getId());
+                } catch (NullPointerException e) {
+                    currentStationId = 0;
+                    Log.e(LOG_TAG, "Error when getting station.getId", e);
+                }
+                String currentStationName;
+                try {
+                    //get name of the station that was clicked
+                    currentStationName = station.getName();
+                } catch (NullPointerException e) {
+                    currentStationName = "";
+                    Log.e(LOG_TAG, "Error when getting station.getName", e);
+                }
 
                 //create new intent, add current StationId and currentStationName as extra,
                 // start new activity
@@ -102,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<Station>> onCreateLoader(int id, Bundle args) {
         //create a new loader for given URL
-        return new StationLoader(this, urlQuery);
+        return new StationLoader(this, URL_QUERY);
     }
 
     @Override

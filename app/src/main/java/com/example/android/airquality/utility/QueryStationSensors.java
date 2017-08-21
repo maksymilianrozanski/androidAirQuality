@@ -29,8 +29,12 @@ public class QueryStationSensors {
     //Tag for log messages
     private static final String LOG_TAG = QueryStationSensors.class.getSimpleName();
 
-    //beginning of url to query - need to add station id at the end
-    private static final String beginningOfUrl = "http://api.gios.gov.pl/pjp-api/rest/station/sensors/";
+    //beginning of url to query - need to add station id at the end - return list of sensors
+    private static final String BEGINNING_OF_URL_SENSORS_LIST = "http://api.gios.gov.pl/pjp-api/rest/station/sensors/";
+
+    //beginning of url to query - need to add sensor id at the end
+    //return type of param and array of dates + values
+    private static final String BEGINNING_OF_URL_SENSOR_DATA = "http://api.gios.gov.pl/pjp-api/rest/data/getData/";
 
     //private constructor
     private QueryStationSensors() {
@@ -41,7 +45,7 @@ public class QueryStationSensors {
      * @return return list of sensors on station with entered id
      */
     public static List<Sensor> fetchSensorData(int stationId) {
-        URL url = createUrl(beginningOfUrl + stationId);
+        URL url = createUrl(BEGINNING_OF_URL_SENSORS_LIST + stationId);
 
         //perform http request and receive JSON response back
         String jsonResponse = null;
@@ -54,6 +58,8 @@ public class QueryStationSensors {
 
         //extract list of sensors from JSON response
         List<Sensor> sensors = extractListOfSensorsFromJson(jsonResponse);
+        //add param value and last measurement date
+        sensors = addDataToSensorList(sensors);
 
         //return list of sensors
         return sensors;
@@ -104,8 +110,83 @@ public class QueryStationSensors {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception, and show a toast to the user.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
-            Toaster.toast("An error occured.");
-        }return sensors;
+            Toaster.toast("An error occurred.");
+        }
+        return sensors;
     }
 
+    /**
+     * Adds new values from sensors to the List
+     *
+     * @param inputList list of sensors
+     * @return list of sensors with new measurement value and date
+     */
+    private static List<Sensor> addDataToSensorList(List<Sensor> inputList) {
+        for (int i = 0; i < inputList.size(); i++) {
+            Sensor currentSensor = inputList.get(i);
+            //get currentSensorId
+            int currentSensorId = currentSensor.getId();
+            //create url to query based on sensor's id
+            URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
+            //fetch data based on currentSensorId
+            String jsonResponse = null;
+            try {
+                jsonResponse = makeHttpRequest(url);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+                //TODO: solve what to do if exception occurs
+            }
+            //extract fields from jsonResponse and add data to Sensor object
+            currentSensor = addValueAndDate(currentSensor, jsonResponse);
+            inputList.set(i, currentSensor);
+        }
+        return inputList;
+    }
+
+    /**
+     * Add or refresh value of measured param, and data of last measurement
+     *
+     * @param inputSensor - Sensor object
+     * @param jsonResponse - jsonData about input sensor
+     * @return sensor with new values, or unchanged sensor object if JSONException
+     */
+    private static Sensor addValueAndDate(Sensor inputSensor, String jsonResponse) {
+        //if JSON string is empty or null, then return early
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return null;
+        }
+        // Try to parse the JSON response string. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        try {
+            String value = "no data to display";
+            String date = "no data to display";
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            //get an array of JSONObjects
+            JSONArray jsonDataValueArray = jsonObject.getJSONArray("values");
+
+            //get element of an array with most recent data, and check if "value" of measured param
+            //is not null
+            for (int i=0; i<jsonDataValueArray.length(); i++){
+                //get "i" element of an array
+                JSONObject recentData = jsonDataValueArray.getJSONObject(i);
+                //get value of measured param
+                value = recentData.getString("value");
+                Log.v(LOG_TAG, "value: " + value);
+                //if value is not null, get date and break the loop
+                if (!value.equals("null")){
+                    date = recentData.getString("date");
+                    Log.v(LOG_TAG, "date: " + date);
+                    break;
+                }
+            }
+            //add new date and value to Sensor object
+                inputSensor.setLastDate(date);
+                inputSensor.setValue(value);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Error occurred", e);
+        }
+
+        return inputSensor;
+    }
 }

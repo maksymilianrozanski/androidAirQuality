@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Max on 19.08.2017.
  */
 
-public class SensorAdapter extends ArrayAdapter<Sensor>{
+public class SensorAdapter extends ArrayAdapter<Sensor> {
 
     public SensorAdapter(@NonNull Context context, List<Sensor> sensors) {
         super(context, 0, sensors);
@@ -38,17 +38,41 @@ public class SensorAdapter extends ArrayAdapter<Sensor>{
         //find sensor at position on the list
         Sensor currentSensor = getItem(position);
 
-        //set param that sensor measure in TextView
+        //find TextView that display param that sensor measure
         TextView sensorTypeView = (TextView) listItemView.findViewById(R.id.sensorType);
         String sensorType;
 
-        //check if sensorType in not null
+        //check if sensorType in not null, add sensorType to TextView
         try {
             sensorType = currentSensor.getParam();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             sensorType = "not specified";
         }
         sensorTypeView.setText(sensorType);
+
+        //find TextView that display value of measured param
+        TextView paramValueView = (TextView) listItemView.findViewById(R.id.paramValue);
+        String paramValue;
+
+        //check if paramValue is not null, add value to TextView
+        try {
+            paramValue = currentSensor.getValue();
+        } catch (NullPointerException e) {
+            paramValue = "error occurred";
+        }
+        paramValueView.setText(paramValue);
+
+        //find TextView that display date of measurement
+        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
+        String date;
+
+        //check if date is not null, add value to TextView
+        try {
+            date = currentSensor.getLastDate();
+        }catch (NullPointerException e){
+            date = "error occurred";
+        }
+        dateView.setText(date);
         return listItemView;
     }
 }

@@ -98,7 +98,7 @@ public class QueryStationsList {
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
-            Toaster.toast("An error occured.");
+            Toaster.toast("An error occurred.");
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -190,7 +190,7 @@ public class QueryStationsList {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception, and show a toast to the user.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
-            Toaster.toast("An error occured.");
+            Toaster.toast("An error occurred.");
         }
         return stations;
     }
