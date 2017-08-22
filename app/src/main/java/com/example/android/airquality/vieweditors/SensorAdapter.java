@@ -52,15 +52,16 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
 
         //find TextView that display value of measured param
         TextView paramValueView = (TextView) listItemView.findViewById(R.id.paramValue);
-        String paramValue;
+        double paramValue;
 
         //check if paramValue is not null, add value to TextView
         try {
             paramValue = currentSensor.getValue();
         } catch (NullPointerException e) {
-            paramValue = "error occurred";
+            paramValue = 0;
         }
-        paramValueView.setText(paramValue);
+        String paramValueString = String.format("%.2f", paramValue);
+        paramValueView.setText(paramValueString);
 
         //find TextView that display date of measurement
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);

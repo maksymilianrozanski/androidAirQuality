@@ -182,7 +182,8 @@ public class QueryStationSensors {
             }
             //add new date and value to Sensor object
                 inputSensor.setLastDate(date);
-                inputSensor.setValue(value);
+            //convert String "value" to double
+                inputSensor.setValue(Double.parseDouble(value));
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error occurred", e);
         }

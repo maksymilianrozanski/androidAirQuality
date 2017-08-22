@@ -8,7 +8,7 @@ public class Sensor {
 
     private int id;
     private String param;
-    private String value;
+    private double value;
     private String lastDate;
 
     public Sensor(int id, String param) {
@@ -35,11 +35,11 @@ public class Sensor {
         this.param = param;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
