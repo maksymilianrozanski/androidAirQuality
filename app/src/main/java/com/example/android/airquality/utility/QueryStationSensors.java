@@ -51,7 +51,7 @@ public class QueryStationSensors {
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(url);
+            jsonResponse = makeHttpRequest(url, false);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request", e);
         }
@@ -131,7 +131,7 @@ public class QueryStationSensors {
             //fetch data based on currentSensorId
             String jsonResponse = null;
             try {
-                jsonResponse = makeHttpRequest(url);
+                jsonResponse = makeHttpRequest(url, false);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request.", e);
                 //TODO: solve what to do if exception occurs

@@ -1,9 +1,12 @@
 package com.example.android.airquality.utility;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.main.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,10 +47,24 @@ public class QueryStationsList {
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(url);
+            jsonResponse = makeHttpRequest(url, true);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request", e);
         }
+
+        //extract fields from JSON response and create a list of Station objects
+        List<Station> stations = extractFeatureFromJson(jsonResponse);
+
+        //return the list of stations
+        return stations;
+    }
+
+    public static List<Station> fetchStationDataFromSharedPreferences(){
+
+        String jsonResponse = null;
+        Context context = MainActivity.getAppContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
+        jsonResponse = sharedPreferences.getString("STATIONS", null);
 
         //extract fields from JSON response and create a list of Station objects
         List<Station> stations = extractFeatureFromJson(jsonResponse);
@@ -71,8 +88,12 @@ public class QueryStationsList {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
+     * @param url   url to query data from
+     * @param modifySavedListOfStations if true - save result of httpRequest as list of stations
+     * @return  String given from server
+     * @throws IOException
      */
-    protected static String makeHttpRequest(URL url) throws IOException {
+    protected static String makeHttpRequest(URL url, boolean modifySavedListOfStations) throws IOException {
         String jsonResponse = "";
 
         // If the URL is null, then return early.
@@ -95,6 +116,16 @@ public class QueryStationsList {
                 jsonResponse = readFromStream(inputStream);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+            }
+
+            if (modifySavedListOfStations) {
+                //save jsonResponse to sharedPreferences
+                Context context = MainActivity.getAppContext();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("STATIONS", jsonResponse);
+                editor.apply();
+                Log.v(LOG_TAG, "Saved jsonResponse to SharedPreferences");
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
@@ -150,10 +181,6 @@ public class QueryStationsList {
 
             //for each station create a single Station object
             for (int i = 0; i < stationsArray.length(); i++) {
-                //TODO: delete this comment and next two lines
-                // get a single station at position i
-                JSONObject currentStation = stationsArray.getJSONObject(i);
-
                 //get "i" element of stationsArray and cast to JSONObject
                 JSONObject currentObject = (JSONObject) stationsArray.get(i);
 
@@ -190,6 +217,14 @@ public class QueryStationsList {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception, and show a toast to the user.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
+            // clear station list if any is saved in SharedPreferences
+            Context context = MainActivity.getAppContext();
+            SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("STATIONS", "");
+            editor.apply();
+            sharedPreferences.getString("STATIONS", "");
+            Log.v(LOG_TAG, "Deleted saved list of stations\n list of stations:" + ".");
             Toaster.toast("An error occurred.");
         }
         return stations;
