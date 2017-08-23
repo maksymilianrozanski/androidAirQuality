@@ -9,11 +9,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.airquality.R;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //adapter for list of stations
     private StationAdapter stationAdapter;
 
+    // Get a reference to the LoaderManager, in order to interact with loaders.
+    LoaderManager loaderManager = getLoaderManager();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,29 +55,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //set the adapter, the list can be populated in the user's interface
         stationListView.setAdapter(stationAdapter);
 
-        // Get a reference to the LoaderManager, in order to interact with loaders.
-        LoaderManager loaderManager = getLoaderManager();
-
         // Initialize the loader. Pass in the int ID constant defined above and pass in null for
         // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
-
-        // refresh button
-        final Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener((View v) -> {
-            Log.v("Info", "Refresh button pressed");
-            //remove default view showing start info
-            TextView defaultItemTextView = (TextView) findViewById(R.id.on_start_text_view);
-            defaultItemTextView.setVisibility(View.GONE);
-            if (this.isConnected(getApplicationContext())) {
-                Log.v("Info", "Connected to the internet");
-                loaderManager.restartLoader(STATION_LOADER_ID, null, this);
-            } else {
-                Log.v("info", "No Internet connection");
-                Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         //OnClickListener - redirects to SingleStationActivity
         stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,5 +130,36 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         return isConnected;
+    }
+
+    //show three dot menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    //handle menu items clicks
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.reload:
+                reloadStations();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //reload list of stations
+    private void reloadStations() {
+        if (this.isConnected(getApplicationContext())) {
+            Log.v("Info", "Connected to the internet");
+            loaderManager.restartLoader(STATION_LOADER_ID, null, this);
+        } else {
+            Log.v("info", "No Internet connection");
+            Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+        }
     }
 }
