@@ -61,7 +61,11 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             paramValue = 0;
         }
         String paramValueString = String.format("%.2f", paramValue);
-        paramValueView.setText(paramValueString);
+
+        //if sensorType is correctly loaded add units at the end of value string
+        if (!sensorType.equals("not specified")) {
+            paramValueView.setText(paramValueString + "μg/m³");
+        }
 
         //find TextView that display date of measurement
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
@@ -70,7 +74,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         //check if date is not null, add value to TextView
         try {
             date = currentSensor.getLastDate();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             date = "error occurred";
         }
         dateView.setText(date);
