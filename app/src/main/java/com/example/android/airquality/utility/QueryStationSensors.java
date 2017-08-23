@@ -1,5 +1,6 @@
 package com.example.android.airquality.utility;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -44,14 +45,14 @@ public class QueryStationSensors {
      * @param stationId id of station from which we request list of sensors
      * @return return list of sensors on station with entered id
      */
-    public static List<Sensor> fetchSensorData(int stationId) {
+    public static List<Sensor> fetchSensorData(int stationId, Context context) {
         URL url = createUrl(BEGINNING_OF_URL_SENSORS_LIST + stationId);
 
         //perform http request and receive JSON response back
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(url, false);
+            jsonResponse = makeHttpRequest(url, false, context);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request", e);
         }
@@ -59,7 +60,7 @@ public class QueryStationSensors {
         //extract list of sensors from JSON response
         List<Sensor> sensors = extractListOfSensorsFromJson(jsonResponse);
         //add param value and last measurement date
-        sensors = addDataToSensorList(sensors);
+        sensors = addDataToSensorList(sensors, context);
 
         //return list of sensors
         return sensors;
@@ -121,7 +122,7 @@ public class QueryStationSensors {
      * @param inputList list of sensors
      * @return list of sensors with new measurement value and date
      */
-    private static List<Sensor> addDataToSensorList(List<Sensor> inputList) {
+    private static List<Sensor> addDataToSensorList(List<Sensor> inputList, Context context) {
         for (int i = 0; i < inputList.size(); i++) {
             Sensor currentSensor = inputList.get(i);
             //get currentSensorId
@@ -131,7 +132,7 @@ public class QueryStationSensors {
             //fetch data based on currentSensorId
             String jsonResponse = null;
             try {
-                jsonResponse = makeHttpRequest(url, false);
+                jsonResponse = makeHttpRequest(url, false, context);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request.", e);
                 //TODO: solve what to do if exception occurs

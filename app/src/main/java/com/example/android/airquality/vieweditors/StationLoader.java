@@ -52,11 +52,11 @@ public class StationLoader extends AsyncTaskLoader<List<Station>> {
         //if list of stations is saved return list of stations loaded from SharedPreferences
         if (isStationListSaved) {
             Log.v(LOG_TAG, "Loading list of stations from SharedPreferences...");
-            return QueryStationsList.fetchStationDataFromSharedPreferences();
+            return QueryStationsList.fetchStationDataFromSharedPreferences(getContext());
         } else {
             // Perform the network request, parse the response, and extract a list of stations
             Log.v(LOG_TAG, "Making request to load list of stations from server...");
-            return QueryStationsList.fetchStationData(url);
+            return QueryStationsList.fetchStationData(url, getContext());
         }
     }
 }

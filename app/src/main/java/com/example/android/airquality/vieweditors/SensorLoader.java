@@ -29,6 +29,6 @@ public class SensorLoader extends AsyncTaskLoader<List<Sensor>> {
 
     @Override
     public List<Sensor> loadInBackground() {
-        return QueryStationSensors.fetchSensorData(stationId);
+        return QueryStationSensors.fetchSensorData(stationId, getContext());
     }
 }

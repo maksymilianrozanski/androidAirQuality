@@ -37,17 +37,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //adapter for list of stations
     private StationAdapter stationAdapter;
 
-    //TODO: fix:
-    // " Warning:(40, 5)Do not place Android context classes in static fields;
-    // this is a memory leak (and also breaks Instant Run)"
-    private static Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        context = getApplicationContext();
-
         setContentView(R.layout.activity_main);
 
         //find reference to ListView in the layout
@@ -153,9 +145,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         return isConnected;
-    }
-
-    public static Context getAppContext(){
-        return context;
     }
 }

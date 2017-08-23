@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Station;
-import com.example.android.airquality.main.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +37,7 @@ public class QueryStationsList {
     private QueryStationsList() {
     }
 
-    public static List<Station> fetchStationData(String requestUrl) {
+    public static List<Station> fetchStationData(String requestUrl, Context context) {
 
         //create URL object
         URL url = createUrl(requestUrl);
@@ -47,27 +46,27 @@ public class QueryStationsList {
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(url, true);
+            jsonResponse = makeHttpRequest(url, true, context);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request", e);
         }
 
         //extract fields from JSON response and create a list of Station objects
-        List<Station> stations = extractFeatureFromJson(jsonResponse);
+        List<Station> stations = extractFeatureFromJson(jsonResponse, context);
 
         //return the list of stations
         return stations;
     }
 
-    public static List<Station> fetchStationDataFromSharedPreferences(){
+    public static List<Station> fetchStationDataFromSharedPreferences(Context context) {
 
         String jsonResponse = null;
-        Context context = MainActivity.getAppContext();
+
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         jsonResponse = sharedPreferences.getString("STATIONS", null);
 
         //extract fields from JSON response and create a list of Station objects
-        List<Station> stations = extractFeatureFromJson(jsonResponse);
+        List<Station> stations = extractFeatureFromJson(jsonResponse, context);
 
         //return the list of stations
         return stations;
@@ -76,7 +75,7 @@ public class QueryStationsList {
     /**
      * Returns new URL object from the given string URL.
      */
-    protected static URL createUrl(String stringUrl) {
+    static URL createUrl(String stringUrl) {
         URL url = null;
         try {
             url = new URL(stringUrl);
@@ -88,12 +87,13 @@ public class QueryStationsList {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
-     * @param url   url to query data from
+     *
+     * @param url                       url to query data from
      * @param modifySavedListOfStations if true - save result of httpRequest as list of stations
-     * @return  String given from server
+     * @return String given from server
      * @throws IOException
      */
-    protected static String makeHttpRequest(URL url, boolean modifySavedListOfStations) throws IOException {
+    static String makeHttpRequest(URL url, boolean modifySavedListOfStations, Context context) throws IOException {
         String jsonResponse = "";
 
         // If the URL is null, then return early.
@@ -120,7 +120,6 @@ public class QueryStationsList {
 
             if (modifySavedListOfStations) {
                 //save jsonResponse to sharedPreferences
-                Context context = MainActivity.getAppContext();
                 SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("STATIONS", jsonResponse);
@@ -148,7 +147,7 @@ public class QueryStationsList {
      * Convert the {@link InputStream} into a String which contains the
      * whole JSON response from the server.
      */
-    protected static String readFromStream(InputStream inputStream) throws IOException {
+    private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
@@ -162,7 +161,7 @@ public class QueryStationsList {
         return output.toString();
     }
 
-    private static List<Station> extractFeatureFromJson(String stationJSON) {
+    private static List<Station> extractFeatureFromJson(String stationJSON, Context context) {
         //if JSON string is empty or null, then return early
         if (TextUtils.isEmpty(stationJSON)) {
             return null;
@@ -218,7 +217,6 @@ public class QueryStationsList {
             // with the message from the exception, and show a toast to the user.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
             // clear station list if any is saved in SharedPreferences
-            Context context = MainActivity.getAppContext();
             SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("STATIONS", "");
@@ -237,7 +235,7 @@ public class QueryStationsList {
      * @param jsonKey    Key in JSONObject - name of the value taken
      * @return String acquired form JSONObject, or "not specified" value if exception or null
      */
-    protected static String passJSONString(JSONObject jsonObject, String jsonKey) {
+    static String passJSONString(JSONObject jsonObject, String jsonKey) {
         String stringToReturn;
         try {
             if (jsonObject.getString(jsonKey) != null) {
