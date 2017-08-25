@@ -131,11 +131,18 @@ public class QueryStationSensors {
             URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
             //fetch data based on currentSensorId
             String jsonResponse = null;
-            try {
-                jsonResponse = makeHttpRequest(url, false, context);
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Problem making the HTTP request.", e);
-                //TODO: solve what to do if exception occurs
+            //trying to get correct response from server up to 5 times
+            for (int j = 1; j < 6; j = j) {
+                try {
+                    Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
+                    jsonResponse = makeHttpRequest(url, false, context);
+                    //if no exception is thrown, break inner "for" loop
+                    break;
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+                    //add 1 to for loop counter if exception is thrown by makeHttpRequest method
+                    j = j + 1;
+                }
             }
             //extract fields from jsonResponse and add data to Sensor object
             currentSensor = addValueAndDate(currentSensor, jsonResponse);
@@ -147,7 +154,7 @@ public class QueryStationSensors {
     /**
      * Add or refresh value of measured param, and data of last measurement
      *
-     * @param inputSensor - Sensor object
+     * @param inputSensor  - Sensor object
      * @param jsonResponse - jsonData about input sensor
      * @return sensor with new values, or unchanged sensor object if JSONException
      */
@@ -168,24 +175,24 @@ public class QueryStationSensors {
 
             //get element of an array with most recent data, and check if "value" of measured param
             //is not null
-            for (int i=0; i<jsonDataValueArray.length(); i++){
+            for (int i = 0; i < jsonDataValueArray.length(); i++) {
                 //get "i" element of an array
                 JSONObject recentData = jsonDataValueArray.getJSONObject(i);
                 //get value of measured param
                 value = recentData.getString("value");
                 Log.v(LOG_TAG, "value: " + value);
                 //if value is not null, get date and break the loop
-                if (!value.equals("null")){
+                if (!value.equals("null")) {
                     date = recentData.getString("date");
                     Log.v(LOG_TAG, "date: " + date);
                     break;
                 }
             }
             //add new date and value to Sensor object
-                inputSensor.setLastDate(date);
+            inputSensor.setLastDate(date);
             //convert String "value" to double
-                inputSensor.setValue(Double.parseDouble(value));
-        } catch (JSONException e) {
+            inputSensor.setValue(Double.parseDouble(value));
+        } catch (JSONException | NumberFormatException e) {
             Log.e(LOG_TAG, "Error occurred", e);
         }
 

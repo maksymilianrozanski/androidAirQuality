@@ -38,22 +38,28 @@ public class QueryStationsList {
     }
 
     public static List<Station> fetchStationData(String requestUrl, Context context) {
-
+        List<Station> stations = null;
         //create URL object
         URL url = createUrl(requestUrl);
 
         //perform http request and receive JSON response back
-        String jsonResponse = null;
+        String jsonResponse;
 
-        try {
-            jsonResponse = makeHttpRequest(url, true, context);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request", e);
+        //trying to get correct response from server up to 5 times
+        for (int j = 1; j < 6; j = j) {
+            try {
+                Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
+                jsonResponse = makeHttpRequest(url, true, context);
+                //extract fields from JSON response and create a list of Station objects
+                stations = extractFeatureFromJson(jsonResponse, context);
+                //if no exception is thrown, break inner "for" loop
+                break;
+            } catch (IOException | JSONException e) {
+                Log.e(LOG_TAG, "Problem making the HTTP request", e);
+                //add 1 to for loop counter if exception is thrown by makeHttpRequest method
+                j = j + 1;
+            }
         }
-
-        //extract fields from JSON response and create a list of Station objects
-        List<Station> stations = extractFeatureFromJson(jsonResponse, context);
-
         //return the list of stations
         return stations;
     }
@@ -61,13 +67,16 @@ public class QueryStationsList {
     public static List<Station> fetchStationDataFromSharedPreferences(Context context) {
 
         String jsonResponse = null;
-
+        List<Station> stations = null;
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         jsonResponse = sharedPreferences.getString("STATIONS", null);
 
         //extract fields from JSON response and create a list of Station objects
-        List<Station> stations = extractFeatureFromJson(jsonResponse, context);
-
+        try {
+            stations = extractFeatureFromJson(jsonResponse, context);
+        }catch (JSONException e){
+            Log.e(LOG_TAG, "Corrupted data loaded from SharedPreferences", e);
+        }
         //return the list of stations
         return stations;
     }
@@ -128,7 +137,7 @@ public class QueryStationsList {
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
-            Toaster.toast("An error occurred.");
+            throw e;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -161,7 +170,7 @@ public class QueryStationsList {
         return output.toString();
     }
 
-    private static List<Station> extractFeatureFromJson(String stationJSON, Context context) {
+    private static List<Station> extractFeatureFromJson(String stationJSON, Context context) throws JSONException{
         //if JSON string is empty or null, then return early
         if (TextUtils.isEmpty(stationJSON)) {
             return null;
@@ -224,6 +233,7 @@ public class QueryStationsList {
             sharedPreferences.getString("STATIONS", "");
             Log.v(LOG_TAG, "Deleted saved list of stations\n list of stations:" + ".");
             Toaster.toast("An error occurred.");
+            throw e;
         }
         return stations;
     }
