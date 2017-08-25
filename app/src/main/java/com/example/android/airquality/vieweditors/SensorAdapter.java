@@ -68,8 +68,6 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
         String paramValueString = String.format("%.2f", paramValue);
 
-
-        //TODO: display the highest acceptable concentration
         //if sensorType is correctly loaded add units at the end of value string
         if (!sensorType.equals("not specified")) {
             String textToAdd = paramValueString;
@@ -91,12 +89,23 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             date = "error occurred";
         }
         dateView.setText(date);
+
+        //find TextView displaying percent of acceptable value, if exception: set "-" value
+        TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
+        try {
+            //calculate: value divided by max. acceptable value, multiplied by 100 (% symbol added later)
+            double calculationResult = (currentSensor.getValue() / MAX_CONCENTRATIONS.get(sensorType) * 100);
+            //add calculated value to TextView
+            percentView.setText(String.format("%.0f", calculationResult) + "%");
+        } catch (NullPointerException | NumberFormatException e) {
+            percentView.setText("-");
+        }
         return listItemView;
     }
 
     //set maximum acceptable values
     //http://powietrze.gios.gov.pl/pjp/content/annual_assessment_air_acceptable_level
-    static{
+    static {
         Map<String, Integer> maxConcentrationsMap = new HashMap<String, Integer>();
         maxConcentrationsMap.put("C6H6", 5);
         maxConcentrationsMap.put("NO2", 200);
