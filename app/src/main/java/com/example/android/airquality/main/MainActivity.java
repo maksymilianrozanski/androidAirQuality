@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //reload list of stations
     private void reloadStations() {
-        if (this.isConnected(getApplicationContext())) {
+        if (isConnected(getApplicationContext())) {
             Log.v("Info", "Connected to the internet");
             loaderManager.restartLoader(STATION_LOADER_ID, null, this);
         } else {
