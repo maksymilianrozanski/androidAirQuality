@@ -3,4 +3,24 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Color values to display pollution level-->
+    <!-- value for 0-25 -->
+    <color name="qualityColor1">#9ccc65</color>
+    <!-- value for 25-50 -->
+    <color name="qualityColor2">#d4e157</color>
+    <!-- 50-75 -->
+    <color name="qualityColor3">#ffee58</color>
+    <!-- 75-100 -->
+    <color name="qualityColor4">#ffca28</color>
+    <!-- 100-150 -->
+    <color name="qualityColor5">#ffa726</color>
+    <!-- 150-300 -->
+    <color name="qualityColor6">#ff7043</color>
+    <!-- 300-500 -->
+    <color name="qualityColor7">#f4511e</color>
+    <!-- 500+ -->
+    <color name="qualityColor8">#e53935</color>
+    <!-- no data -->
+    <color name="noData">#bdbdbd</color>
 </resources>

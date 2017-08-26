@@ -43,6 +43,7 @@
         android:id="@+id/percentValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/pollution_circle"
         android:text="100%"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"

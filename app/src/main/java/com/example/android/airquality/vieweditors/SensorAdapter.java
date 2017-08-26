@@ -1,8 +1,11 @@
 package com.example.android.airquality.vieweditors;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,11 +100,53 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             double calculationResult = (currentSensor.getValue() / MAX_CONCENTRATIONS.get(sensorType) * 100);
             //add calculated value to TextView
             percentView.setText(String.format("%.0f", calculationResult) + "%");
+
+            //set color of percentView background, if exception above is thrown,
+            // this part is skipped and background remains grey
+            GradientDrawable percentViewBackground = (GradientDrawable) percentView.getBackground();
+            int chosenColor = chooseColorOfBackground(calculationResult);
+            Log.v("LogSensorAdapter", "calculation result value: "+ calculationResult + "chosen color: " +chosenColor);
+            percentViewBackground.setColor(chosenColor);
+
         } catch (NullPointerException | NumberFormatException e) {
             percentView.setText("-");
         }
+
+
+
+
+
+
+
+
         return listItemView;
     }
+
+    /**
+     * @param percentValue  percent of maximum acceptable level of parameter
+     * @return  return int color value based on percentValue
+     */
+    private int chooseColorOfBackground(double percentValue){
+        int percentValueInt = Integer.parseInt(String.format("%.0f", percentValue));
+        Log.v("inside choseColor..", "percentValue" + percentValueInt);
+        Log.v("log", String.valueOf(R.color.qualityColor1));
+        if (percentValueInt <= 25){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor1);
+        }else if (percentValueInt <= 50 ){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor2);
+        }else if (percentValueInt <= 75){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor3);
+        }else if (percentValueInt <= 100){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor4);
+        }else if (percentValueInt <= 150){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor5);
+        }else if (percentValueInt <= 300){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor6);
+        }else if (percentValueInt <= 500){
+            return ContextCompat.getColor(getContext(),R.color.qualityColor7);
+        }else return ContextCompat.getColor(getContext(),R.color.qualityColor8);
+    }
+
 
     //set maximum acceptable values
     //http://powietrze.gios.gov.pl/pjp/content/annual_assessment_air_acceptable_level
