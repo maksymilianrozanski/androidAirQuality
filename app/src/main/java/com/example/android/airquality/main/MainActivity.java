@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.v("Info", "Inside onLoaderReset - after .clear");
     }
 
-    //for checking is device connected to the Internet  //TODO: fix crash when no Internet connection
-    public boolean isConnected(Context context) {
+    //for checking is device connected to the Internet
+    public static boolean isConnected(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
