@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.utility.NearestStationFinder;
+import com.example.android.airquality.utility.QueryStationsList;
 import com.example.android.airquality.vieweditors.StationAdapter;
 import com.example.android.airquality.vieweditors.StationLoader;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -184,10 +186,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //if app doesn't have permission - requestPermission
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
+            Log.v(LOG_TAG, "No permission, asking for permission");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST);
-
         }
+
 
         //if app have permission - print location in log
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -196,9 +198,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         @Override
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
-                            Log.v("Log", "Location: " + location.toString());
                             if (location != null) {
+                                Log.v(LOG_TAG, "Location: " + location.toString());
                                 // Logic to handle location object
+                                Log.v(LOG_TAG, "location.getLatitude(): " + location.getLatitude()
+                                        + "location.getLongitude(): " + location.getLongitude());
+                                List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
+                                Integer nearestStationId = NearestStationFinder.findNearestStation(location.getLatitude(), location.getLongitude(), stations);
+                                Log.v(LOG_TAG, "the nearest station id: " + nearestStationId);
+                            } else {
+                                Log.v(LOG_TAG, "location == null");
                             }
                         }
                     });
