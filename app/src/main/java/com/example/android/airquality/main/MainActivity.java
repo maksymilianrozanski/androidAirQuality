@@ -1,12 +1,17 @@
 package com.example.android.airquality.main;
 
+import android.Manifest;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +26,9 @@ import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.vieweditors.StationAdapter;
 import com.example.android.airquality.vieweditors.StationLoader;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // Get a reference to the LoaderManager, in order to interact with loaders.
     LoaderManager loaderManager = getLoaderManager();
+
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.reload:
                 reloadStations();
                 return true;
+            case R.id.findNearestStation:
+                //TODO: put finding nearest station method here
+                goToNearestStation();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -160,6 +174,34 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             Log.v("info", "No Internet connection");
             Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void goToNearestStation() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        int MY_PERMISSION_REQUEST = 0;
+
+        //if app doesn't have permission - requestPermission
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST);
+
+        }
+
+        //if app have permission - print location in log
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            Log.v("Log", "Location: " + location.toString());
+                            if (location != null) {
+                                // Logic to handle location object
+                            }
+                        }
+                    });
         }
     }
 }
