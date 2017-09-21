@@ -190,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST);
         }
 
-
         //if app have permission - print location in log
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient.getLastLocation()
@@ -206,6 +205,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
                                 Integer nearestStationId = NearestStationFinder.findNearestStation(location.getLatitude(), location.getLongitude(), stations);
                                 Log.v(LOG_TAG, "the nearest station id: " + nearestStationId);
+
+                                //create new intent to pass stationId and stationName to SingleStationActivity
+                                Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
+                                intent.putExtra("StationId", nearestStationId);
+                                for(Station currentStation:stations){
+                                    if (Integer.parseInt(currentStation.getId()) == nearestStationId){
+                                        intent.putExtra("StationName", currentStation.getName());
+                                        break;
+                                    }
+                                }
+                                startActivity(intent);
                             } else {
                                 Log.v(LOG_TAG, "location == null");
                             }
