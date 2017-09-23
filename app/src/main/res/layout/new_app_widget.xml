@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#09C"
+    android:padding="@dimen/widget_margin"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/widgetStationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:background="#09C"
+        android:text="Station name"
+        android:textColor="#ffffff"
+        android:textSize="8sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/widgetNameAndValueOfParam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PM10 250%"
+        android:textSize="14sp"
+        />
+    <TextView
+        android:id="@+id/widgetUpdateDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2017-09-22 20:00"
+        android:textSize="8sp"/>
+
+</LinearLayout>
