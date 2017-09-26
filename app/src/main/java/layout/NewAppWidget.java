@@ -6,10 +6,6 @@ import android.content.Context;
 import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
-import com.example.android.airquality.dataholders.Sensor;
-import com.example.android.airquality.utility.QueryStationSensors;
-
-import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,14 +14,11 @@ public class NewAppWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(400, context);
-        String lastDate = sensors.get(0).getLastDate();
 
         CharSequence widgetText = "Example station name";
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
         views.setTextViewText(R.id.widgetStationName, widgetText);
-        views.setTextViewText(R.id.widgetUpdateDate, lastDate);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
