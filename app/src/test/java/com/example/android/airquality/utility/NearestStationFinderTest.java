@@ -53,6 +53,4 @@ public class NearestStationFinderTest {
         int predictedResult = 531;
         assertEquals(predictedResult, result);
     }
-
-
 }

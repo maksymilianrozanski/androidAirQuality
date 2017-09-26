@@ -31,7 +31,6 @@ public class NearestStationFinder {
 
     /**
      * Calculate distance between user and station using Haversine method, height is omitted
-     *
      * @param userLatitude     - user's position latitude
      * @param userLongitude    - user's position longitude
      * @param stationLatitude  - station's latitude
@@ -40,7 +39,7 @@ public class NearestStationFinder {
      */
     private static double calculateDistance(double userLatitude, double userLongitude,
                                             double stationLatitude, double stationLongitude) {
-        final int R = 6371000; // Radius of the earth
+        final int R = 6371000; // Radius of the earth in meters
         double userLatitudeRadian = Math.toRadians(userLatitude);
         double userLongitudeRadian = Math.toRadians(userLongitude);
         double stationLatitudeRadian = Math.toRadians(stationLatitude);
@@ -51,7 +50,6 @@ public class NearestStationFinder {
                         + Math.cos(userLatitudeRadian) * Math.cos(stationLatitudeRadian) *
                         Math.pow(Math.sin((stationLongitudeRadian - userLongitudeRadian) / 2), 2)
         )));
-
-        return distance; //distance in meters
+        return distance;
     }
 }

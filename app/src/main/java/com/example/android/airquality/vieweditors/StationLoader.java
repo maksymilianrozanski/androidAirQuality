@@ -25,7 +25,6 @@ public class StationLoader extends AsyncTaskLoader<List<Station>> {
 
     /**
      * Constructs a new StationLoader
-     *
      * @param context of the activity
      * @param url     to load data from
      */

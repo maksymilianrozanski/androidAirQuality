@@ -27,7 +27,6 @@ import static com.example.android.airquality.utility.QueryStationsList.passJSONS
 
 public class QueryStationSensors {
 
-    //Tag for log messages
     private static final String LOG_TAG = QueryStationSensors.class.getSimpleName();
 
     //beginning of url to query - need to add station id at the end - return list of sensors
@@ -37,7 +36,6 @@ public class QueryStationSensors {
     //return type of param and array of dates + values
     private static final String BEGINNING_OF_URL_SENSOR_DATA = "http://api.gios.gov.pl/pjp-api/rest/data/getData/";
 
-    //private constructor
     private QueryStationSensors() {
     }
 
@@ -48,7 +46,6 @@ public class QueryStationSensors {
     public static List<Sensor> fetchSensorData(int stationId, Context context) {
         URL url = createUrl(BEGINNING_OF_URL_SENSORS_LIST + stationId);
 
-        //perform http request and receive JSON response back
         String jsonResponse = null;
 
         try {
@@ -57,12 +54,9 @@ public class QueryStationSensors {
             Log.e(LOG_TAG, "Problem making the HTTP request", e);
         }
 
-        //extract list of sensors from JSON response
         List<Sensor> sensors = extractListOfSensorsFromJson(jsonResponse);
-        //add param value and last measurement date
         sensors = addDataToSensorList(sensors, context);
 
-        //return list of sensors
         return sensors;
     }
 
@@ -73,12 +67,10 @@ public class QueryStationSensors {
      * @return List of sensors on one station
      */
     private static List<Sensor> extractListOfSensorsFromJson(String jsonResponse) {
-        //if JSON string is empty or null, then return early
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
 
-        //create empty ArrayList where it's possible to add sensors
         List<Sensor> sensors = new ArrayList<>();
 
         // Try to parse the JSON response string. If there's a problem with the way the JSON
@@ -101,9 +93,7 @@ public class QueryStationSensors {
                 //param measured by sensor/sensor type
                 String sensorsParam = passJSONString(sensorsParamJSON, "paramFormula");
 
-                //create new Sensor object
                 Sensor sensor = new Sensor(sensorsId, sensorsParam);
-                //add created Sensor object to sensors List
                 sensors.add(sensor);
             }
         } catch (JSONException e) {
@@ -118,25 +108,23 @@ public class QueryStationSensors {
 
     /**
      * Adds new values from sensors to the List
-     *
      * @param inputList list of sensors
      * @return list of sensors with new measurement value and date
      */
     private static List<Sensor> addDataToSensorList(List<Sensor> inputList, Context context) {
         for (int i = 0; i < inputList.size(); i++) {
             Sensor currentSensor = inputList.get(i);
-            //get currentSensorId
             int currentSensorId = currentSensor.getId();
             //create url to query based on sensor's id
             URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
-            //fetch data based on currentSensorId
+
             String jsonResponse = null;
+            //fetch data based on currentSensorId
             //trying to get correct response from server up to 5 times
             for (int j = 1; j < 6; j = j) {
                 try {
                     Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
                     jsonResponse = makeHttpRequest(url, false, context);
-                    //if no exception is thrown, break inner "for" loop
                     break;
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "Problem making the HTTP request.", e);
@@ -153,7 +141,6 @@ public class QueryStationSensors {
 
     /**
      * Add or refresh value of measured param, and data of last measurement
-     *
      * @param inputSensor  - Sensor object
      * @param jsonResponse - jsonData about input sensor
      * @return sensor with new values, or unchanged sensor object if JSONException
@@ -188,9 +175,7 @@ public class QueryStationSensors {
                     break;
                 }
             }
-            //add new date and value to Sensor object
             inputSensor.setLastDate(date);
-            //convert String "value" to double
             inputSensor.setValue(Double.parseDouble(value));
         } catch (JSONException | NumberFormatException e) {
             Log.e(LOG_TAG, "Error occurred", e);

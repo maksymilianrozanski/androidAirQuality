@@ -33,7 +33,6 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_station);
 
-        //get Intent
         Intent intent = getIntent();
         stationId = intent.getIntExtra("StationId", 0);
         stationName = intent.getStringExtra("StationName");
@@ -42,16 +41,12 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         TextView stationNameTextView = (TextView) findViewById(R.id.sensorsViewStationName);
         stationNameTextView.setText(stationName);
 
-        //find reference to ListView in the layout
         ListView sensorListView = (ListView) findViewById(R.id.listViewOfSensors);
 
-        //create new adapter, that takes empty sensor list as input
         sensorAdapter = new SensorAdapter(this, new ArrayList<Sensor>());
 
-        //set the adapter, the list can be populated in the user's interface
         sensorListView.setAdapter(sensorAdapter);
 
-        //Get a reference to the LoaderManager, in order to interact with loaders.
         LoaderManager loaderManager = getLoaderManager();
 
         // Initialize the loader. Pass in the int ID constant defined above and pass in null for
@@ -64,13 +59,11 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public Loader<List<Sensor>> onCreateLoader(int id, Bundle args) {
-        //create a new loader for given StationId
         return new SensorLoader(this, stationId);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Sensor>> loader, List<Sensor> data) {
-        //clear adapter of previous data
         sensorAdapter.clear();
         //If there is valid list of sensors add them to adapter's data set.
         //This will trigger the ListView to update

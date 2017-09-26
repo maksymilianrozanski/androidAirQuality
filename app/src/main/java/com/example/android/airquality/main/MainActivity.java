@@ -45,10 +45,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //id of loader, only matter when multiple loaders
     private static final int STATION_LOADER_ID = 1;
 
-    //adapter for list of stations
     private StationAdapter stationAdapter;
 
-    // Get a reference to the LoaderManager, in order to interact with loaders.
     LoaderManager loaderManager = getLoaderManager();
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -58,10 +56,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //find reference to ListView in the layout
         ListView stationListView = (ListView) findViewById(R.id.list);
 
-        //create new adapter, that takes empty station list as input
         stationAdapter = new StationAdapter(this, new ArrayList<Station>());
 
         //set the adapter, the list can be populated in the user's interface
@@ -115,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<Station>> loader, List<Station> data) {
         Log.v("Info", "Inside onLoaderFinished - start");
-        //clear adapter of previous search data
         stationAdapter.clear();
         Log.v("Info", "Inside onLoaderFinished - after .clear");
         //If there is valid list of stations add them to adapter's data set.
@@ -129,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
         Log.v("Info", "Inside onLoaderReset - before .clear");
-        // Loader reset, so we can clear out our existing data.
         stationAdapter.clear();
         Log.v("Info", "Inside onLoaderReset - after .clear");
     }
@@ -160,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 reloadStations();
                 return true;
             case R.id.findNearestStation:
-                //TODO: put finding nearest station method here
                 goToNearestStation();
                 return true;
             default:
@@ -168,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    //reload list of stations
     private void reloadStations() {
         if (isConnected(getApplicationContext())) {
             Log.v("Info", "Connected to the internet");
@@ -209,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 //create new intent to pass stationId and stationName to SingleStationActivity
                                 Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
                                 intent.putExtra("StationId", nearestStationId);
-                                for(Station currentStation:stations){
-                                    if (Integer.parseInt(currentStation.getId()) == nearestStationId){
+                                for (Station currentStation : stations) {
+                                    if (Integer.parseInt(currentStation.getId()) == nearestStationId) {
                                         intent.putExtra("StationName", currentStation.getName());
                                         break;
                                     }

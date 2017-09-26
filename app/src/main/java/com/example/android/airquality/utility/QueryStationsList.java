@@ -30,19 +30,16 @@ import xdroid.toaster.Toaster;
 
 public class QueryStationsList {
 
-    //Tag for log messages
     private static final String LOG_TAG = QueryStationsList.class.getSimpleName();
 
-    //private constructor
     private QueryStationsList() {
     }
 
     public static List<Station> fetchStationData(String requestUrl, Context context) {
         List<Station> stations = null;
-        //create URL object
+
         URL url = createUrl(requestUrl);
 
-        //perform http request and receive JSON response back
         String jsonResponse;
 
         //trying to get correct response from server up to 5 times
@@ -60,13 +57,11 @@ public class QueryStationsList {
                 j = j + 1;
             }
         }
-        //return the list of stations
         return stations;
     }
 
     public static List<Station> fetchStationDataFromSharedPreferences(Context context) {
-
-        String jsonResponse = null;
+        String jsonResponse;
         List<Station> stations = null;
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         jsonResponse = sharedPreferences.getString("STATIONS", null);
@@ -77,13 +72,9 @@ public class QueryStationsList {
         }catch (JSONException e){
             Log.e(LOG_TAG, "Corrupted data loaded from SharedPreferences", e);
         }
-        //return the list of stations
         return stations;
     }
 
-    /**
-     * Returns new URL object from the given string URL.
-     */
     static URL createUrl(String stringUrl) {
         URL url = null;
         try {
@@ -96,7 +87,6 @@ public class QueryStationsList {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
-     *
      * @param url                       url to query data from
      * @param modifySavedListOfStations if true - save result of httpRequest as list of stations
      * @return String given from server
@@ -171,12 +161,10 @@ public class QueryStationsList {
     }
 
     private static List<Station> extractFeatureFromJson(String stationJSON, Context context) throws JSONException{
-        //if JSON string is empty or null, then return early
         if (TextUtils.isEmpty(stationJSON)) {
             return null;
         }
 
-        //create empty ArrayList where it's possible to add stations
         List<Station> stations = new ArrayList<>();
 
         // Try to parse the JSON response string. If there's a problem with the way the JSON
@@ -199,7 +187,6 @@ public class QueryStationsList {
                 String gegrLon = passJSONString(currentObject, "gegrLon");
                 String cityId;
                 String cityName;
-
 
                 //get city - JSONObject, if city object is null, pass "not specified" as data
                 try {
@@ -240,7 +227,6 @@ public class QueryStationsList {
 
     /**
      * Check for null values and JSONException
-     *
      * @param jsonObject JSONObject from which String value is taken
      * @param jsonKey    Key in JSONObject - name of the value taken
      * @return String acquired form JSONObject, or "not specified" value if exception or null
