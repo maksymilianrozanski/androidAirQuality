@@ -33,6 +33,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Station>> {
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int STATION_LOADER_ID = 1;
 
     private StationAdapter stationAdapter;
+
+    private Location lastLocation;
 
     LoaderManager loaderManager = getLoaderManager();
 
@@ -156,6 +159,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.findNearestStation:
                 goToNearestStation();
                 return true;
+            case R.id.sortStations:
+                sortStationsByDistance();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -223,6 +229,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void sortStationsByDistance(){
+        List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        lastLocation = location;
+
+                        double userLatitude = 0;
+                        double userLongitude = 0;
+                        try {
+                            userLatitude = lastLocation.getLatitude();
+                            userLongitude = lastLocation.getLongitude();
+                            Log.v(LOG_TAG, "user latitude: " + userLatitude + "user longitude: " + userLongitude);
+                        } catch (NullPointerException e) {
+                            Log.e(LOG_TAG, "Null pointer exception" + e);
+                        }
+
+                        for (Station station : stations) {
+                            station.setDistanceFromUser(userLatitude, userLongitude);
+                        }
+                        Collections.sort(stations);
+
+                        //print list of stations in log
+                        Log.v(LOG_TAG, "List of sorted stations:");
+                        for (Station station : stations) {
+                            Log.v(LOG_TAG, station.getName());
+                        }
+                    }
+                }
+            });
+        }
     }
 }

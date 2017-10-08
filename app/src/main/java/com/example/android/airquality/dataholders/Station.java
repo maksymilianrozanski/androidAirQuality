@@ -18,6 +18,9 @@ public class Station implements Comparable<Station>{
     private String cityName;
     private double distanceFromUser;
 
+    public Station() {
+    }
+
     public Station(String id, String name, String gegrLat, String gegrLon, String cityId, String cityName) {
         this.id = id;
         this.name = name;
@@ -80,14 +83,14 @@ public class Station implements Comparable<Station>{
     }
 
     public void setDistanceFromUser(double userLatitude, double userLongitude) {
-        NearestStationFinder.calculateDistance(userLatitude, userLongitude,
+        this.distanceFromUser = NearestStationFinder.calculateDistance(userLatitude, userLongitude,
                 Double.parseDouble(gegrLat), Double.parseDouble(gegrLon));
     }
 
     @Override
     public int compareTo(@NonNull Station station) {
         if (station.getDistanceFromUser() < this.getDistanceFromUser()){
-            return -1;
-        }else return 1;
+            return 1;
+        }else return -1;
     }
 }
