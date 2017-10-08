@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    //handle menu items clicks
+    //handle menu items clicks  //TODO: add menu item "sort stations"
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -175,12 +175,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         int MY_PERMISSION_REQUEST = 0;
 
-        //if app doesn't have permission - requestPermission
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.v(LOG_TAG, "No permission, asking for permission");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST);
-        }
+        askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
 
         //if app have permission - print location in log
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -214,5 +209,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         }
                     });
         }
+    }
+
+    private boolean askForLocationPermissionIfNoPermission(int permissionNumber){
+        //if app doesn't have permission - requestPermission
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.v(LOG_TAG, "No permission, asking for permission");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, permissionNumber);
+            return false;
+        }
+        return true;
+    }
+
+    private void sortStationsByDistance(){
+
     }
 }
