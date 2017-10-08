@@ -37,7 +37,7 @@ public class NearestStationFinder {
      * @param stationLongitude - station's longitude
      * @return distance in meters
      */
-    private static double calculateDistance(double userLatitude, double userLongitude,
+    public static double calculateDistance(double userLatitude, double userLongitude,
                                             double stationLatitude, double stationLongitude) {
         final int R = 6371000; // Radius of the earth in meters
         double userLatitudeRadian = Math.toRadians(userLatitude);
