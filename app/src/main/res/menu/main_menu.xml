@@ -6,4 +6,7 @@
     <item
         android:id="@+id/findNearestStation"
         android:title="find nearest station"/>
+    <item
+        android:id="@+id/sortStations"
+        android:title="sort stations by distance"/>
 </menu>
