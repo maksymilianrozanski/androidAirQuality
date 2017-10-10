@@ -5,6 +5,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -31,6 +32,8 @@ import com.example.android.airquality.vieweditors.StationLoader;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -149,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    //handle menu items clicks  //TODO: add menu item "sort stations"
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -228,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    private void sortStationsByDistance(){
+    private void sortStationsByDistance() {
         List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -254,14 +256,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         }
                         Collections.sort(stations);
 
-                        //print list of stations in log
-                        Log.v(LOG_TAG, "List of sorted stations:");
-                        for (Station station : stations) {
-                            Log.v(LOG_TAG, station.getName());
-                        }
+                        JSONArray jsonArray = QueryStationsList.passStationListToJSONArray(stations);
+
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("STATIONS", jsonArray.toString());
+                        editor.apply();
+                        reloadStations();
                     }
                 }
             });
+        } else {
+            askForLocationPermissionIfNoPermission(0);
         }
     }
 }

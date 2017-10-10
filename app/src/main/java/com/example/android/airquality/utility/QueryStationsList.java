@@ -246,4 +246,25 @@ public class QueryStationsList {
         }
         return stringToReturn;
     }
+
+    public static JSONArray passStationListToJSONArray(List<Station> stations) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < stations.size(); i++) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", stations.get(i).getId());
+                jsonObject.put("stationName", stations.get(i).getName());
+                jsonObject.put("gegrLat", stations.get(i).getGegrLat());
+                jsonObject.put("gegrLon", stations.get(i).getGegrLon());
+                JSONObject city = new JSONObject();
+                city.put("id", stations.get(i).getCityId());
+                city.put("name", stations.get(i).getCityName());
+                jsonObject.put("city", city);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "JSONException" + e);
+            }
+        }
+        return jsonArray;
+    }
 }
