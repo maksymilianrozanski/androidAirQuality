@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     LoaderManager loaderManager = getLoaderManager();
 
-    private FusedLocationProviderClient mFusedLocationClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.v("Info", "Inside onLoaderReset - after .clear");
     }
 
-    //for checking is device connected to the Internet
     public static boolean isConnected(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -180,28 +179,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void goToNearestStation() {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         int MY_PERMISSION_REQUEST = 0;
 
         askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
 
         //if app have permission - print location in log
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationClient.getLastLocation()
+            fusedLocationProviderClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                Log.v(LOG_TAG, "Location: " + location.toString());
-                                // Logic to handle location object
-                                Log.v(LOG_TAG, "location.getLatitude(): " + location.getLatitude()
-                                        + "location.getLongitude(): " + location.getLongitude());
+
                                 List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
                                 Integer nearestStationId = NearestStationFinder.findNearestStation(location.getLatitude(), location.getLongitude(), stations);
-                                Log.v(LOG_TAG, "the nearest station id: " + nearestStationId);
 
-                                //create new intent to pass stationId and stationName to SingleStationActivity
                                 Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
                                 intent.putExtra("StationId", nearestStationId);
                                 for (Station currentStation : stations) {
@@ -220,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private boolean askForLocationPermissionIfNoPermission(int permissionNumber){
-        //if app doesn't have permission - requestPermission
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.v(LOG_TAG, "No permission, asking for permission");
@@ -233,9 +225,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void sortStationsByDistance() {
         List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
