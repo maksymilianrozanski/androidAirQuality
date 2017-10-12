@@ -207,21 +207,19 @@ public class QueryStationsList {
                 stations.add(station);
             }
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception, and show a toast to the user.
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
-            // clear station list if any is saved in SharedPreferences
-            SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("STATIONS", "");
-            editor.apply();
-            sharedPreferences.getString("STATIONS", "");
-            Log.v(LOG_TAG, "Deleted saved list of stations\n list of stations:" + ".");
+            deleteStationsFromSharedPreferences(context);
             Toaster.toast("An error occurred.");
             throw e;
         }
         return stations;
+    }
+
+    private static void deleteStationsFromSharedPreferences(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("STATIONS", "");
+        editor.apply();
     }
 
     /**
