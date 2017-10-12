@@ -118,12 +118,7 @@ public class QueryStationsList {
             }
 
             if (modifySavedListOfStations) {
-                //save jsonResponse to sharedPreferences
-                SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("STATIONS", jsonResponse);
-                editor.apply();
-                Log.v(LOG_TAG, "Saved jsonResponse to SharedPreferences");
+                saveStationsToSharedPreferences(jsonResponse, context);
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
@@ -140,6 +135,14 @@ public class QueryStationsList {
             }
         }
         return jsonResponse;
+    }
+
+    private static void saveStationsToSharedPreferences(String stations, Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("STATIONS", stations);
+        editor.apply();
+        Log.v(LOG_TAG, "Saved jsonResponse to SharedPreferences");
     }
 
     /**
