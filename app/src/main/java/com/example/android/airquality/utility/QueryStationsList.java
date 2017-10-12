@@ -43,19 +43,15 @@ public class QueryStationsList {
         String jsonResponse;
 
         //trying to get correct response from server up to 5 times
-        for (int j = 1; j < 6; j = j) {
+        for (int j = 1; j < 6;) {
             try {
-                Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
-                jsonResponse = makeHttpRequest(url, context);
-                saveStationsToSharedPreferences(jsonResponse, context);
-                //extract fields from JSON response and create a list of Station objects
+                jsonResponse = retryMakingHttpRequestIfException(url);
                 stations = extractFeatureFromJson(jsonResponse, context);
-                //if no exception is thrown, break inner "for" loop
+                saveStationsToSharedPreferences(jsonResponse, context);
                 break;
-            } catch (IOException | JSONException e) {
+            } catch (JSONException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request", e);
-                //add 1 to for loop counter if exception is thrown by makeHttpRequest method
-                j = j + 1;
+                j++;
             }
         }
         return stations;
@@ -86,13 +82,26 @@ public class QueryStationsList {
         return url;
     }
 
+    static String retryMakingHttpRequestIfException(URL url){
+        String jsonResponse;
+        for (int i = 0; i < 5; ){
+            try {
+                jsonResponse = makeHttpRequest(url);
+                return jsonResponse;
+            }catch (IOException e){
+                i++;
+            }
+        }
+        return null;
+    }
+
     /**
      * Make an HTTP request to the given URL and return a String as the response.
      * @param url                       url to query data from
      * @return String given from server
      * @throws IOException
      */
-    static String makeHttpRequest(URL url, Context context) throws IOException {
+    private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
         // If the URL is null, then return early.

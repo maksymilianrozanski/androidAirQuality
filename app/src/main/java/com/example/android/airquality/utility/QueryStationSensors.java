@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +17,8 @@ import java.util.List;
 import xdroid.toaster.Toaster;
 
 import static com.example.android.airquality.utility.QueryStationsList.createUrl;
-import static com.example.android.airquality.utility.QueryStationsList.makeHttpRequest;
 import static com.example.android.airquality.utility.QueryStationsList.passJSONString;
+import static com.example.android.airquality.utility.QueryStationsList.retryMakingHttpRequestIfException;
 
 /**
  * Created by Max on 18.08.2017.
@@ -46,13 +45,7 @@ public class QueryStationSensors {
     public static List<Sensor> fetchSensorData(int stationId, Context context) {
         URL url = createUrl(BEGINNING_OF_URL_SENSORS_LIST + stationId);
 
-        String jsonResponse = null;
-
-        try {
-            jsonResponse = makeHttpRequest(url, context);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request", e);
-        }
+        String jsonResponse =  retryMakingHttpRequestIfException(url);
 
         List<Sensor> sensors = extractListOfSensorsFromJson(jsonResponse);
         sensors = addDataToSensorList(sensors, context);
@@ -118,20 +111,8 @@ public class QueryStationSensors {
             //create url to query based on sensor's id
             URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
 
-            String jsonResponse = null;
-            //fetch data based on currentSensorId
-            //trying to get correct response from server up to 5 times
-            for (int j = 1; j < 6; j = j) {
-                try {
-                    Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
-                    jsonResponse = makeHttpRequest(url, context);
-                    break;
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Problem making the HTTP request.", e);
-                    //add 1 to for loop counter if exception is thrown by makeHttpRequest method
-                    j = j + 1;
-                }
-            }
+            String jsonResponse  = retryMakingHttpRequestIfException(url);
+
             //extract fields from jsonResponse and add data to Sensor object
             currentSensor = addValueAndDate(currentSensor, jsonResponse);
             sensorList.set(i, currentSensor);
