@@ -46,7 +46,8 @@ public class QueryStationsList {
         for (int j = 1; j < 6; j = j) {
             try {
                 Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
-                jsonResponse = makeHttpRequest(url, true, context);
+                jsonResponse = makeHttpRequest(url, context);
+                saveStationsToSharedPreferences(jsonResponse, context);
                 //extract fields from JSON response and create a list of Station objects
                 stations = extractFeatureFromJson(jsonResponse, context);
                 //if no exception is thrown, break inner "for" loop
@@ -88,11 +89,10 @@ public class QueryStationsList {
     /**
      * Make an HTTP request to the given URL and return a String as the response.
      * @param url                       url to query data from
-     * @param modifySavedListOfStations if true - save result of httpRequest as list of stations
      * @return String given from server
      * @throws IOException
      */
-    static String makeHttpRequest(URL url, boolean modifySavedListOfStations, Context context) throws IOException {
+    static String makeHttpRequest(URL url, Context context) throws IOException {
         String jsonResponse = "";
 
         // If the URL is null, then return early.
@@ -115,10 +115,6 @@ public class QueryStationsList {
                 jsonResponse = readFromStream(inputStream);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
-            }
-
-            if (modifySavedListOfStations) {
-                saveStationsToSharedPreferences(jsonResponse, context);
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);

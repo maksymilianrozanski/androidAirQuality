@@ -49,7 +49,7 @@ public class QueryStationSensors {
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(url, false, context);
+            jsonResponse = makeHttpRequest(url, context);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request", e);
         }
@@ -124,7 +124,7 @@ public class QueryStationSensors {
             for (int j = 1; j < 6; j = j) {
                 try {
                     Log.v(LOG_TAG, "Trying to make http request: " + j + " time...");
-                    jsonResponse = makeHttpRequest(url, false, context);
+                    jsonResponse = makeHttpRequest(url, context);
                     break;
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "Problem making the HTTP request.", e);
