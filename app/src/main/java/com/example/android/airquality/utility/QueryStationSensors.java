@@ -108,12 +108,12 @@ public class QueryStationSensors {
 
     /**
      * Adds new values from sensors to the List
-     * @param inputList list of sensors
+     * @param sensorList list of sensors
      * @return list of sensors with new measurement value and date
      */
-    private static List<Sensor> addDataToSensorList(List<Sensor> inputList, Context context) {
-        for (int i = 0; i < inputList.size(); i++) {
-            Sensor currentSensor = inputList.get(i);
+    private static List<Sensor> addDataToSensorList(List<Sensor> sensorList, Context context) {
+        for (int i = 0; i < sensorList.size(); i++) {
+            Sensor currentSensor = sensorList.get(i);
             int currentSensorId = currentSensor.getId();
             //create url to query based on sensor's id
             URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
@@ -134,9 +134,9 @@ public class QueryStationSensors {
             }
             //extract fields from jsonResponse and add data to Sensor object
             currentSensor = addValueAndDate(currentSensor, jsonResponse);
-            inputList.set(i, currentSensor);
+            sensorList.set(i, currentSensor);
         }
-        return inputList;
+        return sensorList;
     }
 
     /**
