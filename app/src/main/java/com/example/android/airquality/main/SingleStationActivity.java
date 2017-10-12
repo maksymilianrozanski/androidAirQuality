@@ -4,9 +4,12 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Sensor;
@@ -16,13 +19,16 @@ import com.example.android.airquality.vieweditors.SensorLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>> {
+public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>>{
 
     //id of loader, only matter when multiple loaders
     private static final int SENSOR_LOADER_ID = 2;
+    private static final String LOG_TAG = MainActivity.class.getName();
 
     //adapter for list of sensors
     private SensorAdapter sensorAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private LoaderManager loaderManager;
 
     Integer stationId;
     String stationName;
@@ -47,7 +53,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
 
         sensorListView.setAdapter(sensorAdapter);
 
-        LoaderManager loaderManager = getLoaderManager();
+        loaderManager = getLoaderManager();
 
         // Initialize the loader. Pass in the int ID constant defined above and pass in null for
         // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
@@ -55,6 +61,29 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         loaderManager.initLoader(SENSOR_LOADER_ID, null, this);
 
         //TODO: add option to reload data if loaded unsuccessfully, add loading of station name
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        reloadSensors();
+                        Log.v(LOG_TAG, "Inside setOnRefreshListener");
+                        if (swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void reloadSensors(){
+        if (MainActivity.isConnected(getApplicationContext())){
+            loaderManager.restartLoader(SENSOR_LOADER_ID, null, this);
+        }else {
+            Log.v("info", "No Internet connection");
+            Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
