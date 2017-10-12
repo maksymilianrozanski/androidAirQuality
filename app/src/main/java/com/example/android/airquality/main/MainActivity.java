@@ -5,7 +5,6 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //id of loader, only matter when multiple loaders
     private static final int STATION_LOADER_ID = 1;
+    private static final int MY_PERMISSION_REQUEST = 0;
 
     private StationAdapter stationAdapter;
 
@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void goToNearestStation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        int MY_PERMISSION_REQUEST = 0;
 
         askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
 
@@ -232,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 public void onSuccess(Location location) {
                     if (location != null) {
                         lastLocation = location;
-
                         double userLatitude = 0;
                         double userLongitude = 0;
                         try {
@@ -242,24 +240,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         } catch (NullPointerException e) {
                             Log.e(LOG_TAG, "Null pointer exception" + e);
                         }
-
                         for (Station station : stations) {
                             station.setDistanceFromUser(userLatitude, userLongitude);
                         }
                         Collections.sort(stations);
-
                         JSONArray jsonArray = QueryStationsList.passStationListToJSONArray(stations);
-
-                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("STATIONS", jsonArray.toString());
-                        editor.apply();
+                        QueryStationsList.saveStationsToSharedPreferences(jsonArray.toString(), getApplicationContext());
                         reloadStations();
                     }
                 }
             });
         } else {
-            askForLocationPermissionIfNoPermission(0);
+            askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
         }
     }
 }
