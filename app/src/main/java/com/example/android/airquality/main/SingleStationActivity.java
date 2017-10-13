@@ -33,7 +33,6 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
     Integer stationId;
     String stationName;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +59,6 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(SENSOR_LOADER_ID, null, this);
 
-        //TODO: add option to reload data if loaded unsuccessfully, add loading of station name
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -69,7 +66,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
                     public void onRefresh() {
                         reloadSensors();
                         Log.v(LOG_TAG, "Inside setOnRefreshListener");
-                        if (swipeRefreshLayout.isRefreshing()){
+                        if (swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);
                         }
                     }
@@ -77,10 +74,10 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         );
     }
 
-    private void reloadSensors(){
-        if (MainActivity.isConnected(getApplicationContext())){
+    private void reloadSensors() {
+        if (MainActivity.isConnected(getApplicationContext())) {
             loaderManager.restartLoader(SENSOR_LOADER_ID, null, this);
-        }else {
+        } else {
             Log.v("info", "No Internet connection");
             Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
         }
@@ -88,6 +85,8 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public Loader<List<Sensor>> onCreateLoader(int id, Bundle args) {
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
+        swipeRefreshLayout.setRefreshing(true);
         return new SensorLoader(this, stationId);
     }
 
@@ -99,6 +98,8 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         if (data != null && !data.isEmpty()) {
             sensorAdapter.addAll(data);
         }
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
