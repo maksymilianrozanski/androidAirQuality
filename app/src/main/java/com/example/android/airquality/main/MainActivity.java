@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -106,10 +107,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            reloadStations();
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
     public Loader<List<Station>> onCreateLoader(int id, Bundle args) {
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
+        swipeRefreshLayout.setRefreshing(true);
         //create a new loader for given URL
         return new StationLoader(this, URL_QUERY);
     }
@@ -125,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             stationAdapter.addAll(data);
             Log.v("Info", "Inside onLoaderFinished - after .addAll(data)");
         }
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
