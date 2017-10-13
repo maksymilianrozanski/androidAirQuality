@@ -59,7 +59,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(SENSOR_LOADER_ID, null, this);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshSingleStation);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -85,7 +85,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public Loader<List<Sensor>> onCreateLoader(int id, Bundle args) {
-        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshSingleStation);
         swipeRefreshLayout.setRefreshing(true);
         return new SensorLoader(this, stationId);
     }
@@ -98,7 +98,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         if (data != null && !data.isEmpty()) {
             sensorAdapter.addAll(data);
         }
-        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshsinglestation);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshSingleStation);
         swipeRefreshLayout.setRefreshing(false);
     }
 
