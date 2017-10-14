@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Sensor;
+import com.example.android.airquality.main.MainActivity;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 
 public class SensorAdapter extends ArrayAdapter<Sensor> {
-
+    private static final String LOG_TAG = MainActivity.class.getName();
     //map holding maximum acceptable concentrations of parameters
     private static final Map<String, Integer> MAX_CONCENTRATIONS;
 
@@ -95,7 +96,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
 
         //find TextView displaying percent of acceptable value, if exception: set "-" value
         TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
-        try {
+        try {   //TODO: replace with percentOfMaxValue here
             //calculate: value divided by max. acceptable value, multiplied by 100 (% symbol added later)
             double calculationResult = (currentSensor.getValue() / MAX_CONCENTRATIONS.get(sensorType) * 100);
             //add calculated value to TextView
@@ -112,6 +113,17 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             percentView.setText("-");
         }
         return listItemView;
+    }
+
+    public static double percentOfMaxValue(Sensor sensor) {
+        double percentOfMaxValue;
+        try {
+            percentOfMaxValue = (sensor.getValue() / MAX_CONCENTRATIONS.get(sensor.getParam())*100);
+        } catch (NumberFormatException e) {
+            Log.e(LOG_TAG, "Number format exception " + e);
+            throw e;
+        }
+        return percentOfMaxValue;
     }
 
     /**
