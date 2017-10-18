@@ -1,4 +1,4 @@
-package layout;
+package com.example.android.airquality.layout;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -37,10 +37,10 @@ public class NewAppWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
 
-        Intent msgIntent = new Intent(context, NewAppWidget.class);
+        Intent msgIntent = new Intent(context, WidgetUpdateService.class);
         msgIntent.setAction(MY_ACTION);
         msgIntent.putExtra(WidgetUpdateService.PARAM_IN_MSG, "Example text from widget");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, msgIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, msgIntent, 0);
         views.setOnClickPendingIntent(R.id.widgetStationName, pendingIntent);
 
 
@@ -98,15 +98,17 @@ public class NewAppWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
 
-        if (intent.getAction().equals(MY_ACTION)) {
-            Log.v("LOG", "Inside onReceive");
+        Log.v("LOG", "Inside onReceive");
+        Log.v("LOG", "intent.getAction: " + intent.getAction());
+        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
+
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
             String textFromIntent = intent.getStringExtra(WidgetUpdateService.PARAM_OUT_MSG);
             views.setTextViewText(R.id.widgetStationName, textFromIntent);
             Log.v("LOG", "text from intent: " + textFromIntent);
         }
+        super.onReceive(context, intent);
     }
 }
 
