@@ -60,6 +60,8 @@ public class SingleStationWidget extends AppWidgetProvider {
             if (sensorFromIntent != null) {
                 views.setTextViewText(R.id.widgetStationName, stationName);
                 String highestPercentValue = String.format("%.0f", SensorAdapter.percentOfMaxValue(sensorFromIntent));
+                int colorOfValueBackground = SensorAdapter.chooseColorOfBackground(Double.parseDouble(highestPercentValue), context);
+                views.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
                 views.setTextViewText(R.id.widgetNameAndValueOfParam, sensorFromIntent.getParam() + ": " + highestPercentValue + "%");
                 views.setTextViewText(R.id.widgetUpdateDate, sensorFromIntent.getLastDate());
             }
