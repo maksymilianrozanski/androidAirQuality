@@ -21,13 +21,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.android.airquality.R.id.sensorType;
+
 /**
  * Created by Max on 19.08.2017.
  */
 
 public class SensorAdapter extends ArrayAdapter<Sensor> {
     private static final String LOG_TAG = MainActivity.class.getName();
-    //map holding maximum acceptable concentrations of parameters
     private static final Map<String, Integer> MAX_CONCENTRATIONS;
 
     public SensorAdapter(@NonNull Context context, List<Sensor> sensors) {
@@ -45,14 +46,11 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
                     R.layout.sensor_list_item, parent, false);
         }
 
-        //find sensor at position on the list
         Sensor currentSensor = getItem(position);
 
-        //find TextView that display param that sensor measure
-        TextView sensorTypeView = (TextView) listItemView.findViewById(R.id.sensorType);
+        TextView sensorTypeView = (TextView) listItemView.findViewById(sensorType);
         String sensorType;
 
-        //check if sensorType in not null, add sensorType to TextView
         try {
             sensorType = currentSensor.getParam();
         } catch (NullPointerException e) {
@@ -60,33 +58,11 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
         sensorTypeView.setText(sensorType);
 
-        //find TextView that display value of measured param
         TextView paramValueView = (TextView) listItemView.findViewById(R.id.paramValue);
-        double paramValue;
+        setParamValueViewText(paramValueView, currentSensor);
 
-        //check if paramValue is not null, add value to TextView
-        try {
-            paramValue = currentSensor.getValue();
-        } catch (NullPointerException e) {
-            paramValue = 0;
-        }
-        String paramValueString = String.format("%.2f", paramValue);
-
-        //if sensorType is correctly loaded add units at the end of value string
-        if (!sensorType.equals("not specified")) {
-            String textToAdd = paramValueString;
-            //add maximum acceptable value
-            Integer maxValue = MAX_CONCENTRATIONS.get(sensorType);
-            textToAdd = textToAdd + "/" + maxValue + " μg/m³";
-            //add string to TextView
-            paramValueView.setText(textToAdd);
-        }
-
-        //find TextView that display date of measurement
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         String date;
-
-        //check if date is not null, add value to TextView
         try {
             date = currentSensor.getLastDate();
         } catch (NullPointerException e) {
@@ -94,25 +70,38 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
         dateView.setText(date);
 
-        //find TextView displaying percent of acceptable value, if exception: set "-" value
         TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
-        try {   //TODO: replace with percentOfMaxValue here
-            //calculate: value divided by max. acceptable value, multiplied by 100 (% symbol added later)
-            double calculationResult = (currentSensor.getValue() / MAX_CONCENTRATIONS.get(sensorType) * 100);
-            //add calculated value to TextView
+        try {
+            double calculationResult = percentOfMaxValue(currentSensor);
             percentView.setText(String.format("%.0f", calculationResult) + "%");
 
             //set color of percentView background, if exception above is thrown,
             // this part is skipped and background remains grey
             GradientDrawable percentViewBackground = (GradientDrawable) percentView.getBackground();
-            int chosenColor = chooseColorOfBackground(calculationResult);
-            Log.v("LogSensorAdapter", "calculation result value: " + calculationResult + "chosen color: " + chosenColor);
+            int chosenColor = chooseColorOfBackground(calculationResult, getContext());
             percentViewBackground.setColor(chosenColor);
 
         } catch (NullPointerException | NumberFormatException e) {
             percentView.setText("-");
         }
         return listItemView;
+    }
+
+    private void setParamValueViewText(TextView paramValueViewText, Sensor sensor){
+        double paramValue;
+        try {
+            paramValue = sensor.getValue();
+        } catch (NullPointerException e) {
+            paramValue = 0;
+        }
+        String paramValueString = String.format("%.2f", paramValue);
+        String sensorType = sensor.getParam();
+        if (!sensorType.equals("not specified")) {
+            String textToAdd = paramValueString;
+            Integer maxValue = MAX_CONCENTRATIONS.get(sensorType);
+            textToAdd = textToAdd + "/" + maxValue + " μg/m³";
+            paramValueViewText.setText(textToAdd);
+        }
     }
 
     public static double percentOfMaxValue(Sensor sensor) {
@@ -126,29 +115,23 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         return percentOfMaxValue;
     }
 
-    /**
-     * @param percentValue percent of maximum acceptable level of parameter
-     * @return return int color value based on percentValue
-     */
-    private int chooseColorOfBackground(double percentValue) {
+    public static int chooseColorOfBackground(double percentValue, Context context) {
         int percentValueInt = Integer.parseInt(String.format("%.0f", percentValue));
-        Log.v("inside choseColor..", "percentValue" + percentValueInt);
-        Log.v("log", String.valueOf(R.color.qualityColor1));
         if (percentValueInt <= 25) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor1);
+            return ContextCompat.getColor(context, R.color.qualityColor1);
         } else if (percentValueInt <= 50) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor2);
+            return ContextCompat.getColor(context, R.color.qualityColor2);
         } else if (percentValueInt <= 75) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor3);
+            return ContextCompat.getColor(context, R.color.qualityColor3);
         } else if (percentValueInt <= 100) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor4);
+            return ContextCompat.getColor(context, R.color.qualityColor4);
         } else if (percentValueInt <= 150) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor5);
+            return ContextCompat.getColor(context, R.color.qualityColor5);
         } else if (percentValueInt <= 300) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor6);
+            return ContextCompat.getColor(context, R.color.qualityColor6);
         } else if (percentValueInt <= 500) {
-            return ContextCompat.getColor(getContext(), R.color.qualityColor7);
-        } else return ContextCompat.getColor(getContext(), R.color.qualityColor8);
+            return ContextCompat.getColor(context, R.color.qualityColor7);
+        } else return ContextCompat.getColor(context, R.color.qualityColor8);
     }
 
 
