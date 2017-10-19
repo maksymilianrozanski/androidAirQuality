@@ -22,14 +22,14 @@ public class SingleStationWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
         views.setTextViewText(R.id.widgetStationName, "Text set from updateAppWidget");
 
         Intent intentSendToService = new Intent(context, WidgetUpdateService.class);
 
         intentSendToService.putExtra(WidgetUpdateService.PARAM_IN_MSG, "Example text from widget");
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, 0);
-        views.setOnClickPendingIntent(R.id.widgetStationName, pendingIntent);
+        views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -59,7 +59,7 @@ public class SingleStationWidget extends AppWidgetProvider {
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
             Sensor sensorFromIntent = intent.getParcelableExtra(WidgetUpdateService.OUTPUT_SENSOR);
             String stationName = intent.getStringExtra(WidgetUpdateService.OUTPUT_STATION_NAME);
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
             if (sensorFromIntent != null) {
                 views.setTextViewText(R.id.widgetStationName, stationName);
                 String highestPercentValue = String.format("%.0f", SensorAdapter.percentOfMaxValue(sensorFromIntent));
