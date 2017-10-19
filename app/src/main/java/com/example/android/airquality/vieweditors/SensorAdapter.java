@@ -57,24 +57,14 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             sensorType = "not specified";
         }
         sensorTypeView.setText(sensorType);
-
         setParamValueViewText(listItemView, currentSensor);
-
-        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-        String date;
-        try {
-            date = currentSensor.getLastDate();
-        } catch (NullPointerException e) {
-            date = "error occurred";
-        }
-        dateView.setText(date);
-
+        setDateViewText(listItemView, currentSensor);
         setPercentViewText(listItemView, currentSensor);
 
         return listItemView;
     }
 
-    private void setParamValueViewText(View listItemView, Sensor sensor){
+    private void setParamValueViewText(View listItemView, Sensor sensor) {
         TextView paramValueView = (TextView) listItemView.findViewById(R.id.paramValue);
         double paramValue;
         try {
@@ -91,7 +81,19 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             paramValueView.setText(textToAdd);
         }
     }
-    private void setPercentViewText(View listItemView, Sensor sensor){
+
+    private void setDateViewText(View listItemView, Sensor sensor) {
+        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
+        String date;
+        try {
+            date = sensor.getLastDate();
+        } catch (NullPointerException e) {
+            date = "error occurred";
+        }
+        dateView.setText(date);
+    }
+
+    private void setPercentViewText(View listItemView, Sensor sensor) {
         TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
         try {
             double calculationResult = percentOfMaxValue(sensor);
