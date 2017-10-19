@@ -48,20 +48,23 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
 
         Sensor currentSensor = getItem(position);
 
-        TextView sensorTypeView = (TextView) listItemView.findViewById(sensorType);
-        String sensorType;
-
-        try {
-            sensorType = currentSensor.getParam();
-        } catch (NullPointerException e) {
-            sensorType = "not specified";
-        }
-        sensorTypeView.setText(sensorType);
+        setSensorTypeViewText(listItemView, currentSensor);
         setParamValueViewText(listItemView, currentSensor);
         setDateViewText(listItemView, currentSensor);
         setPercentViewText(listItemView, currentSensor);
 
         return listItemView;
+    }
+
+    private void setSensorTypeViewText(View listItemView, Sensor sensor){
+        TextView sensorTypeView = (TextView) listItemView.findViewById(sensorType);
+        String sensorType;
+        try {
+            sensorType = sensor.getParam();
+        } catch (NullPointerException e) {
+            sensorType = "not specified";
+        }
+        sensorTypeView.setText(sensorType);
     }
 
     private void setParamValueViewText(View listItemView, Sensor sensor) {
