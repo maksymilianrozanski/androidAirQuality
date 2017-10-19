@@ -69,20 +69,8 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
         dateView.setText(date);
 
-        TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
-        try {
-            double calculationResult = percentOfMaxValue(currentSensor);
-            percentView.setText(String.format("%.0f", calculationResult) + "%");
+        setPercentViewText(listItemView, currentSensor);
 
-            //set color of percentView background, if exception above is thrown,
-            // this part is skipped and background remains grey
-            GradientDrawable percentViewBackground = (GradientDrawable) percentView.getBackground();
-            int chosenColor = chooseColorOfBackground(calculationResult, getContext());
-            percentViewBackground.setColor(chosenColor);
-
-        } catch (NullPointerException | NumberFormatException e) {
-            percentView.setText("-");
-        }
         return listItemView;
     }
 
@@ -101,6 +89,18 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             Integer maxValue = MAX_CONCENTRATIONS.get(sensorType);
             textToAdd = textToAdd + "/" + maxValue + " μg/m³";
             paramValueView.setText(textToAdd);
+        }
+    }
+    private void setPercentViewText(View listItemView, Sensor sensor){
+        TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
+        try {
+            double calculationResult = percentOfMaxValue(sensor);
+            percentView.setText(String.format("%.0f", calculationResult) + "%");
+            GradientDrawable percentViewBackground = (GradientDrawable) percentView.getBackground();
+            int chosenColor = chooseColorOfBackground(calculationResult, getContext());
+            percentViewBackground.setColor(chosenColor);
+        } catch (NullPointerException | NumberFormatException e) {
+            percentView.setText("-");
         }
     }
 
