@@ -17,7 +17,6 @@ public class WidgetUpdateService extends IntentService {
 
     public static final String PARAM_IN_MSG = "imsg";
     public static final String PARAM_OUT_MSG = "omsg";
-    public static final String ACTION_DATA_UPDATED = "com.example.android.airquality.app.ACTION_DATA_UPDATED";
 
     public WidgetUpdateService() {
         super(WidgetUpdateService.class.getName());

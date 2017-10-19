@@ -3,9 +3,9 @@ package com.example.android.airquality.layout;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -22,9 +22,6 @@ import java.util.List;
 public class NewAppWidget extends AppWidgetProvider {
 //TODO: add Loader...
 
-    private Loader cursorLoader;
-    private int LOADER_ID = 0;
-    public static final String ACTION_RESP = "com.mamlambo.intent.action.MESSAGE_PROCESSED";
     public static final String MY_ACTION = "myAction";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -36,6 +33,7 @@ public class NewAppWidget extends AppWidgetProvider {
 //        List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()), context);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+        views.setTextViewText(R.id.widgetStationName, "Text set from updateAppWidget");
 
         Intent msgIntent = new Intent(context, WidgetUpdateService.class);
         msgIntent.setAction(MY_ACTION);
@@ -102,11 +100,19 @@ public class NewAppWidget extends AppWidgetProvider {
         Log.v("LOG", "Inside onReceive");
         Log.v("LOG", "intent.getAction: " + intent.getAction());
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
+            String textFromIntent = intent.getStringExtra(WidgetUpdateService.PARAM_OUT_MSG);
+            Log.v("LOG", "text from intent: " + textFromIntent);
+
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-            String textFromIntent = intent.getStringExtra(WidgetUpdateService.PARAM_OUT_MSG);
+
+            ComponentName thisWidget = new ComponentName(context, NewAppWidget.class);
+
             views.setTextViewText(R.id.widgetStationName, textFromIntent);
-            Log.v("LOG", "text from intent: " + textFromIntent);
+
+            appWidgetManager.updateAppWidget(thisWidget, views);
+
         }
         super.onReceive(context, intent);
     }
