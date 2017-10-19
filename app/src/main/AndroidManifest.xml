@@ -21,10 +21,10 @@
         </activity>
         <activity android:name=".main.SingleStationActivity" />
 
-        <receiver android:name=".layout.NewAppWidget">
+        <receiver android:name=".layout.SingleStationWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
@@ -32,7 +32,9 @@
                 android:resource="@xml/new_app_widget_info" />
         </receiver>
 
-        <service android:enabled="true" android:name=".utility.WidgetUpdateService"/>
+        <service
+            android:name=".utility.WidgetUpdateService"
+            android:enabled="true" />
     </application>
 
 </manifest>
