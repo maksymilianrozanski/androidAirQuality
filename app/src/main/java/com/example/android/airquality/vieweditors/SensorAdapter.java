@@ -58,8 +58,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
         sensorTypeView.setText(sensorType);
 
-        TextView paramValueView = (TextView) listItemView.findViewById(R.id.paramValue);
-        setParamValueViewText(paramValueView, currentSensor);
+        setParamValueViewText(listItemView, currentSensor);
 
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         String date;
@@ -87,7 +86,8 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         return listItemView;
     }
 
-    private void setParamValueViewText(TextView paramValueViewText, Sensor sensor){
+    private void setParamValueViewText(View listItemView, Sensor sensor){
+        TextView paramValueView = (TextView) listItemView.findViewById(R.id.paramValue);
         double paramValue;
         try {
             paramValue = sensor.getValue();
@@ -100,7 +100,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             String textToAdd = paramValueString;
             Integer maxValue = MAX_CONCENTRATIONS.get(sensorType);
             textToAdd = textToAdd + "/" + maxValue + " μg/m³";
-            paramValueViewText.setText(textToAdd);
+            paramValueView.setText(textToAdd);
         }
     }
 
