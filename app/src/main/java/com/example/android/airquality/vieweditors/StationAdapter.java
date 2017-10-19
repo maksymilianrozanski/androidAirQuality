@@ -33,26 +33,32 @@ public class StationAdapter extends ArrayAdapter<Station> {
                     R.layout.station_list_item, parent, false);
         }
 
-        //find station at position on the list
         Station currentStation = getItem(position);
+        setStationNameViewText(listItemView, currentStation);
+        setCityNameViewText(listItemView, currentStation);
+        return listItemView;
+    }
 
-        //set station name in TextView
+    private void setStationNameViewText(View listItemView, Station station){
         TextView stationNameView = (TextView) listItemView.findViewById(R.id.stationname);
         String stationName;
-        //check if stationName is not null
         try {
-            stationName = currentStation.getName();
+            stationName = station.getName();
         }catch (NullPointerException e){
             stationName = "not specified";
         }
         stationNameView.setText(stationName);
+    }
 
-        //set name of the city in TextView
+    private void setCityNameViewText(View listItemView, Station station){
         TextView cityNameView = (TextView) listItemView.findViewById(R.id.cityname);
-        String cityName = currentStation.getCityName();
+        String cityName;
+        try {
+            cityName = station.getCityName();
+        }catch (NullPointerException e){
+            cityName = "not specified";
+        }
         cityNameView.setText(cityName);
-
-        return listItemView;
     }
 }
 
