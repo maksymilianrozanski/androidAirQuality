@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,10 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
 
     public SensorAdapter(@NonNull Context context, List<Sensor> sensors) {
         super(context, 0, sensors);
+    }
+
+    public static Map<String, Integer> getMaxConcentrations() {
+        return MAX_CONCENTRATIONS;
     }
 
     @NonNull
@@ -99,7 +102,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
     private void setPercentViewText(View listItemView, Sensor sensor) {
         TextView percentView = (TextView) listItemView.findViewById(R.id.percentValue);
         try {
-            double calculationResult = percentOfMaxValue(sensor);
+            double calculationResult = sensor.percentOfMaxValue();
             percentView.setText(String.format("%.0f", calculationResult) + "%");
             GradientDrawable percentViewBackground = (GradientDrawable) percentView.getBackground();
             int chosenColor = chooseColorOfBackground(calculationResult, getContext());
@@ -107,17 +110,6 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         } catch (NullPointerException | NumberFormatException e) {
             percentView.setText("-");
         }
-    }
-
-    public static double percentOfMaxValue(Sensor sensor) {
-        double percentOfMaxValue;
-        try {
-            percentOfMaxValue = (sensor.getValue() / MAX_CONCENTRATIONS.get(sensor.getParam())*100);
-        } catch (NumberFormatException e) {
-            Log.e(LOG_TAG, "Number format exception " + e);
-            throw e;
-        }
-        return percentOfMaxValue;
     }
 
     public static int chooseColorOfBackground(double percentValue, Context context) {

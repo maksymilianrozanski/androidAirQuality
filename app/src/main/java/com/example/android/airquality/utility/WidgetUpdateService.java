@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.layout.SingleStationWidget;
-import com.example.android.airquality.vieweditors.SensorAdapter;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class WidgetUpdateService extends IntentService {
         double highestValue = Double.MIN_VALUE;
         Sensor sensorHighestCalculatedValue = sensors.get(0);
         for (int i = 1 ; i < sensors.size(); i++){
-            double calculatedValue = SensorAdapter.percentOfMaxValue(sensors.get(i));
+            double calculatedValue = sensors.get(i).percentOfMaxValue();
             if (calculatedValue > highestValue){
                 highestValue = calculatedValue;
                 sensorHighestCalculatedValue = sensors.get(i);

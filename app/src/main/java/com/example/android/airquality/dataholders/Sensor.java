@@ -2,6 +2,10 @@ package com.example.android.airquality.dataholders;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.example.android.airquality.main.MainActivity;
+import com.example.android.airquality.vieweditors.SensorAdapter;
 
 /**
  * Created by Max on 18.08.2017.
@@ -13,6 +17,7 @@ public class Sensor implements Parcelable {
     private String param;
     private double value;
     private String lastDate;
+    private static final String LOG_TAG = MainActivity.class.getName();
 
     public Sensor(int id, String param) {
         this.id = id;
@@ -88,4 +93,15 @@ public class Sensor implements Parcelable {
             return new Sensor[size];
         }
     };
+
+    public double percentOfMaxValue() {
+        double percentValue;
+        try {
+            percentValue = (this.getValue() / SensorAdapter.getMaxConcentrations().get(this.getParam()) * 100);
+        } catch (NumberFormatException e) {
+            Log.e(LOG_TAG, "NumberFormatException " + e);
+            throw e;
+        }
+        return percentValue;
+    }
 }
