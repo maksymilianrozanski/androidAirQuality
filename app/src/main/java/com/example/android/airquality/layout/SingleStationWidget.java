@@ -26,7 +26,7 @@ public class SingleStationWidget extends AppWidgetProvider {
 
         Intent intentSendToService = new Intent(context, WidgetUpdateService.class);
 
-        intentSendToService.putExtra(WidgetUpdateService.PARAM_IN_MSG, "Example text from widget");
+        intentSendToService.putExtra(WidgetUpdateService.REQUESTED_STATION_INDEX, 0);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, 0);
         views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
 
