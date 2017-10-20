@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/singleStationWidgetLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,28 +10,26 @@
         android:id="@+id/widgetStationName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:text="Station name"
         android:textColor="#000000"
         android:textSize="12sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/widgetNameAndValueOfParam"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="No data"
         android:textColor="#000000"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/widgetUpdateDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
         android:text=" "
         android:textColor="#000000"
         android:textSize="8sp" />
 
-</RelativeLayout>
+</LinearLayout>
