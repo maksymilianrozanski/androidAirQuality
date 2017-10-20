@@ -63,13 +63,18 @@ public class SingleStationWidget extends AppWidgetProvider {
                 int colorOfValueBackground = SensorAdapter.chooseColorOfBackground(Double.parseDouble(highestPercentValue), context);
                 views.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
                 views.setTextViewText(R.id.widgetNameAndValueOfParam, sensorFromIntent.getParam() + ": " + highestPercentValue + "%");
-                views.setTextViewText(R.id.widgetUpdateDate, sensorFromIntent.getLastDate());
+                views.setTextViewText(R.id.widgetUpdateDate, removeSecondsFromDate(sensorFromIntent.getLastDate()));
             }
             ComponentName thisWidget = new ComponentName(context, SingleStationWidget.class);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             appWidgetManager.updateAppWidget(thisWidget, views);
         }
         super.onReceive(context, intent);
+    }
+
+    private String removeSecondsFromDate(String notFormattedDate) {
+        int notFormattedDateLength = notFormattedDate.length();
+        return notFormattedDate.substring(0, notFormattedDateLength - 3);
     }
 }
 
