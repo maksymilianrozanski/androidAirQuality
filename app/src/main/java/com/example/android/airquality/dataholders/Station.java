@@ -1,5 +1,7 @@
 package com.example.android.airquality.dataholders;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.example.android.airquality.utility.NearestStationFinder;
@@ -8,7 +10,7 @@ import com.example.android.airquality.utility.NearestStationFinder;
  * Created by Max on 16.08.2017.
  */
 
-public class Station implements Comparable<Station>{
+public class Station implements Comparable<Station>, Parcelable {
 
     private String id;
     private String name;
@@ -89,8 +91,49 @@ public class Station implements Comparable<Station>{
 
     @Override
     public int compareTo(@NonNull Station station) {
-        if (station.getDistanceFromUser() < this.getDistanceFromUser()){
+        if (station.getDistanceFromUser() < this.getDistanceFromUser()) {
             return 1;
-        }else return -1;
+        } else return -1;
     }
+
+    private Station(Parcel in) {
+        String[] data = new String[7];
+        in.readStringArray(data);
+        this.id = data[0];
+        this.name = data[1];
+        this.gegrLat = data[2];
+        this.gegrLon = data[3];
+        this.cityId = data[4];
+        this.cityName = data[5];
+        this.distanceFromUser = Double.parseDouble(data[6]);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeStringArray(new String[]{
+                this.id,
+                this.name,
+                this.gegrLat,
+                this.gegrLon,
+                this.cityId,
+                this.cityName,
+                Double.toString(this.distanceFromUser)});
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        @Override
+        public Object createFromParcel(Parcel parcel) {
+            return new Station(parcel);
+        }
+
+        @Override
+        public Object[] newArray(int size) {
+            return new Station[size];
+        }
+    };
 }
