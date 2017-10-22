@@ -1,6 +1,5 @@
 package com.example.android.airquality.layout;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -24,50 +23,35 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int i = 0; i < appWidgetIds.length; ++i) {
-
-            // Set up the intent that starts the StackViewService, which will
-            // provide the views for this collection.
-            Intent intent = new Intent(context, ScrollableWidgetService.class);
-            // Add the app widget ID to the intent extras.
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            // Instantiate the RemoteViews object for the app widget layout.
-            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.multiple_station_listview);
-            // Set up the RemoteViews object to use a RemoteViews adapter.
-            // This adapter connects
-            // to a RemoteViewsService  through the specified intent.
-            // This is how you populate the data.
-            rv.setRemoteAdapter(R.id.multiple_station_list_item, intent);
-
-            // The empty view is displayed when the collection has no items.
-            // It should be in the same layout used to instantiate the RemoteViews
-            // object above.
-            rv.setEmptyView(R.id.multiple_station_list_item, R.id.empty_view);
-
-
-            //
-            // Do additional processing specific to this app widget...
-            //
-            // This section makes it possible for items to have individualized behavior.
-            // It does this by setting up a pending intent template. Individuals items of a collection
-            // cannot set up their own pending intents. Instead, the collection as a whole sets
-            // up a pending intent template, and the individual items set a fillInIntent
-            // to create unique behavior on an item-by-item basis.
-            Intent toastIntent = new Intent(context, MultipleStationWidgetProvider.class);
-            // Set the action for the intent.
-            // When the user touches a particular view, it will have the effect of
-            // broadcasting TOAST_ACTION.
-            toastIntent.setAction(MultipleStationWidgetProvider.TOAST_ACTION);
-            toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, 0, toastIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setPendingIntentTemplate(R.id.widgetStationList, toastPendingIntent);
-
-            appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
+            RemoteViews remoteViews = updateWidgetListView(context,
+                    appWidgetIds[i]);
+            appWidgetManager.updateAppWidget(appWidgetIds[i],
+                    remoteViews);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
+
+    private RemoteViews updateWidgetListView(Context context, int appWidgetId) {
+        //which layout to show on widget
+        RemoteViews remoteViews = new RemoteViews(
+                context.getPackageName(), R.layout.multiple_station_listview);
+
+        //RemoteViews Service needed to provide adapter for ListView
+        Intent svcIntent = new Intent(context, ScrollableWidgetService.class);
+        //passing app widget id to that RemoteViews Service
+        svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        //setting a unique Uri to the intent
+        //don't know its purpose to me right now
+        svcIntent.setData(Uri.parse(
+                svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        //setting adapter to listview of the widget
+        remoteViews.setRemoteAdapter(appWidgetId, R.id.widgetStationList,
+                svcIntent);
+        //setting an empty view in case of no data
+        remoteViews.setEmptyView(R.id.widgetStationList, R.id.empty_view);
+        return remoteViews;
+    }
+
 
     @Override
     public void onEnabled(Context context) {

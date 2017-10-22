@@ -5,10 +5,29 @@ package com.example.android.airquality.layout;
  */
 
 class WidgetItem {
+    private String stationName,nameAndValueOfParam,updateDate;
 
-    int number;
+    String getStationName() {
+        return stationName;
+    }
 
-    public WidgetItem(int number) {
-        this.number = number;
+    void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
+
+    String getNameAndValueOfParam() {
+        return nameAndValueOfParam;
+    }
+
+    void setNameAndValueOfParam(String nameAndValueOfParam) {
+        this.nameAndValueOfParam = nameAndValueOfParam;
+    }
+
+    String getUpdateDate() {
+        return updateDate;
+    }
+
+    void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }
