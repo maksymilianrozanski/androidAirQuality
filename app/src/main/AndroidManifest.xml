@@ -26,15 +26,28 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/single_station_widget_info" />
         </receiver>
+        <receiver android:name=".layout.MultipleStationWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/multiple_station_widget_info" />
+        </receiver>
+
 
         <service
             android:name=".utility.WidgetUpdateService"
             android:enabled="true" />
+        <service android:name=".layout.ScrollableWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+
+        </service>
     </application>
 
 </manifest>
