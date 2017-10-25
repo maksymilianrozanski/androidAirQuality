@@ -10,7 +10,6 @@ import android.util.Log;
 import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.layout.SingleStationWidget;
-import com.example.android.airquality.main.MainActivity;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class WidgetUpdateService extends IntentService {
     public static final String REQUESTED_STATION_INDEX = "imsg";
     public static final String OUTPUT_SENSOR = "omsg";
     public static final String OUTPUT_STATION_NAME = "outputStationName";
-    private static final String LOG_TAG = MainActivity.class.getName();
+    private static final String LOG_TAG = WidgetUpdateService.class.getName();
 
     public WidgetUpdateService() {
         super(WidgetUpdateService.class.getName());
@@ -31,6 +30,7 @@ public class WidgetUpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        Log.v(LOG_TAG, "Inside onHandleIntent");
         int requestedStationIndex;
         try {
             requestedStationIndex = intent.getIntExtra(REQUESTED_STATION_INDEX, 0);

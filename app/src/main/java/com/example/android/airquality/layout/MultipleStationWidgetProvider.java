@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.example.android.airquality.R;
 
@@ -18,6 +17,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
     public static final String TOAST_ACTION = "com.example.android.airquality.TOAST_ACTION";
     public static final String EXTRA_ITEM = "com.example.android.airquality.EXTRA_ITEM";
+    public static final String DATA_FETCHED = "com.example.android.airquality.DATA_FETCHED";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -68,13 +68,15 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     // displays a Toast message for the current item.
     @Override
     public void onReceive(Context context, Intent intent) {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-        if (intent.getAction().equals(TOAST_ACTION)) {
-            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-            int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
-            Toast.makeText(context, "Touched view " + viewIndex, Toast.LENGTH_SHORT).show();
-        }
         super.onReceive(context, intent);
+        if (intent.getAction().equals(DATA_FETCHED)) {
+            int appWidgetId = intent.getIntExtra(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            AppWidgetManager appWidgetManager = AppWidgetManager
+                    .getInstance(context);
+            RemoteViews remoteViews = updateWidgetListView(context, appWidgetId);
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        }
     }
 }

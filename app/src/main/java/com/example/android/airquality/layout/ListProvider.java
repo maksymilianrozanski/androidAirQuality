@@ -21,22 +21,25 @@ class ListProvider implements
 //    private List<WidgetItem> mWidgetItems = new ArrayList<WidgetItem>();
 
 
-    ListProvider(Context context, Intent intent) {
+    ListProvider(Context context, Intent intent, ArrayList<WidgetItem> listItems) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        populateListItem();
+        if (listItems!=null){
+            this.listItemList = (ArrayList<WidgetItem>) listItems.clone();
+        }
+//        populateListItem();
     }
 
-    private void populateListItem() {
-        for (int i = 0; i < 10; i++) {
-            WidgetItem widgetListItem = new WidgetItem();
-            widgetListItem.setStationName("Station name..." + i);
-            widgetListItem.setNameAndValueOfParam("example param 100%");
-            widgetListItem.setUpdateDate("2100-10-10");
-            listItemList.add(widgetListItem);
-        }
-    }
+//    private void populateListItem() {
+//        for (int i = 0; i < 10; i++) {
+//            WidgetItem widgetListItem = new WidgetItem();
+//            widgetListItem.setStationName("Station name..." + i);
+//            widgetListItem.setNameAndValueOfParam("example param 100%");
+//            widgetListItem.setUpdateDate("2100-10-10");
+//            listItemList.add(widgetListItem);
+//        }
+//    }
 
     @Override
     public int getCount () {
