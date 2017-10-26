@@ -50,13 +50,14 @@ public class MultipleStationWidgetUpdateService extends Service {
     }
 
     private void fetchDataFromWeb() {
+
+        long millisStart = System.currentTimeMillis();
         widgetItemList = new ArrayList<WidgetItem>();
         for (int i = 0; i < 5; i++ ){
             WidgetItem widgetItem = new WidgetItem();
             widgetItem.setStationName(getStationName(i));
             widgetItemList.add(widgetItem);
         }
-        //TODO: finish fetching data
 
         final AtomicReference<ArrayList<WidgetItem>> atomicList = new AtomicReference<>();
         atomicList.set(widgetItemList);
@@ -84,12 +85,15 @@ public class MultipleStationWidgetUpdateService extends Service {
         Log.e(LOG_TAG, "interrupted exception");
         }
 
+        long millisEnd = System.currentTimeMillis();
+        long operationTime = millisStart - millisEnd;
+        Log.v(LOG_TAG, "Time of operation in ms: " + String.valueOf(operationTime));
+
         Intent widgetUpdateIntent = new Intent();
         widgetUpdateIntent.setAction(MultipleStationWidgetProvider.DATA_FETCHED);
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 appWidgetId);
         sendBroadcast(widgetUpdateIntent);
-
         this.stopSelf();
     }
 
