@@ -51,16 +51,29 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     private void fetchDataFromWeb() {
         widgetItemList = new ArrayList<WidgetItem>();
-
-        String station0Name = getStationName(0);
+        for (int i = 0; i < 5; i++ ){
+            WidgetItem widgetItem = new WidgetItem();
+            widgetItem.setStationName(getStationName(i));
+            widgetItemList.add(widgetItem);
+        }
         //TODO: finish fetching data
 
-        final AtomicReference<Sensor> b = new AtomicReference<>();
+        final AtomicReference<ArrayList<WidgetItem>> atomicList = new AtomicReference<>();
+        atomicList.set(widgetItemList);
 
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                b.set(fetchSensorWithHighestPercentValue(getApplicationContext(), 0));
+                ArrayList<WidgetItem> tempList = (ArrayList<WidgetItem>) atomicList.get().clone();
+                for (int i = 0; i < tempList.size(); i++) {
+                    Sensor tempSensor = fetchSensorWithHighestPercentValue(getApplicationContext(), i);
+                    WidgetItem currentWidgetItem = tempList.get(i);
+                    String paramType = tempSensor.getParam();
+                    String paramValue = String.format("%.0f", tempSensor.getValue());
+                    currentWidgetItem.setNameAndValueOfParam(paramType + ": " + paramValue + "%");
+                    currentWidgetItem.setUpdateDate(removeSecondsFromDate(tempSensor.getLastDate()));
+                }
+                atomicList.set(tempList);
             }
         });
 
@@ -71,14 +84,6 @@ public class MultipleStationWidgetUpdateService extends Service {
         Log.e(LOG_TAG, "interrupted exception");
         }
 
-        Sensor tempSensor =  b.get();
-
-        Log.v(LOG_TAG, "tempSensor... "  + tempSensor.getParam());
-
-        widgetItemList.add(new WidgetItem(station0Name, tempSensor.getParam(), "1990"));
-        widgetItemList.add(new WidgetItem("example station2", "param2", "1290"));
-        widgetItemList.add(new WidgetItem("example station3", "param3", "1190"));
-
         Intent widgetUpdateIntent = new Intent();
         widgetUpdateIntent.setAction(MultipleStationWidgetProvider.DATA_FETCHED);
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -86,6 +91,11 @@ public class MultipleStationWidgetUpdateService extends Service {
         sendBroadcast(widgetUpdateIntent);
 
         this.stopSelf();
+    }
+
+    private String removeSecondsFromDate(String notFormattedDate) {
+        int notFormattedDateLength = notFormattedDate.length();
+        return notFormattedDate.substring(0, notFormattedDateLength - 3);
     }
 
     private String getStationName(int indexOnStationList){
