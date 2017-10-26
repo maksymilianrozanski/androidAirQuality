@@ -47,34 +47,8 @@ public class MultipleStationWidgetUpdateService extends Service {
     }
 
     private void fetchDataFromWeb() {
-
-        long millisStart = System.currentTimeMillis();
-        widgetItemList = new ArrayList<WidgetItem>();
-        for (int i = 0; i < 5; i++ ){
-            WidgetItem widgetItem = new WidgetItem();
-            widgetItem.setStationName(getStationName(i));
-            widgetItemList.add(widgetItem);
-        }
-
-        FetchWidgetItem[] threads = new FetchWidgetItem[widgetItemList.size()];
-
-        for (int i = 0 ; i < widgetItemList.size(); i++){
-            threads[i] = new FetchWidgetItem(i, getApplicationContext(), widgetItemList);
-            threads[i].start();
-        }
-
-
-        for(int i = 0; i < threads.length; i++){
-            try {
-                threads[i].join();
-            }catch (InterruptedException e){
-                Log.e(LOG_TAG, "Exception: " + e);
-            }
-        }
-
-        long millisEnd = System.currentTimeMillis();
-        long operationTime = millisEnd - millisStart;
-        Log.v(LOG_TAG, "Time of operation in ms: " + String.valueOf(operationTime));
+        widgetItemList = createWidgetItemListWithStationNames(5);
+        fetchSensorDataForWidgetItems(widgetItemList);
 
         Intent widgetUpdateIntent = new Intent();
         widgetUpdateIntent.setAction(MultipleStationWidgetProvider.DATA_FETCHED);
@@ -84,7 +58,34 @@ public class MultipleStationWidgetUpdateService extends Service {
         this.stopSelf();
     }
 
-    private String getStationName(int indexOnStationList){
+    private void fetchSensorDataForWidgetItems(ArrayList<WidgetItem> widgetItemList) {
+        FetchWidgetItem[] threads = new FetchWidgetItem[widgetItemList.size()];
+
+        for (int i = 0; i < widgetItemList.size(); i++) {
+            threads[i] = new FetchWidgetItem(i, getApplicationContext(), widgetItemList);
+            threads[i].start();
+        }
+
+        for (FetchWidgetItem thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                Log.e(LOG_TAG, "Exception: " + e);
+            }
+        }
+    }
+
+    private ArrayList<WidgetItem> createWidgetItemListWithStationNames(int numberOfStations) {
+        ArrayList<WidgetItem> widgetItemList = new ArrayList<>();
+        for (int i = 0; i < numberOfStations; i++) {
+            WidgetItem widgetItem = new WidgetItem();
+            widgetItem.setStationName(getStationName(i));
+            widgetItemList.add(widgetItem);
+        }
+        return widgetItemList;
+    }
+
+    private String getStationName(int indexOnStationList) {
         List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
         return stationList.get(indexOnStationList).getName();
     }

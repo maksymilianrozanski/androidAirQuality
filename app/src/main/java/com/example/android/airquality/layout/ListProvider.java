@@ -1,8 +1,6 @@
 package com.example.android.airquality.layout;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -13,33 +11,15 @@ import java.util.ArrayList;
 class ListProvider implements
         RemoteViewsService.RemoteViewsFactory {
 
-    private ArrayList<WidgetItem> listItemList = new ArrayList<WidgetItem>();
+    private ArrayList<WidgetItem> listItemList = new ArrayList<>();
     private Context context = null;
-    private int appWidgetId;
 
-//    private static final int mCount = 10;
-//    private List<WidgetItem> mWidgetItems = new ArrayList<WidgetItem>();
-
-
-    ListProvider(Context context, Intent intent, ArrayList<WidgetItem> listItems) {
+    ListProvider(Context context, ArrayList<WidgetItem> listItems) {
         this.context = context;
-        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID);
         if (listItems!=null){
             this.listItemList = (ArrayList<WidgetItem>) listItems.clone();
         }
-//        populateListItem();
     }
-
-//    private void populateListItem() {
-//        for (int i = 0; i < 10; i++) {
-//            WidgetItem widgetListItem = new WidgetItem();
-//            widgetListItem.setStationName("Station name..." + i);
-//            widgetListItem.setNameAndValueOfParam("example param 100%");
-//            widgetListItem.setUpdateDate("2100-10-10");
-//            listItemList.add(widgetListItem);
-//        }
-//    }
 
     @Override
     public int getCount () {
@@ -81,12 +61,7 @@ class ListProvider implements
     // Initialize the data set.
     @Override
     public void onCreate() {
-//        // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
-//        // for example downloading or creating content etc, should be deferred to onDataSetChanged()
-//        // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
-//        for (int i = 0; i < mCount; i++) {
-//            mWidgetItems.add(new WidgetItem(i + 1));
-//        }
+
     }
 
     @Override
