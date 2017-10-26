@@ -5,6 +5,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.vieweditors.SensorAdapter;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,13 @@ class ListProvider implements
 
         rv.setTextViewText(R.id.widgetStationName, widgetItem.getStationName());
         rv.setTextViewText(R.id.widgetNameAndValueOfParam, widgetItem.getNameAndValueOfParam());
+
+        int colorOfValueBackground = SensorAdapter.chooseColorOfBackground
+                (cutStringToDoublePercentValue(widgetItem.getNameAndValueOfParam()), context);
+        rv.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
+
+
         return rv;
 //        // Next, set a fill-intent, which will be used to fill in the pending intent template
 //        // that is set on the collection view in StackWidgetProvider.
@@ -56,6 +63,13 @@ class ListProvider implements
 //        // action of a given item
 //        rv.setOnClickFillInIntent(R.id.multiple_station_list_item, fillInIntent);
 
+    }
+
+    private double cutStringToDoublePercentValue(String nameAndValueOfParam) {
+        String parts[] = nameAndValueOfParam.split(" ");
+        String secondPart = parts[1];
+        String percentValue = secondPart.substring(0, secondPart.length() - 1);
+        return Double.parseDouble(percentValue);
     }
 
     // Initialize the data set.
