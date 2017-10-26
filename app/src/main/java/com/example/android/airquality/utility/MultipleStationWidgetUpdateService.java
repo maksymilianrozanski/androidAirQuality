@@ -2,13 +2,11 @@ package com.example.android.airquality.utility;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.layout.MultipleStationWidgetProvider;
 import com.example.android.airquality.layout.WidgetItem;
@@ -86,34 +84,8 @@ public class MultipleStationWidgetUpdateService extends Service {
         this.stopSelf();
     }
 
-    private String removeSecondsFromDate(String notFormattedDate) {
-        int notFormattedDateLength = notFormattedDate.length();
-        return notFormattedDate.substring(0, notFormattedDateLength - 3);
-    }
-
     private String getStationName(int indexOnStationList){
         List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
         return stationList.get(indexOnStationList).getName();
-    }
-
-    private Sensor fetchSensorWithHighestPercentValue(Context context, int stationIndex) {
-        List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(context);
-        Station station = stationList.get(stationIndex);
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()), context);
-        return getSensorWithHighestValue(sensors);
-    }
-
-    private Sensor getSensorWithHighestValue(List<Sensor> sensors){
-        if (sensors.size() == 1) return sensors.get(0);
-        double highestValue = Double.MIN_VALUE;
-        Sensor sensorHighestCalculatedValue = sensors.get(0);
-        for (int i = 1 ; i < sensors.size(); i++){
-            double calculatedValue = sensors.get(i).percentOfMaxValue();
-            if (calculatedValue > highestValue){
-                highestValue = calculatedValue;
-                sensorHighestCalculatedValue = sensors.get(i);
-            }
-        }
-        return sensorHighestCalculatedValue;
     }
 }
