@@ -15,7 +15,6 @@ import com.example.android.airquality.layout.WidgetItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Max on 23.09.2017.
@@ -59,34 +58,24 @@ public class MultipleStationWidgetUpdateService extends Service {
             widgetItemList.add(widgetItem);
         }
 
-        final AtomicReference<ArrayList<WidgetItem>> atomicList = new AtomicReference<>();
-        atomicList.set(widgetItemList);
+        FetchWidgetItem[] threads = new FetchWidgetItem[widgetItemList.size()];
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<WidgetItem> tempList = (ArrayList<WidgetItem>) atomicList.get().clone();
-                for (int i = 0; i < tempList.size(); i++) {
-                    Sensor tempSensor = fetchSensorWithHighestPercentValue(getApplicationContext(), i);
-                    WidgetItem currentWidgetItem = tempList.get(i);
-                    String paramType = tempSensor.getParam();
-                    String paramValue = String.format("%.0f", tempSensor.getValue());
-                    currentWidgetItem.setNameAndValueOfParam(paramType + ": " + paramValue + "%");
-                    currentWidgetItem.setUpdateDate(removeSecondsFromDate(tempSensor.getLastDate()));
-                }
-                atomicList.set(tempList);
+        for (int i = 0 ; i < widgetItemList.size(); i++){
+            threads[i] = new FetchWidgetItem(i, getApplicationContext(), widgetItemList);
+            threads[i].start();
+        }
+
+
+        for(int i = 0; i < threads.length; i++){
+            try {
+                threads[i].join();
+            }catch (InterruptedException e){
+                Log.e(LOG_TAG, "Exception: " + e);
             }
-        });
-
-        t.start();
-        try {
-            t.join();
-        }catch (InterruptedException e){
-        Log.e(LOG_TAG, "interrupted exception");
         }
 
         long millisEnd = System.currentTimeMillis();
-        long operationTime = millisStart - millisEnd;
+        long operationTime = millisEnd - millisStart;
         Log.v(LOG_TAG, "Time of operation in ms: " + String.valueOf(operationTime));
 
         Intent widgetUpdateIntent = new Intent();
