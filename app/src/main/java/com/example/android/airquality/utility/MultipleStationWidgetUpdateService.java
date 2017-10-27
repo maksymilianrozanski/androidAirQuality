@@ -105,6 +105,8 @@ public class MultipleStationWidgetUpdateService extends Service {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String widgetItemsAsJsonString = gson.toJson(widgetItemList);
+        editor.remove(LIST_TAG);
+        editor.apply();
         editor.putString(LIST_TAG, widgetItemsAsJsonString);
         editor.apply();
     }

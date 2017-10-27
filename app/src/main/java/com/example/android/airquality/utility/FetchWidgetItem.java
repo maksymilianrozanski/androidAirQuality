@@ -44,7 +44,7 @@ public class FetchWidgetItem extends Thread {
 
     private Sensor getSensorWithHighestValue(List<Sensor> sensors){
         if (sensors.size() == 1) return sensors.get(0);
-        double highestValue = Double.MIN_VALUE;
+        double highestValue = sensors.get(0).percentOfMaxValue();
         Sensor sensorHighestCalculatedValue = sensors.get(0);
         for (int i = 1; i < sensors.size(); i++) {
             double calculatedValue;
