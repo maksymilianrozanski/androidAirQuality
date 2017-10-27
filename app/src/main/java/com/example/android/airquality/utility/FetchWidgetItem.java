@@ -30,8 +30,8 @@ public class FetchWidgetItem extends Thread {
         Sensor tempSensor = fetchSensorWithHighestPercentValue(context, indexNumber);
         WidgetItem currentWidgetItem = widgetItems.get(indexNumber);
         String paramType = tempSensor.getParam();
-        String paramValue = String.format("%.0f", tempSensor.getValue());
-        currentWidgetItem.setNameAndValueOfParam(paramType + ": " + paramValue + "%");
+        String percentValue = String.format("%.0f", tempSensor.percentOfMaxValue());
+        currentWidgetItem.setNameAndValueOfParam(paramType + ": " + percentValue + "%");
         currentWidgetItem.setUpdateDate(removeSecondsFromDate(tempSensor.getLastDate()));
     }
 

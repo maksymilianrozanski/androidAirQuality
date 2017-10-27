@@ -1,5 +1,6 @@
 package com.example.android.airquality.layout;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
 
 /**
  * Created by Max on 20.10.2017.
@@ -15,8 +17,6 @@ import com.example.android.airquality.R;
 
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
-    public static final String TOAST_ACTION = "com.example.android.airquality.TOAST_ACTION";
-    public static final String EXTRA_ITEM = "com.example.android.airquality.EXTRA_ITEM";
     public static final String DATA_FETCHED = "com.example.android.airquality.DATA_FETCHED";
 
     @Override
@@ -35,6 +35,12 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         //which layout to show on widget
         RemoteViews remoteViews = new RemoteViews(
                 context.getPackageName(), R.layout.multiple_station_listview);
+
+        //TODO: wrap refreshing code into method
+        Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
+        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.multiple_station_temp_refresh, pendingIntent);
 
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, ScrollableWidgetService.class);
