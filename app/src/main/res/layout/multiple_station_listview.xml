@@ -10,7 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tap to refresh"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:background="@color/colorAccent"/>
     <ListView
         android:id="@+id/widgetStationList"
         android:layout_width="fill_parent"

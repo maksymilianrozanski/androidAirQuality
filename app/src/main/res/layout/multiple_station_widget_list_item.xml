@@ -5,12 +5,13 @@
     android:id="@+id/multiple_station_list_item">
         <TextView
             android:id="@+id/widgetStationName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Station name"
             android:textColor="#000000"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/noData"/>
 
         <TextView
             android:id="@+id/widgetNameAndValueOfParam"
@@ -22,10 +23,11 @@
 
         <TextView
             android:id="@+id/widgetUpdateDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text=" "
             android:textColor="#000000"
-            android:textSize="8sp" />
+            android:textSize="8sp"
+            android:background="@color/noData"/>
 </LinearLayout>
