@@ -19,7 +19,7 @@ public class FetchWidgetItem extends Thread {
     private Context context;
     private ArrayList<WidgetItem> widgetItems;
 
-    public FetchWidgetItem(int indexNumber, Context context, ArrayList<WidgetItem> widgetItems) {
+    FetchWidgetItem(int indexNumber, Context context, ArrayList<WidgetItem> widgetItems) {
         this.indexNumber = indexNumber;
         this.context = context;
         this.widgetItems = widgetItems;
@@ -46,9 +46,14 @@ public class FetchWidgetItem extends Thread {
         if (sensors.size() == 1) return sensors.get(0);
         double highestValue = Double.MIN_VALUE;
         Sensor sensorHighestCalculatedValue = sensors.get(0);
-        for (int i = 1 ; i < sensors.size(); i++){
-            double calculatedValue = sensors.get(i).percentOfMaxValue();
-            if (calculatedValue > highestValue){
+        for (int i = 1; i < sensors.size(); i++) {
+            double calculatedValue;
+            try {
+                calculatedValue = sensors.get(i).percentOfMaxValue();
+            } catch (NullPointerException e) {
+                calculatedValue = Double.MIN_VALUE;
+            }
+            if (calculatedValue > highestValue) {
                 highestValue = calculatedValue;
                 sensorHighestCalculatedValue = sensors.get(i);
             }

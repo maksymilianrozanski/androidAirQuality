@@ -25,6 +25,15 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         for (int i = 0; i < appWidgetIds.length; ++i) {
             RemoteViews remoteViews = updateWidgetListView(context,
                     appWidgetIds[i]);
+
+
+            //TODO: wrap refreshing code into method
+            Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
+            refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds[i]);
+            PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.multiple_station_temp_refresh, pendingIntent);
+
+
             appWidgetManager.updateAppWidget(appWidgetIds[i],
                     remoteViews);
         }
@@ -36,12 +45,6 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(
                 context.getPackageName(), R.layout.multiple_station_listview);
 
-        //TODO: wrap refreshing code into method
-        Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
-        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.multiple_station_temp_refresh, pendingIntent);
-
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, ScrollableWidgetService.class);
         //passing app widget id to that RemoteViews Service
@@ -51,7 +54,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         svcIntent.setData(Uri.parse(
                 svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
         //setting adapter to listview of the widget
-        remoteViews.setRemoteAdapter(appWidgetId, R.id.widgetStationList,
+        remoteViews.setRemoteAdapter(R.id.widgetStationList,
                 svcIntent);
         //setting an empty view in case of no data
         remoteViews.setEmptyView(R.id.widgetStationList, R.id.empty_view);

@@ -2,15 +2,20 @@ package com.example.android.airquality.utility;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Station;
-import com.example.android.airquality.layout.MultipleStationWidgetProvider;
 import com.example.android.airquality.layout.WidgetItem;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +25,18 @@ import java.util.List;
 
 public class MultipleStationWidgetUpdateService extends Service {
 
+    public static final String LIST_TAG = "com.example.android.airquality.widgetItemList";
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     private static final String LOG_TAG = MultipleStationWidgetUpdateService.class.getName();
-    private static ArrayList<WidgetItem> widgetItemList;
+    private static ArrayList<WidgetItem> widgetItemList = new ArrayList<>();
 
-    public static ArrayList<WidgetItem> getWidgetItemList() {
-        return widgetItemList;
+    public static ArrayList<WidgetItem> getWidgetItemListFromSharedPreferences(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(LIST_TAG, null);
+        Type listType = new TypeToken<ArrayList<WidgetItem>>() {}.getType();
+        return widgetItemList = gson.fromJson(json, listType);
     }
 
     @Nullable
@@ -49,9 +59,9 @@ public class MultipleStationWidgetUpdateService extends Service {
     private void fetchDataFromWeb() {
         widgetItemList = createWidgetItemListWithStationNames(5);
         fetchSensorDataForWidgetItems(widgetItemList);
-
+        saveWidgetItemList();
         Intent widgetUpdateIntent = new Intent();
-        widgetUpdateIntent.setAction(MultipleStationWidgetProvider.DATA_FETCHED);
+        widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 appWidgetId);
         sendBroadcast(widgetUpdateIntent);
@@ -88,5 +98,14 @@ public class MultipleStationWidgetUpdateService extends Service {
     private String getStationName(int indexOnStationList) {
         List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
         return stationList.get(indexOnStationList).getName();
+    }
+
+    private void saveWidgetItemList(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String widgetItemsAsJsonString = gson.toJson(widgetItemList);
+        editor.putString(LIST_TAG, widgetItemsAsJsonString);
+        editor.apply();
     }
 }
