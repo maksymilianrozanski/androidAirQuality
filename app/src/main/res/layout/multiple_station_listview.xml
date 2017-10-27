@@ -3,16 +3,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:orientation="vertical">
 
     <ListView
         android:id="@+id/widgetStationList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@null"
-        android:dividerHeight="0dp"
-        android:orientation="vertical" />
+        android:dividerHeight="2dp"
+        android:orientation="vertical"
+        android:layout_margin="2dp"/>
 
     <TextView
         android:id="@+id/empty_view"
