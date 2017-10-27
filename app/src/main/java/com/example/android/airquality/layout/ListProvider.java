@@ -5,6 +5,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
 import java.util.ArrayList;
@@ -17,13 +18,13 @@ class ListProvider implements
 
     ListProvider(Context context, ArrayList<WidgetItem> listItems) {
         this.context = context;
-        if (listItems!=null){
+        if (listItems != null) {
             this.listItemList = (ArrayList<WidgetItem>) listItems.clone();
         }
     }
 
     @Override
-    public int getCount () {
+    public int getCount() {
         return listItemList.size();
     }
 
@@ -80,7 +81,7 @@ class ListProvider implements
 
     @Override
     public void onDataSetChanged() {
-
+        listItemList = MultipleStationWidgetUpdateService.getWidgetItemListFromSharedPreferences(context);
     }
 
     @Override

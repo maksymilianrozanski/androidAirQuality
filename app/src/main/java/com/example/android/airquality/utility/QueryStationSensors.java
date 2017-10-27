@@ -157,7 +157,11 @@ public class QueryStationSensors {
                 }
             }
             inputSensor.setLastDate(date);
-            inputSensor.setValue(Double.parseDouble(value));
+            try {
+                inputSensor.setValue(Double.parseDouble(value));
+            } catch (NumberFormatException f) {
+                inputSensor.setValue(0);
+            }
         } catch (JSONException | NumberFormatException e) {
             Log.e(LOG_TAG, "Error occurred", e);
         }
