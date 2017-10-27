@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "com.example.android.airquality"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -37,17 +37,17 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.0.2'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.shamanland:xdroid-toaster:0.2.4'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:26.0.2'
-    compile 'com.google.android.gms:play-services-location:11.4.0'
-    compile 'com.android.support:mediarouter-v7:26.0.2'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.google.android.gms:play-services-location:11.4.2'
+    compile 'com.android.support:mediarouter-v7:26.1.0'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
     // Optional -- Mockito framework
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.mockito:mockito-core:2.8.9'
 }
