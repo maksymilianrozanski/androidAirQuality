@@ -9,7 +9,7 @@
         android:id="@+id/widgetStationList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/multiple_station_temp_refresh"
+        android:layout_above="@id/multiple_station_refresh"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
@@ -29,8 +29,8 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/multiple_station_temp_refresh"
-        android:layout_width="wrap_content"
+        android:id="@+id/multiple_station_refresh"
+        android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_background_rounded_corners"

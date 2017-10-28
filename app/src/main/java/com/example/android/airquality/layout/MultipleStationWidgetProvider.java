@@ -39,7 +39,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.multiple_station_temp_refresh, pendingIntent);
+        remoteViews.setOnClickPendingIntent(R.id.multiple_station_refresh, pendingIntent);
     }
 
     private RemoteViews updateWidgetListView(Context context, int appWidgetId) {
