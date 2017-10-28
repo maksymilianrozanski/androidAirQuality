@@ -21,11 +21,8 @@ import java.util.List;
 
 public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>>{
 
-    //id of loader, only matter when multiple loaders
     private static final int SENSOR_LOADER_ID = 2;
     private static final String LOG_TAG = MainActivity.class.getName();
-
-    //adapter for list of sensors
     private SensorAdapter sensorAdapter;
     private LoaderManager loaderManager;
 
@@ -52,10 +49,6 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         sensorListView.setAdapter(sensorAdapter);
 
         loaderManager = getLoaderManager();
-
-        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
-        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-        // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(SENSOR_LOADER_ID, null, this);
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshSingleStation);
