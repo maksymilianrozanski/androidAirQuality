@@ -28,13 +28,13 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <TextView
+    <Button
         android:id="@+id/multiple_station_temp_refresh"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorAccent"
-        android:text="Tap to refresh"
-        android:textSize="12sp" />
+        android:background="@drawable/button_background_rounded_corners"
+        android:text="refresh"
+        android:textSize="12sp"/>
 
 </RelativeLayout>
