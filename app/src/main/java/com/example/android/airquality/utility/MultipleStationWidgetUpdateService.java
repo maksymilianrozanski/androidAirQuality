@@ -52,6 +52,7 @@ public class MultipleStationWidgetUpdateService extends Service {
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
+        QueryStationsList.sortStationsByDistance(getApplicationContext());
         fetchDataFromWeb();
         return super.onStartCommand(intent, flags, startId);
     }

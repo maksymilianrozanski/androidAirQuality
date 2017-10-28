@@ -1,11 +1,18 @@
 package com.example.android.airquality.utility;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Station;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import xdroid.toaster.Toaster;
@@ -43,7 +51,7 @@ public class QueryStationsList {
         String jsonResponse;
 
         //trying to get correct response from server up to 5 times
-        for (int j = 1; j < 6;) {
+        for (int j = 1; j < 6; ) {
             try {
                 jsonResponse = retryMakingHttpRequestIfException(url);
                 stations = extractFeatureFromJson(jsonResponse, context);
@@ -66,7 +74,7 @@ public class QueryStationsList {
         //extract fields from JSON response and create a list of Station objects
         try {
             stations = extractFeatureFromJson(jsonResponse, context);
-        }catch (JSONException e){
+        } catch (JSONException e) {
             Log.e(LOG_TAG, "Corrupted data loaded from SharedPreferences", e);
         }
         return stations;
@@ -82,13 +90,13 @@ public class QueryStationsList {
         return url;
     }
 
-    static String retryMakingHttpRequestIfException(URL url){
+    static String retryMakingHttpRequestIfException(URL url) {
         String jsonResponse;
-        for (int i = 0; i < 5; ){
+        for (int i = 0; i < 5; ) {
             try {
                 jsonResponse = makeHttpRequest(url);
                 return jsonResponse;
-            }catch (IOException e){
+            } catch (IOException e) {
                 i++;
             }
         }
@@ -97,7 +105,8 @@ public class QueryStationsList {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
-     * @param url                       url to query data from
+     *
+     * @param url url to query data from
      * @return String given from server
      * @throws IOException
      */
@@ -142,7 +151,7 @@ public class QueryStationsList {
         return jsonResponse;
     }
 
-    public static void saveStationsToSharedPreferences(String stations, Context context){
+    public static void saveStationsToSharedPreferences(String stations, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("STATIONS", stations);
@@ -168,7 +177,7 @@ public class QueryStationsList {
         return output.toString();
     }
 
-    private static List<Station> extractFeatureFromJson(String stationJSON, Context context) throws JSONException{
+    private static List<Station> extractFeatureFromJson(String stationJSON, Context context) throws JSONException {
         if (TextUtils.isEmpty(stationJSON)) {
             return null;
         }
@@ -224,7 +233,7 @@ public class QueryStationsList {
         return stations;
     }
 
-    private static void deleteStationsFromSharedPreferences(Context context){
+    private static void deleteStationsFromSharedPreferences(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("STATIONS", "");
@@ -233,6 +242,7 @@ public class QueryStationsList {
 
     /**
      * Check for null values and JSONException
+     *
      * @param jsonObject JSONObject from which String value is taken
      * @param jsonKey    Key in JSONObject - name of the value taken
      * @return String acquired form JSONObject, or "not specified" value if exception or null
@@ -273,4 +283,38 @@ public class QueryStationsList {
         }
         return jsonArray;
     }
+
+    public static void sortStationsByDistance(Context context) {
+        List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(context);
+        FusedLocationProviderClient fusedLocationProviderClient;
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        Location lastLocation = location;
+                        double userLatitude = 0;
+                        double userLongitude = 0;
+                        try {
+                            userLatitude = lastLocation.getLatitude();
+                            userLongitude = lastLocation.getLongitude();
+                            Log.v(LOG_TAG, "user latitude: " + userLatitude + "user longitude: " + userLongitude);
+                        } catch (NullPointerException e) {
+                            Log.e(LOG_TAG, "Null pointer exception" + e);
+                        }
+                        for (Station station : stations) {
+                            station.setDistanceFromUser(userLatitude, userLongitude);
+                        }
+                        Collections.sort(stations);
+                        JSONArray jsonArray = passStationListToJSONArray(stations);
+                        saveStationsToSharedPreferences(jsonArray.toString(), context);
+                    }
+                }
+            });
+        } else {
+            Toaster.toast("No location permission");
+        }
+    }
+
 }
