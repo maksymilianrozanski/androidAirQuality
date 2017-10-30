@@ -1,6 +1,7 @@
 package com.example.android.airquality.layout;
 
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.main.SingleStationActivity;
 import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
 
 /**
@@ -58,6 +60,11 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         //setting adapter to listview of the widget
         remoteViews.setRemoteAdapter(R.id.widgetStationList,
                 svcIntent);
+
+        Intent clickIntentTemplate = new Intent(context, SingleStationActivity.class);
+        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context).addNextIntentWithParentStack(clickIntentTemplate).getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setPendingIntentTemplate(R.id.widgetStationList, clickPendingIntentTemplate);
+
         //setting an empty view in case of no data
         remoteViews.setEmptyView(R.id.widgetStationList, R.id.empty_view);
         return remoteViews;

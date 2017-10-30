@@ -19,6 +19,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import xdroid.toaster.Toaster;
+
 /**
  * Created by Max on 23.09.2017.
  */
@@ -47,6 +49,7 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Toaster.toast("Inside Service - received intent");
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
             appWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -66,6 +69,7 @@ public class MultipleStationWidgetUpdateService extends Service {
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 appWidgetId);
         sendBroadcast(widgetUpdateIntent);
+        Toaster.toast("Inside Service - after sending Broadcast");
         this.stopSelf();
     }
 

@@ -1,6 +1,7 @@
 package com.example.android.airquality.layout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -52,6 +53,10 @@ class ListProvider implements
         rv.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
 
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtra("StationId", 400);    //TODO: add getting real stationId
+        fillInIntent.putExtra("StationName", widgetItem.getStationName());
+        rv.setOnClickFillInIntent(R.id.multiple_station_list_item, fillInIntent);
 
         return rv;
 //        // Next, set a fill-intent, which will be used to fill in the pending intent template
