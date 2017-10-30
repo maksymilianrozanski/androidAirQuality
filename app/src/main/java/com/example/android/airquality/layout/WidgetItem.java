@@ -5,7 +5,8 @@ package com.example.android.airquality.layout;
  */
 
 public class WidgetItem {
-    private String stationName,nameAndValueOfParam,updateDate;
+    private String stationName, nameAndValueOfParam, updateDate;
+    private int stationId;
 
     public WidgetItem() {
     }
@@ -16,7 +17,7 @@ public class WidgetItem {
         this.updateDate = updateDate;
     }
 
-    public String getStationName() {
+    String getStationName() {
         return stationName;
     }
 
@@ -24,7 +25,7 @@ public class WidgetItem {
         this.stationName = stationName;
     }
 
-    public String getNameAndValueOfParam() {
+    String getNameAndValueOfParam() {
         return nameAndValueOfParam;
     }
 
@@ -32,11 +33,19 @@ public class WidgetItem {
         this.nameAndValueOfParam = nameAndValueOfParam;
     }
 
-    public String getUpdateDate() {
+    String getUpdateDate() {
         return updateDate;
     }
 
     public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
+    }
+
+    int getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(int stationId) {
+        this.stationId = stationId;
     }
 }

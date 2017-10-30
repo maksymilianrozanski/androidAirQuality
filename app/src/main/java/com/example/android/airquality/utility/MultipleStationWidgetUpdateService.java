@@ -49,7 +49,7 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toaster.toast("Inside Service - received intent");
+        Toaster.toast("Fetching data...");
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
             appWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -69,7 +69,6 @@ public class MultipleStationWidgetUpdateService extends Service {
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 appWidgetId);
         sendBroadcast(widgetUpdateIntent);
-        Toaster.toast("Inside Service - after sending Broadcast");
         this.stopSelf();
     }
 
@@ -94,15 +93,17 @@ public class MultipleStationWidgetUpdateService extends Service {
         ArrayList<WidgetItem> widgetItemList = new ArrayList<>();
         for (int i = 0; i < numberOfStations; i++) {
             WidgetItem widgetItem = new WidgetItem();
-            widgetItem.setStationName(getStationName(i));
+            widgetItem.setStationId(Integer.parseInt(getStation(i).getId()));
+            widgetItem.setStationName(getStation(i).getName());
             widgetItemList.add(widgetItem);
         }
         return widgetItemList;
     }
 
-    private String getStationName(int indexOnStationList) {
-        List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
-        return stationList.get(indexOnStationList).getName();
+    private Station getStation(int indexOnStationList) {
+        List<Station> stationList = QueryStationsList
+                .fetchStationDataFromSharedPreferences(getApplicationContext());
+        return stationList.get(indexOnStationList);
     }
 
     private void saveWidgetItemList(){

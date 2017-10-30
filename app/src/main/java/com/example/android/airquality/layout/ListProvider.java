@@ -34,15 +34,10 @@ class ListProvider implements
         return position;
     }
 
-    // Given the position (index) of a WidgetItem in the array, use the item's text value in
-    // combination with the app widget item XML file to construct a RemoteViews object.
     @Override
     public RemoteViews getViewAt(int position) {
-        // position will always range from 0 to getCount() - 1.
-
-        // Construct a remote views item based on the app widget item XML file,
-        // and set the text based on the position.
-        final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.multiple_station_widget_list_item);
+        final RemoteViews rv = new RemoteViews
+                (context.getPackageName(), R.layout.multiple_station_widget_list_item);
         WidgetItem widgetItem = listItemList.get(position);
 
         rv.setTextViewText(R.id.widgetStationName, widgetItem.getStationName());
@@ -54,21 +49,11 @@ class ListProvider implements
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
 
         Intent fillInIntent = new Intent();
-        fillInIntent.putExtra("StationId", 400);    //TODO: add getting real stationId
+        fillInIntent.putExtra("StationId", widgetItem.getStationId());
         fillInIntent.putExtra("StationName", widgetItem.getStationName());
         rv.setOnClickFillInIntent(R.id.multiple_station_list_item, fillInIntent);
 
         return rv;
-//        // Next, set a fill-intent, which will be used to fill in the pending intent template
-//        // that is set on the collection view in StackWidgetProvider.
-//        Bundle extras = new Bundle();
-//        extras.putInt(MultipleStationWidgetProvider.EXTRA_ITEM, position);
-//        Intent fillInIntent = new Intent();
-//        fillInIntent.putExtras(extras);
-//        // Make it possible to distinguish the individual on-click
-//        // action of a given item
-//        rv.setOnClickFillInIntent(R.id.multiple_station_list_item, fillInIntent);
-
     }
 
     private double cutStringToDoublePercentValue(String nameAndValueOfParam) {
@@ -78,7 +63,6 @@ class ListProvider implements
         return Double.parseDouble(percentValue);
     }
 
-    // Initialize the data set.
     @Override
     public void onCreate() {
 
@@ -86,7 +70,8 @@ class ListProvider implements
 
     @Override
     public void onDataSetChanged() {
-        listItemList = MultipleStationWidgetUpdateService.getWidgetItemListFromSharedPreferences(context);
+        listItemList = MultipleStationWidgetUpdateService
+                .getWidgetItemListFromSharedPreferences(context);
     }
 
     @Override
