@@ -4,16 +4,8 @@ import com.example.android.airquality.dataholders.Station;
 
 import java.util.List;
 
-/**
- * Created by Max on 21.09.2017.
- */
-
 public class NearestStationFinder {
 
-    /**
-     * @param stations List of stations with location data (latitude and longitude)
-     * @return id of station which is located the closest to user's location
-     */
     public static Integer findNearestStation(double userLatitude, double userLongitude, List<Station> stations) {
         double userDistance = Double.MAX_VALUE;
         Integer closestStationId = null;
@@ -31,10 +23,6 @@ public class NearestStationFinder {
 
     /**
      * Calculate distance between user and station using Haversine method, height is omitted
-     * @param userLatitude     - user's position latitude
-     * @param userLongitude    - user's position longitude
-     * @param stationLatitude  - station's latitude
-     * @param stationLongitude - station's longitude
      * @return distance in meters
      */
     public static double calculateDistance(double userLatitude, double userLongitude,

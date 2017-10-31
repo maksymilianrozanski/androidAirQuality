@@ -13,9 +13,6 @@ import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.utility.WidgetUpdateService;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
-/**
- * Implementation of App Widget functionality.
- */
 public class SingleStationWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -35,21 +32,16 @@ public class SingleStationWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
+    public void onEnabled(Context context) {}
 
     @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-    }
+    public void onDisabled(Context context) {}
 
     @Override
     public void onReceive(Context context, Intent intent) {

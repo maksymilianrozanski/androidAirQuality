@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.layout.WidgetItem;
 import com.google.gson.Gson;
@@ -20,10 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xdroid.toaster.Toaster;
-
-/**
- * Created by Max on 23.09.2017.
- */
 
 public class MultipleStationWidgetUpdateService extends Service {
 
@@ -49,7 +46,7 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toaster.toast("Fetching data...");
+        Toaster.toast(getString(R.string.fetching_data));
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
             appWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,

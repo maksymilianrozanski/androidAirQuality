@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -32,10 +33,6 @@ import java.util.List;
 
 import xdroid.toaster.Toaster;
 
-/**
- * Created by Max on 16.08.2017.
- */
-
 public class QueryStationsList {
 
     private static final String LOG_TAG = QueryStationsList.class.getSimpleName();
@@ -45,9 +42,7 @@ public class QueryStationsList {
 
     public static List<Station> fetchStationData(String requestUrl, Context context) {
         List<Station> stations = null;
-
         URL url = createUrl(requestUrl);
-
         String jsonResponse;
 
         //trying to get correct response from server up to 5 times
@@ -71,7 +66,6 @@ public class QueryStationsList {
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         jsonResponse = sharedPreferences.getString("STATIONS", null);
 
-        //extract fields from JSON response and create a list of Station objects
         try {
             stations = extractFeatureFromJson(jsonResponse, context);
         } catch (JSONException e) {
@@ -103,17 +97,9 @@ public class QueryStationsList {
         return null;
     }
 
-    /**
-     * Make an HTTP request to the given URL and return a String as the response.
-     *
-     * @param url url to query data from
-     * @return String given from server
-     * @throws IOException
-     */
+
     private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
-
-        // If the URL is null, then return early.
         if (url == null) {
             return jsonResponse;
         }
@@ -121,8 +107,8 @@ public class QueryStationsList {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -156,13 +142,8 @@ public class QueryStationsList {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("STATIONS", stations);
         editor.apply();
-        Log.v(LOG_TAG, "Saved jsonResponse to SharedPreferences");
     }
 
-    /**
-     * Convert the {@link InputStream} into a String which contains the
-     * whole JSON response from the server.
-     */
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
@@ -184,53 +165,45 @@ public class QueryStationsList {
 
         List<Station> stations = new ArrayList<>();
 
-        // Try to parse the JSON response string. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
-            //Create a JSONArray from the JSON response string
-            //String is already in Array form
             JSONArray stationsArray = new JSONArray(stationJSON);
 
-            //for each station create a single Station object
             for (int i = 0; i < stationsArray.length(); i++) {
-                //get "i" element of stationsArray and cast to JSONObject
-                JSONObject currentObject = (JSONObject) stationsArray.get(i);
-
-                //declaration of station properties, pass data from JSONObject
-                String id = passJSONString(currentObject, "id");
-                String name = passJSONString(currentObject, "stationName");
-                String gegrLat = passJSONString(currentObject, "gegrLat");
-                String gegrLon = passJSONString(currentObject, "gegrLon");
-                String cityId;
-                String cityName;
-
-                //get city - JSONObject, if city object is null, pass "not specified" as data
-                try {
-                    if (currentObject.getJSONObject("city") != null) {
-                        JSONObject currentCity = currentObject.getJSONObject("city");
-                        cityId = passJSONString(currentCity, "id");
-                        cityName = passJSONString(currentCity, "name");
-                    } else {
-                        cityId = "not specified";
-                        cityName = "not specified";
-                    }
-                } catch (JSONException e) {
-                    cityId = "not specified";
-                    cityName = "not specified";
-                }
-                //create new Station object
-                Station station = new Station(id, name, gegrLat, gegrLon, cityId, cityName);
-                //add created Station object to stations List
-                stations.add(station);
+                stations.add(createStation(stationsArray, i));
             }
         } catch (JSONException e) {
             Log.e("QueryStationsList", "Problem parsing the JSON results", e);
             deleteStationsFromSharedPreferences(context);
-            Toaster.toast("An error occurred.");
+            Toaster.toast(R.string.error_occurred);
             throw e;
         }
         return stations;
+    }
+
+    private static Station createStation(JSONArray stations, int indexOfStation) throws JSONException{
+        JSONObject currentObject = (JSONObject) stations.get(indexOfStation);
+
+        String id = passJSONString(currentObject, "id");
+        String name = passJSONString(currentObject, "stationName");
+        String gegrLat = passJSONString(currentObject, "gegrLat");
+        String gegrLon = passJSONString(currentObject, "gegrLon");
+        String cityId;
+        String cityName;
+
+        try {
+            if (currentObject.getJSONObject("city") != null) {
+                JSONObject currentCity = currentObject.getJSONObject("city");
+                cityId = passJSONString(currentCity, "id");
+                cityName = passJSONString(currentCity, "name");
+            } else {
+                cityId = "not specified";
+                cityName = "not specified";
+            }
+        } catch (JSONException e) {
+            cityId = "not specified";
+            cityName = "not specified";
+        }
+        return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
     }
 
     private static void deleteStationsFromSharedPreferences(Context context) {
@@ -240,13 +213,6 @@ public class QueryStationsList {
         editor.apply();
     }
 
-    /**
-     * Check for null values and JSONException
-     *
-     * @param jsonObject JSONObject from which String value is taken
-     * @param jsonKey    Key in JSONObject - name of the value taken
-     * @return String acquired form JSONObject, or "not specified" value if exception or null
-     */
     static String passJSONString(JSONObject jsonObject, String jsonKey) {
         String stringToReturn;
         try {
@@ -284,7 +250,7 @@ public class QueryStationsList {
         return jsonArray;
     }
 
-    public static void sortStationsByDistance(Context context) {
+    static void sortStationsByDistance(Context context) {
         List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(context);
         FusedLocationProviderClient fusedLocationProviderClient;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
@@ -293,12 +259,11 @@ public class QueryStationsList {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
-                        Location lastLocation = location;
                         double userLatitude = 0;
                         double userLongitude = 0;
                         try {
-                            userLatitude = lastLocation.getLatitude();
-                            userLongitude = lastLocation.getLongitude();
+                            userLatitude = location.getLatitude();
+                            userLongitude = location.getLongitude();
                             Log.v(LOG_TAG, "user latitude: " + userLatitude + "user longitude: " + userLongitude);
                         } catch (NullPointerException e) {
                             Log.e(LOG_TAG, "Null pointer exception" + e);
@@ -313,7 +278,7 @@ public class QueryStationsList {
                 }
             });
         } else {
-            Toaster.toast("No location permission");
+            Toaster.toast(context.getString(R.string.no_location_permission));
         }
     }
 

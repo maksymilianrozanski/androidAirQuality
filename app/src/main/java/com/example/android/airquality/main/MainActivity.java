@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int MY_PERMISSION_REQUEST = 0;
 
     private StationAdapter stationAdapter;
-
     private Location lastLocation;
 
     LoaderManager loaderManager = getLoaderManager();
@@ -67,24 +66,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         stationAdapter = new StationAdapter(this, new ArrayList<Station>());
 
-        //set the adapter, the list can be populated in the user's interface
         stationListView.setAdapter(stationAdapter);
 
-        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
-        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-        // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
         //OnClickListener - redirects to SingleStationActivity
         stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //find station that was clicked
                 Station station = stationAdapter.getItem(position);
 
                 int currentStationId;
                 try {
-                    //get id of the station that was clicked
                     currentStationId = Integer.parseInt(station.getId());
                 } catch (NullPointerException e) {
                     currentStationId = 0;
@@ -92,15 +85,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 String currentStationName;
                 try {
-                    //get name of the station that was clicked
                     currentStationName = station.getName();
                 } catch (NullPointerException e) {
                     currentStationName = "";
                     Log.e(LOG_TAG, "Error when getting station.getName", e);
                 }
 
-                //create new intent, add current StationId and currentStationName as extra,
-                // start new activity
                 Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
                 intent.putExtra("StationId", currentStationId);
                 intent.putExtra("StationName", currentStationName);
@@ -121,20 +111,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<List<Station>> onCreateLoader(int id, Bundle args) {
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
         swipeRefreshLayout.setRefreshing(true);
-        //create a new loader for given URL
         return new StationLoader(this, URL_QUERY);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Station>> loader, List<Station> data) {
-        Log.v("Info", "Inside onLoaderFinished - start");
         stationAdapter.clear();
-        Log.v("Info", "Inside onLoaderFinished - after .clear");
-        //If there is valid list of stations add them to adapter's data set.
-        // This will trigger the ListView to update
         if (data != null && !data.isEmpty()) {
             stationAdapter.addAll(data);
-            Log.v("Info", "Inside onLoaderFinished - after .addAll(data)");
         }
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
         swipeRefreshLayout.setRefreshing(false);
@@ -142,15 +126,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
-        Log.v("Info", "Inside onLoaderReset - before .clear");
         stationAdapter.clear();
-        Log.v("Info", "Inside onLoaderReset - after .clear");
     }
 
     public static boolean isConnected(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetwork;
+        try {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }catch (NullPointerException e){
+            Log.e(LOG_TAG, "NullPointerException: " + e);
+            return false;
+        }
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         return isConnected;
@@ -183,11 +171,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void reloadStations() {
         if (isConnected(getApplicationContext())) {
-            Log.v("Info", "Connected to the internet");
             loaderManager.restartLoader(STATION_LOADER_ID, null, this);
         } else {
-            Log.v("info", "No Internet connection");
-            Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -196,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
 
-        //if app have permission - print location in log
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -217,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 }
                                 startActivity(intent);
                             } else {
-                                Log.v(LOG_TAG, "location == null");
+                                Log.e(LOG_TAG, "location == null");
                             }
                         }
                     });

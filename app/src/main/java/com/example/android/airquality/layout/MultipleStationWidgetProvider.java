@@ -14,13 +14,8 @@ import com.example.android.airquality.R;
 import com.example.android.airquality.main.SingleStationActivity;
 import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
 
-/**
- * Created by Max on 20.10.2017.
- */
 
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
-
-    public static final String DATA_FETCHED = "com.example.android.airquality.DATA_FETCHED";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -62,28 +57,22 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
                 svcIntent);
 
         Intent clickIntentTemplate = new Intent(context, SingleStationActivity.class);
-        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context).addNextIntentWithParentStack(clickIntentTemplate).getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(clickIntentTemplate).
+                        getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setPendingIntentTemplate(R.id.widgetStationList, clickPendingIntentTemplate);
 
-        //setting an empty view in case of no data
         remoteViews.setEmptyView(R.id.widgetStationList, R.id.empty_view);
         return remoteViews;
     }
 
 
     @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
+    public void onEnabled(Context context) {}
 
     @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-    }
+    public void onDisabled(Context context) {}
 
-    // Called when the BroadcastReceiver receives an Intent broadcast.
-    // Checks to see whether the intent's action is TOAST_ACTION. If it is, the app widget
-    // displays a Toast message for the current item.
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -102,7 +91,8 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     }
 
     private void notifyAdapter(Context context, AppWidgetManager appWidgetManager) {
-        ComponentName thisAppWidget = new ComponentName(context.getPackageName(), MultipleStationWidgetProvider.class.getName());
+        ComponentName thisAppWidget = new ComponentName
+                (context.getPackageName(), MultipleStationWidgetProvider.class.getName());
         int appWidgetIds[] = appWidgetManager.getAppWidgetIds(thisAppWidget);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetStationList);
     }

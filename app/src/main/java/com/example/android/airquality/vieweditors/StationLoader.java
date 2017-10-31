@@ -10,24 +10,11 @@ import com.example.android.airquality.utility.QueryStationsList;
 
 import java.util.List;
 
-/**
- * Created by Max on 16.08.2017.
- */
-
 public class StationLoader extends AsyncTaskLoader<List<Station>> {
 
-    //Tag for log messages
     private static final String LOG_TAG = StationLoader.class.getName();
-
-    //Query url
     private String url;
 
-
-    /**
-     * Constructs a new StationLoader
-     * @param context of the activity
-     * @param url     to load data from
-     */
     public StationLoader(Context context, String url) {
         super(context);
         this.url = url;
@@ -43,7 +30,6 @@ public class StationLoader extends AsyncTaskLoader<List<Station>> {
         if (url == null) {
             return null;
         }
-        Log.v(LOG_TAG, "Inside loadInBackground");
         //check if there is saved list of stations in SharedPreferences
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         String listOfStations = sharedPreferences.getString("STATIONS", "");

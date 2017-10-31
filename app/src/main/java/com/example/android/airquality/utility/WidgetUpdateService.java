@@ -13,10 +13,6 @@ import com.example.android.airquality.layout.SingleStationWidget;
 
 import java.util.List;
 
-/**
- * Created by Max on 23.09.2017.
- */
-
 public class WidgetUpdateService extends IntentService {
 
     public static final String REQUESTED_STATION_INDEX = "imsg";
@@ -30,7 +26,6 @@ public class WidgetUpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Log.v(LOG_TAG, "Inside onHandleIntent");
         int requestedStationIndex;
         try {
             requestedStationIndex = intent.getIntExtra(REQUESTED_STATION_INDEX, 0);

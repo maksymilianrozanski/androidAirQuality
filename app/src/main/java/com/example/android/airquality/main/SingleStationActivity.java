@@ -6,7 +6,6 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +56,6 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
                     @Override
                     public void onRefresh() {
                         reloadSensors();
-                        Log.v(LOG_TAG, "Inside setOnRefreshListener");
                         if (swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);
                         }
@@ -70,8 +68,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
         if (MainActivity.isConnected(getApplicationContext())) {
             loaderManager.restartLoader(SENSOR_LOADER_ID, null, this);
         } else {
-            Log.v("info", "No Internet connection");
-            Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 
