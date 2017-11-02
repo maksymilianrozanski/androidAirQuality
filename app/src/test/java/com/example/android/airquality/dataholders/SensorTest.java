@@ -62,13 +62,14 @@ public class SensorTest {
         assertTrue(expectedValue.equals(percentOfMaxValueString));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void percentOfMaxValueKeyNotInMap() throws Exception {
         Sensor sensor = new Sensor();
         sensor.setId(10);
         sensor.setValue(25);
         sensor.setParam("KeyNotInMap");
-        Double thisThrowsException = sensor.percentOfMaxValue();
+        Double value = sensor.percentOfMaxValue();
+        assertTrue(value == -1);
     }
 
 
