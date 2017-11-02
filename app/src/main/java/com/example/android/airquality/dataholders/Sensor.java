@@ -94,8 +94,9 @@ public class Sensor implements Parcelable {
         }
     };
 
-    public double percentOfMaxValue() {
+    public double percentOfMaxValue() throws NullPointerException{
         double percentValue;
+        throwExceptionIfKeyDoesntExist(this.getParam());
         try {
             percentValue = (this.getValue() / SensorAdapter.getMaxConcentrations().get(this.getParam()) * 100);
         } catch (NumberFormatException e) {
@@ -103,5 +104,12 @@ public class Sensor implements Parcelable {
             throw e;
         }
         return percentValue;
+    }
+
+    private void throwExceptionIfKeyDoesntExist(String key){
+        if (!SensorAdapter.getMaxConcentrations().containsKey(key)){
+            Log.e(LOG_TAG, "Key not found in map");
+            throw new NullPointerException("Key not found in map");
+        }
     }
 }

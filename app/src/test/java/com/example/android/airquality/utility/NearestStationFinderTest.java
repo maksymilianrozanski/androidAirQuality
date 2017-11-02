@@ -10,9 +10,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Max on 22.09.2017.
- */
 public class NearestStationFinderTest {
     private double userLatitude;
     private double userLongitude;
