@@ -71,6 +71,4 @@ public class SensorTest {
         Double value = sensor.percentOfMaxValue();
         assertTrue(value == -1);
     }
-
-
 }
