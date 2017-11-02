@@ -84,6 +84,10 @@ public class Station implements Comparable<Station>, Parcelable {
         return distanceFromUser;
     }
 
+    public void setDistanceFromUser(double distanceFromUser) {
+        this.distanceFromUser = distanceFromUser;
+    }
+
     public void setDistanceFromUser(double userLatitude, double userLongitude) {
         this.distanceFromUser = NearestStationFinder.calculateDistance(userLatitude, userLongitude,
                 Double.parseDouble(gegrLat), Double.parseDouble(gegrLon));

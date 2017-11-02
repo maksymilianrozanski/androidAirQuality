@@ -7,10 +7,6 @@ import android.util.Log;
 import com.example.android.airquality.main.MainActivity;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
-/**
- * Created by Max on 18.08.2017.
- */
-
 public class Sensor implements Parcelable {
 
     private int id;
@@ -94,22 +90,14 @@ public class Sensor implements Parcelable {
         }
     };
 
-    public double percentOfMaxValue() throws NullPointerException{
+    public double percentOfMaxValue(){
         double percentValue;
-        throwExceptionIfKeyDoesntExist(this.getParam());
         try {
             percentValue = (this.getValue() / SensorAdapter.getMaxConcentrations().get(this.getParam()) * 100);
-        } catch (NumberFormatException e) {
-            Log.e(LOG_TAG, "NumberFormatException " + e);
-            throw e;
+        } catch (NumberFormatException | NullPointerException e) {
+            Log.e(LOG_TAG, "exception: " + e);
+            return -1;
         }
         return percentValue;
-    }
-
-    private void throwExceptionIfKeyDoesntExist(String key){
-        if (!SensorAdapter.getMaxConcentrations().containsKey(key)){
-            Log.e(LOG_TAG, "Key not found in map");
-            throw new NullPointerException("Key not found in map");
-        }
     }
 }
