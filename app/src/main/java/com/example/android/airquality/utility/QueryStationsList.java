@@ -252,8 +252,7 @@ public class QueryStationsList {
 
     static void sortStationsByDistance(Context context) {
         List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(context);
-        FusedLocationProviderClient fusedLocationProviderClient;
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
