@@ -244,7 +244,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         Collections.sort(stations);
                         JSONArray jsonArray = QueryStationsList.passStationListToJSONArray(stations);
                         QueryStationsList.saveStationsToSharedPreferences(jsonArray.toString(), getApplicationContext());
-                        reloadStations();
+                        stationAdapter.clear();
+                        stationAdapter.addAll(stations);
                     }
                 }
             });
