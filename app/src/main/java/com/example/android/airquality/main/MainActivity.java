@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void goToNearestStation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
+        askForLocationPermissionIfNoPermission();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation()
@@ -209,11 +209,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    private boolean askForLocationPermissionIfNoPermission(int permissionNumber){
+    private boolean askForLocationPermissionIfNoPermission(){
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.v(LOG_TAG, "No permission, asking for permission");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, permissionNumber);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST);
             return false;
         }
         return true;
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             });
         } else {
-            askForLocationPermissionIfNoPermission(MY_PERMISSION_REQUEST);
+            askForLocationPermissionIfNoPermission();
         }
     }
 }
