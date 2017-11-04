@@ -2,13 +2,13 @@ package com.example.android.airquality.utility;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.layout.SingleStationWidget;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class WidgetUpdateService extends IntentService {
             Log.e(LOG_TAG, "No IntExtra in intent" + e);
         }
 
-        Sensor sensor = fetchSensorWithHighestPercentValue(getApplicationContext(), requestedStationIndex);
+        Sensor sensor = fetchSensorWithHighestPercentValue(requestedStationIndex);
 
         Intent intentSendBackToWidget = new Intent(this.getApplicationContext(), SingleStationWidget.class);
         intentSendBackToWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -44,14 +44,13 @@ public class WidgetUpdateService extends IntentService {
     }
 
     private String getStationName(int indexOnStationList){
-        List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
-        return stationList.get(indexOnStationList).getName();
+        return StationList.getStationListInstance(getApplicationContext()).getStation(indexOnStationList).getName();
     }
 
-    private Sensor fetchSensorWithHighestPercentValue(Context context, int stationIndex) {
-        List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(context);
+    private Sensor fetchSensorWithHighestPercentValue(int stationIndex) {
+        List<Station> stationList = StationList.getStationListInstance(getApplicationContext()).getStations();
         Station station = stationList.get(stationIndex);
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()), context);
+        List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()), getApplicationContext());
         return getSensorWithHighestValue(sensors);
     }
 

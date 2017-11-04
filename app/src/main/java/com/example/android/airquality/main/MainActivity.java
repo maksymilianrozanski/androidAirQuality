@@ -25,18 +25,15 @@ import android.widget.Toast;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.utility.NearestStationFinder;
-import com.example.android.airquality.utility.QueryStationsList;
 import com.example.android.airquality.vieweditors.StationAdapter;
 import com.example.android.airquality.vieweditors.StationLoader;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Station>> {
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ListView stationListView = (ListView) findViewById(R.id.list);
 
-        stationAdapter = new StationAdapter(this, new ArrayList<Station>());
+        stationAdapter = new StationAdapter(this, new ArrayList<>());
 
         stationListView.setAdapter(stationAdapter);
 
@@ -135,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo activeNetwork;
         try {
             activeNetwork = connectivityManager.getActiveNetworkInfo();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Log.e(LOG_TAG, "NullPointerException: " + e);
             return false;
         }
@@ -189,12 +186,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         public void onSuccess(Location location) {
                             if (location != null) {
 
-                                List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
-                                Integer nearestStationId = NearestStationFinder.findNearestStation(location.getLatitude(), location.getLongitude(), stations);
+                                StationList stations = StationList.getStationListInstance(getApplicationContext());
+
+
+                                Integer nearestStationId = NearestStationFinder.findNearestStation
+                                        (location.getLatitude(), location.getLongitude(), stations.getStations());
 
                                 Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
                                 intent.putExtra("StationId", nearestStationId);
-                                for (Station currentStation : stations) {
+                                for (Station currentStation : stations.getStations()) {
                                     if (Integer.parseInt(currentStation.getId()) == nearestStationId) {
                                         intent.putExtra("StationName", currentStation.getName());
                                         break;
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    private boolean askForLocationPermissionIfNoPermission(){
+    private boolean askForLocationPermissionIfNoPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.v(LOG_TAG, "No permission, asking for permission");
@@ -220,33 +220,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void sortStationsByDistance() {
-        List<Station> stations = QueryStationsList.fetchStationDataFromSharedPreferences(getApplicationContext());
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    if (location != null) {
-                        lastLocation = location;
-                        double userLatitude = 0;
-                        double userLongitude = 0;
-                        try {
-                            userLatitude = lastLocation.getLatitude();
-                            userLongitude = lastLocation.getLongitude();
-                            Log.v(LOG_TAG, "user latitude: " + userLatitude + "user longitude: " + userLongitude);
-                        } catch (NullPointerException e) {
-                            Log.e(LOG_TAG, "Null pointer exception" + e);
-                        }
-                        for (Station station : stations) {
-                            station.setDistanceFromUser(userLatitude, userLongitude);
-                        }
-                        Collections.sort(stations);
-                        JSONArray jsonArray = QueryStationsList.passStationListToJSONArray(stations);
-                        QueryStationsList.saveStationsToSharedPreferences(jsonArray.toString(), getApplicationContext());
-                        stationAdapter.clear();
-                        stationAdapter.addAll(stations);
-                    }
+                    StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
+                    stationListInstance.sortStationsByDistance(getApplicationContext(), location);
+                    stationAdapter.clear();
+                    stationAdapter.addAll(stationListInstance.getStations());
                 }
             });
         } else {

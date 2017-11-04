@@ -4,14 +4,11 @@ import android.content.Context;
 
 import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.layout.WidgetItem;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by Max on 26.10.2017.
- */
 
 public class FetchWidgetItem extends Thread {
 
@@ -36,7 +33,7 @@ public class FetchWidgetItem extends Thread {
     }
 
     private Sensor fetchSensorWithHighestPercentValue(Context context, int stationIndex) {
-        List<Station> stationList = QueryStationsList.fetchStationDataFromSharedPreferences(context);
+        List<Station> stationList = StationList.getStationListInstance(context).getStations();
         Station station = stationList.get(stationIndex);
         List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()), context);
         return getSensorWithHighestValue(sensors);
