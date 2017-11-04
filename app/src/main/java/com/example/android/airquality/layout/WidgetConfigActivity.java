@@ -25,8 +25,6 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int MY_PERMISSION_REQUEST = 0;
-    //url for data - list of stations
-    private static final String URL_QUERY = "http://api.gios.gov.pl/pjp-api/rest/station/findAll";
     private static final int STATION_LOADER_ID = 1;
     LoaderManager loaderManager = getLoaderManager();
 
@@ -104,7 +102,7 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
 
     @Override
     public Loader<List<Station>> onCreateLoader(int i, Bundle bundle) {
-        return new StationLoader(this, URL_QUERY);
+        return new StationLoader(this);
     }
 
     @Override

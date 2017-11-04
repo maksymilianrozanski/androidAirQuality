@@ -40,15 +40,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final String LOG_TAG = MainActivity.class.getName();
 
-    //url for data - list of stations
-    private static final String URL_QUERY = "http://api.gios.gov.pl/pjp-api/rest/station/findAll";
-
     //id of loader, only matter when multiple loaders
     private static final int STATION_LOADER_ID = 1;
     private static final int MY_PERMISSION_REQUEST = 0;
 
     private StationAdapter stationAdapter;
-    private Location lastLocation;
 
     LoaderManager loaderManager = getLoaderManager();
 
@@ -108,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<List<Station>> onCreateLoader(int id, Bundle args) {
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
         swipeRefreshLayout.setRefreshing(true);
-        return new StationLoader(this, URL_QUERY);
+        return new StationLoader(this);
     }
 
     @Override

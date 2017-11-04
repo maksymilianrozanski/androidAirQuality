@@ -95,5 +95,4 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
     public void onLoaderReset(Loader<List<Sensor>> loader) {
         sensorAdapter.clear();
     }
-
 }

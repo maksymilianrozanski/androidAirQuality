@@ -65,18 +65,8 @@ public class MultipleStationWidgetUpdateService extends Service {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Thread fetchStations = new Thread(){
-                        @Override
-                        public void run() {
-                            StationList.getStationListInstance(getApplicationContext())
-                                    .sortStationsByDistance(getApplicationContext(), location);
-                        }};
-                    fetchStations.run();
-                    try {
-                        fetchStations.join();
-                    }catch (InterruptedException e){
-                        Log.e(LOG_TAG, "Exception: " + e);
-                    }
+                    StationList.getStationListInstance(getApplicationContext())
+                            .sortStationsByDistance(getApplicationContext(), location);
                     fetchDataFromWeb();
                 }
             });
