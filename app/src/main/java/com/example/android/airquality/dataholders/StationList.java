@@ -30,7 +30,7 @@ public class StationList {
 
     private StationList(Context context) {
         fetchStationDataFromSharedPreferences(context);
-        if (stations.size() < 1) {
+        if (stations == null) {
             fetchStationDataFromWeb(URL_QUERY, context);
         }
     }

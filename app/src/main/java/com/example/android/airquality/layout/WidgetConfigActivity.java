@@ -2,8 +2,10 @@ package com.example.android.airquality.layout;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -13,16 +15,26 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
+import com.example.android.airquality.vieweditors.StationLoader;
 
-public class WidgetConfigActivity extends Activity implements OnClickListener {
+import java.util.List;
+
+public class WidgetConfigActivity extends Activity implements OnClickListener, LoaderManager.LoaderCallbacks<List<Station>> {
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int MY_PERMISSION_REQUEST = 0;
+    //url for data - list of stations
+    private static final String URL_QUERY = "http://api.gios.gov.pl/pjp-api/rest/station/findAll";
+    private static final int STATION_LOADER_ID = 1;
+    LoaderManager loaderManager = getLoaderManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loaderManager.initLoader(STATION_LOADER_ID, null, this);
+
         setContentView(R.layout.widgetconfigactivity);
 
         assignAppWidgetId();
@@ -90,4 +102,18 @@ public class WidgetConfigActivity extends Activity implements OnClickListener {
         this.finish();
     }
 
+    @Override
+    public Loader<List<Station>> onCreateLoader(int i, Bundle bundle) {
+        return new StationLoader(this, URL_QUERY);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Station>> loader, List<Station> stations) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Station>> loader) {
+
+    }
 }
