@@ -17,9 +17,9 @@ import java.util.List;
 
 import xdroid.toaster.Toaster;
 
-import static com.example.android.airquality.utility.QueryStationsList.createUrl;
-import static com.example.android.airquality.utility.QueryStationsList.passJSONString;
-import static com.example.android.airquality.utility.QueryStationsList.retryMakingHttpRequestIfException;
+import static com.example.android.airquality.utility.QueryUtilities.createUrl;
+import static com.example.android.airquality.utility.QueryUtilities.passJSONString;
+import static com.example.android.airquality.utility.QueryUtilities.retryMakingHttpRequestIfException;
 
 public class QueryStationSensors {
 
@@ -61,7 +61,7 @@ public class QueryStationSensors {
                 sensors.add(createSensor(sensorArray, i));
             }
         } catch (JSONException e) {
-            Log.e("QueryStationsList", "Problem parsing the JSON results", e);
+            Log.e("QueryUtilities", "Problem parsing the JSON results", e);
             Toaster.toast(R.string.error_occurred);
         }
         return sensors;

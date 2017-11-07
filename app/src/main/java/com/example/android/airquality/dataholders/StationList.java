@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.airquality.R;
-import com.example.android.airquality.utility.QueryStationsList;
+import com.example.android.airquality.utility.QueryUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,13 +65,13 @@ public class StationList {
 
     private List<Station> fetchStationDataFromWeb(String requestUrl, Context context) {
         stations = null;
-        URL url = QueryStationsList.createUrl(requestUrl);
+        URL url = QueryUtilities.createUrl(requestUrl);
         String jsonResponse;
 
         //trying to get correct response from server up to 5 times
         for (int j = 1; j < 6; ) {
             try {
-                jsonResponse = QueryStationsList.retryMakingHttpRequestIfException(url);
+                jsonResponse = QueryUtilities.retryMakingHttpRequestIfException(url);
                 stations = extractFeatureFromJson(jsonResponse, context);
                 saveStationsToSharedPreferences(jsonResponse, context);
                 break;
@@ -97,7 +97,7 @@ public class StationList {
                 stations.add(createStation(stationsArray, i));
             }
         } catch (JSONException e) {
-            Log.e("QueryStationsList", "Problem parsing the JSON results", e);
+            Log.e("QueryUtilities", "Problem parsing the JSON results", e);
             deleteStationsFromSharedPreferences(context);
             Toaster.toast(R.string.error_occurred);
             throw e;
@@ -115,18 +115,18 @@ public class StationList {
     private Station createStation(JSONArray stations, int indexOfStation) throws JSONException {
         JSONObject currentObject = (JSONObject) stations.get(indexOfStation);
 
-        String id = QueryStationsList.passJSONString(currentObject, "id");
-        String name = QueryStationsList.passJSONString(currentObject, "stationName");
-        String gegrLat = QueryStationsList.passJSONString(currentObject, "gegrLat");
-        String gegrLon = QueryStationsList.passJSONString(currentObject, "gegrLon");
+        String id = QueryUtilities.passJSONString(currentObject, "id");
+        String name = QueryUtilities.passJSONString(currentObject, "stationName");
+        String gegrLat = QueryUtilities.passJSONString(currentObject, "gegrLat");
+        String gegrLon = QueryUtilities.passJSONString(currentObject, "gegrLon");
         String cityId;
         String cityName;
 
         try {
             if (currentObject.getJSONObject("city") != null) {
                 JSONObject currentCity = currentObject.getJSONObject("city");
-                cityId = QueryStationsList.passJSONString(currentCity, "id");
-                cityName = QueryStationsList.passJSONString(currentCity, "name");
+                cityId = QueryUtilities.passJSONString(currentCity, "id");
+                cityName = QueryUtilities.passJSONString(currentCity, "name");
             } else {
                 cityId = "not specified";
                 cityName = "not specified";
