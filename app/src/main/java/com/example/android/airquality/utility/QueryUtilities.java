@@ -67,7 +67,7 @@ public class QueryUtilities {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the JSON results.");
             throw e;
         } finally {
             if (urlConnection != null) {

@@ -24,15 +24,13 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = updateWidgetListView(context,
                     appWidgetIds[i]);
 
-            sendIntentToRequestNewData(context, appWidgetIds[i], remoteViews);
-
             appWidgetManager.updateAppWidget(appWidgetIds[i],
                     remoteViews);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private void sendIntentToRequestNewData(Context context, int appWidgetId, RemoteViews remoteViews){
+    private void setPendingIntentToRequestNewData(Context context, int appWidgetId, RemoteViews remoteViews){
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
@@ -63,6 +61,9 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         remoteViews.setPendingIntentTemplate(R.id.widgetStationList, clickPendingIntentTemplate);
 
         remoteViews.setEmptyView(R.id.widgetStationList, R.id.empty_view);
+
+        setPendingIntentToRequestNewData(context, appWidgetId, remoteViews);
+
         return remoteViews;
     }
 

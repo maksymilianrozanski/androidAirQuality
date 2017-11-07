@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/multiple_station_outer_layout">
 
     <ListView
         android:id="@+id/widgetStationList"
@@ -23,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="empty view text"
+        android:text="@string/empty_view_text"
         android:textColor="#ffffff"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -34,7 +35,7 @@
         android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_background_rounded_corners"
-        android:text="refresh"
+        android:text="@string/refresh"
         android:textSize="12sp"/>
 
 </RelativeLayout>
