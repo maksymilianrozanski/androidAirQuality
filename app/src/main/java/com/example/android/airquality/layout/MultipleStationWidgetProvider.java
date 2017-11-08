@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
@@ -26,6 +27,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
             appWidgetManager.updateAppWidget(appWidgetIds[i],
                     remoteViews);
+            sendIntentToUpdatingService(context, appWidgetIds[i]);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -35,6 +37,17 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.multiple_station_refresh, pendingIntent);
+    }
+
+    private void sendIntentToUpdatingService(Context context, int appWidgetId){
+        Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
+        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
+        try {
+            pendingIntent.send();
+        }catch (PendingIntent.CanceledException e){
+            Log.e("Log", "exception canceledException: " + e);
+        }
     }
 
     private RemoteViews updateWidgetListView(Context context, int appWidgetId) {
