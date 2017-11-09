@@ -57,10 +57,14 @@ class ListProvider implements
     }
 
     private double cutStringToDoublePercentValue(String nameAndValueOfParam) {
-        String parts[] = nameAndValueOfParam.split(" ");
-        String secondPart = parts[1];
-        String percentValue = secondPart.substring(0, secondPart.length() - 1);
-        return Double.parseDouble(percentValue);
+        try {
+            String parts[] = nameAndValueOfParam.split(" ");
+            String secondPart = parts[1];
+            String percentValue = secondPart.substring(0, secondPart.length() - 1);
+            return Double.parseDouble(percentValue);
+        }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
+            return -1;
+        }
     }
 
     @Override

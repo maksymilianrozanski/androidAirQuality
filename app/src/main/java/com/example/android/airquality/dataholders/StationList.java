@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +76,7 @@ public class StationList {
                 stations = extractFeatureFromJson(jsonResponse, context);
                 saveStationsToSharedPreferences(jsonResponse, context);
                 break;
-            } catch (JSONException e) {
+            } catch (JSONException | IOException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request", e);
                 j++;
             }

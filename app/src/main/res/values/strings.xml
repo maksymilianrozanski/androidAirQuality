@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">AirQuality</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="no_internet_connection">No Internet connection</string>
     <string name="fetching_data">Fetching data...</string>
     <string name="error_occurred">An error occurred.</string>
@@ -12,4 +10,5 @@
     <string name="start_widget">start widget</string>
     <string name="empty_view_text">empty view text</string>
     <string name="refresh">refresh</string>
+    <string name="could_not_connect_to_server">Could not connect to server</string>
 </resources>

@@ -59,7 +59,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         return listItemView;
     }
 
-    private void setSensorTypeViewText(View listItemView, Sensor sensor){
+    private void setSensorTypeViewText(View listItemView, Sensor sensor) {
         TextView sensorTypeView = (TextView) listItemView.findViewById(sensorType);
         String sensorType;
         try {
@@ -114,7 +114,9 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
 
     public static int chooseColorOfBackground(double percentValue, Context context) {
         int percentValueInt = Integer.parseInt(String.format("%.0f", percentValue));
-        if (percentValueInt <= 25) {
+        if (percentValueInt < 0) {
+            return ContextCompat.getColor(context, R.color.noData);
+        } else if (percentValueInt <= 25) {
             return ContextCompat.getColor(context, R.color.qualityColor1);
         } else if (percentValueInt <= 50) {
             return ContextCompat.getColor(context, R.color.qualityColor2);

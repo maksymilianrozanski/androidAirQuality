@@ -31,7 +31,7 @@ public class QueryUtilities {
         return url;
     }
 
-    public static String retryMakingHttpRequestIfException(URL url) {
+    public static String retryMakingHttpRequestIfException(URL url) throws IOException {
         String jsonResponse;
         for (int i = 0; i < 5; ) {
             try {
@@ -41,7 +41,8 @@ public class QueryUtilities {
                 i++;
             }
         }
-        return null;
+        Log.e(LOG_TAG, "http request not succeed, after retrying.");
+        throw new IOException();
     }
 
     private static String makeHttpRequest(URL url) throws IOException {

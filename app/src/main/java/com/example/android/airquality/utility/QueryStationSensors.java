@@ -1,6 +1,5 @@
 package com.example.android.airquality.utility;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -11,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +35,10 @@ public class QueryStationSensors {
     private QueryStationSensors() {
     }
 
-    public static List<Sensor> fetchSensorData(int stationId, Context context) {
+    public static List<Sensor> fetchSensorData(int stationId) throws IOException {
         URL url = createUrl(BEGINNING_OF_URL_SENSORS_LIST + stationId);
 
-        String jsonResponse =  retryMakingHttpRequestIfException(url);
+        String jsonResponse = retryMakingHttpRequestIfException(url);
 
         List<Sensor> sensors = extractListOfSensorsFromJson(jsonResponse);
         sensors = addDataToSensorList(sensors);
@@ -67,7 +67,7 @@ public class QueryStationSensors {
         return sensors;
     }
 
-    private static Sensor createSensor(JSONArray sensorArray, int indexOfSensor) throws JSONException{
+    private static Sensor createSensor(JSONArray sensorArray, int indexOfSensor) throws JSONException {
         JSONObject currentObject = (JSONObject) sensorArray.get(indexOfSensor);
         int sensorsId = Integer.parseInt(passJSONString(currentObject, "id"));
         JSONObject sensorsParamJSON = currentObject.getJSONObject("param");
@@ -80,7 +80,13 @@ public class QueryStationSensors {
             Sensor currentSensor = sensorList.get(i);
             int currentSensorId = currentSensor.getId();
             URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
-            String jsonResponse  = retryMakingHttpRequestIfException(url);
+
+            String jsonResponse;
+            try {
+                jsonResponse = retryMakingHttpRequestIfException(url);
+            } catch (IOException e) {
+                continue;
+            }
             currentSensor = addValueAndDate(currentSensor, jsonResponse);
             sensorList.set(i, currentSensor);
         }
