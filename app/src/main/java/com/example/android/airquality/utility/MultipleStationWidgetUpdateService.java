@@ -18,6 +18,7 @@ import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.layout.WidgetItem;
+import com.example.android.airquality.main.MainActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -75,14 +76,18 @@ public class MultipleStationWidgetUpdateService extends Service {
     }
 
     private void fetchDataFromWeb() {
-        widgetItemList = createWidgetItemListWithStationNames(5);
-        fetchSensorDataForWidgetItems(widgetItemList);
-        saveWidgetItemList();
-        Intent widgetUpdateIntent = new Intent();
-        widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                appWidgetId);
-        sendBroadcast(widgetUpdateIntent);
+        if (MainActivity.isConnected(getApplicationContext())) {
+            widgetItemList = createWidgetItemListWithStationNames(5);
+            fetchSensorDataForWidgetItems(widgetItemList);
+            saveWidgetItemList();
+            Intent widgetUpdateIntent = new Intent();
+            widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    appWidgetId);
+            sendBroadcast(widgetUpdateIntent);
+        } else {
+            Toaster.toast(R.string.no_internet_connection);
+        }
         this.stopSelf();
     }
 
