@@ -4,7 +4,7 @@
     <string name="fetching_data">Fetching data...</string>
     <string name="error_occurred">An error occurred.</string>
     <string name="no_location_permission">No location permission</string>
-    <string name="multiple_station_widget_config">To use this widget you have to grant a permission
+    <string name="multiple_station_widget_config">To use this widget you have to grant permission
         to access device\'s location data.</string>
     <string name="request_location_permission">grant permission</string>
     <string name="start_widget">start widget</string>
