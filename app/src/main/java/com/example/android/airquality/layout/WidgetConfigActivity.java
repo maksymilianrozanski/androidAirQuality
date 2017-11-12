@@ -28,7 +28,8 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int MY_PERMISSION_REQUEST = 0;
     private static final int STATION_LOADER_ID = 1;
-    public static final String SHOW_REFRESH_BUTTON = "show_refresh_button_key";
+    public static final String SHOW_REFRESH_BUTTON = "SHOW_REFRESH_BUTTON";
+    public static final String VISIBILITY_KEY = "VISIBILITY_KEY";
     LoaderManager loaderManager = getLoaderManager();
 
     @Override
@@ -94,7 +95,6 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
 
         sendIntentRefreshButtonVisibility();
 
-
         // start your service
         // to fetch data from web
         Intent serviceIntent = new Intent(this, MultipleStationWidgetUpdateService.class);
@@ -106,14 +106,12 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
         this.finish();
     }
 
-
-
     private void sendIntentRefreshButtonVisibility(){
         CheckBox checkBox = (CheckBox) findViewById(R.id.displayRefreshButtonCheckBox);
         Log.v("LOG", "state of checkbox: " + checkBox.isChecked());
         Intent refreshButtonVisibility = new Intent(getApplicationContext(), MultipleStationWidgetProvider.class);
-        refreshButtonVisibility.putExtra("visibility", checkBox.isChecked());
-        refreshButtonVisibility.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        refreshButtonVisibility.setAction(WidgetConfigActivity.SHOW_REFRESH_BUTTON);
+        refreshButtonVisibility.putExtra(VISIBILITY_KEY, checkBox.isChecked());
         sendBroadcast(refreshButtonVisibility);
     }
 

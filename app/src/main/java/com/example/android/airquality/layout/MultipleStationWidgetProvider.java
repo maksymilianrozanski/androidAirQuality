@@ -33,7 +33,6 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-
     private void sendIntentToUpdatingService(Context context, int appWidgetId) {
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
@@ -101,9 +100,16 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager
                     .getInstance(context);
 
-            if (intent.hasExtra("visibility")) {
+            notifyAdapter(context, appWidgetManager);
+
+            RemoteViews remoteViews = updateWidgetListView(context, appWidgetId);
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        }
+
+        if (intent.getAction().equals(WidgetConfigActivity.SHOW_REFRESH_BUTTON)){
+            if (intent.hasExtra(WidgetConfigActivity.VISIBILITY_KEY)) {
                 Log.v("LOG", "inside onReceive, intent.hasExtra(visibility)......." + intent.getBooleanExtra("visibility", true));
-                boolean visibility = intent.getBooleanExtra("visibility", true);
+                boolean visibility = intent.getBooleanExtra(WidgetConfigActivity.VISIBILITY_KEY, true);
 
 
                 RemoteViews remoteViews = new RemoteViews(
@@ -114,14 +120,11 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
                     remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.GONE);
                 }
 
+                AppWidgetManager appWidgetManager = AppWidgetManager
+                        .getInstance(context);
                 final ComponentName provider = new ComponentName(context, this.getClass());
                 appWidgetManager.updateAppWidget(provider, remoteViews);
             }
-
-            notifyAdapter(context, appWidgetManager);
-
-            RemoteViews remoteViews = updateWidgetListView(context, appWidgetId);
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
     }
 
