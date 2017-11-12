@@ -15,6 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/request_location_permission"/>
+
+    <CheckBox
+        android:id="@+id/displayRefreshButtonCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/display_refresh_button"/>
     <Button 
         android:id="@+id/widgetStartButton"
         android:layout_width="match_parent"

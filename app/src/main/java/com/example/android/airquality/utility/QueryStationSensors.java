@@ -111,11 +111,11 @@ public class QueryStationSensors {
                 JSONObject recentData = jsonDataValueArray.getJSONObject(i);
                 //get value of measured param
                 value = recentData.getString("value");
-                Log.v(LOG_TAG, "value: " + value);
+//                Log.v(LOG_TAG, "value: " + value);
                 //if value is not null, get date and break the loop
                 if (!value.equals("null")) {
                     date = recentData.getString("date");
-                    Log.v(LOG_TAG, "date: " + date);
+//                    Log.v(LOG_TAG, "date: " + date);
                     break;
                 }
             }

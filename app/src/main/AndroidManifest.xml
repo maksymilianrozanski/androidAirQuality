@@ -35,6 +35,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="com.example.android.airquality.DATA_FETCHED"/>
+                <action android:name="com.example.android.airquality.SET_VISIBILITY_ACTION"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

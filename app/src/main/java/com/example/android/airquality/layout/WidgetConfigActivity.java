@@ -10,9 +10,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
@@ -26,11 +28,13 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int MY_PERMISSION_REQUEST = 0;
     private static final int STATION_LOADER_ID = 1;
+    public static final String SHOW_REFRESH_BUTTON = "show_refresh_button_key";
     LoaderManager loaderManager = getLoaderManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
         setContentView(R.layout.widgetconfigactivity);
@@ -81,13 +85,15 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
      * remote data from Server
      */
     private void startWidget() {
-
         // this intent is essential to show the widget
         // if this intent is not included,you can't show
         // widget on homescreen
         Intent intent = new Intent();
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         setResult(Activity.RESULT_OK, intent);
+
+        sendIntentRefreshButtonVisibility();
+
 
         // start your service
         // to fetch data from web
@@ -98,6 +104,17 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
 
         // finish this activity
         this.finish();
+    }
+
+
+
+    private void sendIntentRefreshButtonVisibility(){
+        CheckBox checkBox = (CheckBox) findViewById(R.id.displayRefreshButtonCheckBox);
+        Log.v("LOG", "state of checkbox: " + checkBox.isChecked());
+        Intent refreshButtonVisibility = new Intent(getApplicationContext(), MultipleStationWidgetProvider.class);
+        refreshButtonVisibility.putExtra("visibility", checkBox.isChecked());
+        refreshButtonVisibility.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        sendBroadcast(refreshButtonVisibility);
     }
 
     @Override

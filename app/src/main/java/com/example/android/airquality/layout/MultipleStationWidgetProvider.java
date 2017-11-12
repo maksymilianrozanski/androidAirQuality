@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
@@ -32,20 +33,14 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private void setPendingIntentToRequestNewData(Context context, int appWidgetId, RemoteViews remoteViews){
-        Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
-        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.multiple_station_refresh, pendingIntent);
-    }
 
-    private void sendIntentToUpdatingService(Context context, int appWidgetId){
+    private void sendIntentToUpdatingService(Context context, int appWidgetId) {
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
         try {
             pendingIntent.send();
-        }catch (PendingIntent.CanceledException e){
+        } catch (PendingIntent.CanceledException e) {
             Log.e("Log", "exception canceledException: " + e);
         }
     }
@@ -54,6 +49,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         //which layout to show on widget
         RemoteViews remoteViews = new RemoteViews(
                 context.getPackageName(), R.layout.multiple_station_listview);
+        Log.v("LOG", "context.getPackageName() inside updateWidgetListView: " + context.getPackageName());
 
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, ScrollableWidgetService.class);
@@ -75,17 +71,25 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
         remoteViews.setEmptyView(R.id.widgetStationList, R.id.empty_view);
 
-        setPendingIntentToRequestNewData(context, appWidgetId, remoteViews);
+        setRefreshButton(context, appWidgetId, remoteViews);
 
         return remoteViews;
     }
 
+    private void setRefreshButton(Context context, int appWidgetId, RemoteViews remoteViews) {
+        Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
+        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.multiple_station_refresh, pendingIntent);
+    }
 
     @Override
-    public void onEnabled(Context context) {}
+    public void onEnabled(Context context) {
+    }
 
     @Override
-    public void onDisabled(Context context) {}
+    public void onDisabled(Context context) {
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -96,6 +100,23 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             AppWidgetManager appWidgetManager = AppWidgetManager
                     .getInstance(context);
+
+            if (intent.hasExtra("visibility")) {
+                Log.v("LOG", "inside onReceive, intent.hasExtra(visibility)......." + intent.getBooleanExtra("visibility", true));
+                boolean visibility = intent.getBooleanExtra("visibility", true);
+
+
+                RemoteViews remoteViews = new RemoteViews(
+                        context.getPackageName(), R.layout.multiple_station_listview);
+                if (visibility) {
+                    remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.VISIBLE);
+                } else {
+                    remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.GONE);
+                }
+
+                final ComponentName provider = new ComponentName(context, this.getClass());
+                appWidgetManager.updateAppWidget(provider, remoteViews);
+            }
 
             notifyAdapter(context, appWidgetManager);
 

@@ -11,4 +11,5 @@
     <string name="empty_view_text">empty view text</string>
     <string name="refresh">refresh</string>
     <string name="could_not_connect_to_server">Could not connect to server</string>
+    <string name="display_refresh_button">display refresh button</string>
 </resources>
