@@ -38,7 +38,7 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
 
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
-        setContentView(R.layout.widgetconfigactivity);
+        setContentView(R.layout.widget_config_activity);
 
         assignAppWidgetId();
 
@@ -112,6 +112,7 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
         Intent refreshButtonVisibility = new Intent(getApplicationContext(), MultipleStationWidgetProvider.class);
         refreshButtonVisibility.setAction(WidgetConfigActivity.SHOW_REFRESH_BUTTON);
         refreshButtonVisibility.putExtra(VISIBILITY_KEY, checkBox.isChecked());
+        refreshButtonVisibility.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         sendBroadcast(refreshButtonVisibility);
     }
 

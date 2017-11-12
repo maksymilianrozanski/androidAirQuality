@@ -93,6 +93,11 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        onReceiveUpdateIntent(context, intent);
+        onReceiveRefreshButtonVisibilityIntent(context, intent);
+    }
+
+    private void onReceiveUpdateIntent(Context context, Intent intent){
         if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
             int appWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -105,27 +110,6 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = updateWidgetListView(context, appWidgetId);
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
-
-        if (intent.getAction().equals(WidgetConfigActivity.SHOW_REFRESH_BUTTON)){
-            if (intent.hasExtra(WidgetConfigActivity.VISIBILITY_KEY)) {
-                Log.v("LOG", "inside onReceive, intent.hasExtra(visibility)......." + intent.getBooleanExtra("visibility", true));
-                boolean visibility = intent.getBooleanExtra(WidgetConfigActivity.VISIBILITY_KEY, true);
-
-
-                RemoteViews remoteViews = new RemoteViews(
-                        context.getPackageName(), R.layout.multiple_station_listview);
-                if (visibility) {
-                    remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.VISIBLE);
-                } else {
-                    remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.GONE);
-                }
-
-                AppWidgetManager appWidgetManager = AppWidgetManager
-                        .getInstance(context);
-                final ComponentName provider = new ComponentName(context, this.getClass());
-                appWidgetManager.updateAppWidget(provider, remoteViews);
-            }
-        }
     }
 
     private void notifyAdapter(Context context, AppWidgetManager appWidgetManager) {
@@ -134,4 +118,33 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         int appWidgetIds[] = appWidgetManager.getAppWidgetIds(thisAppWidget);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetStationList);
     }
+
+    private void onReceiveRefreshButtonVisibilityIntent(Context context, Intent intent){
+        if (intent.getAction().equals(WidgetConfigActivity.SHOW_REFRESH_BUTTON)){
+            if (intent.hasExtra(WidgetConfigActivity.VISIBILITY_KEY) && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
+                boolean visibility = intent.getBooleanExtra(WidgetConfigActivity.VISIBILITY_KEY, true);
+                int appWidgetId = intent.getIntExtra(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+
+                RemoteViews remoteViews = new RemoteViews(
+                        context.getPackageName(), R.layout.multiple_station_listview);
+                setRefreshButtonVisibility(visibility,remoteViews);
+
+                AppWidgetManager appWidgetManager = AppWidgetManager
+                        .getInstance(context);
+                appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+            }
+        }
+    }
+
+    private void setRefreshButtonVisibility(boolean visible, RemoteViews remoteViews){
+        if (visible) {
+            remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.GONE);
+        }
+    }
+
+    //TODO: save refresh button visibility to shared preferences, and restore after device restart
 }
