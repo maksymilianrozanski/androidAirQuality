@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -19,10 +20,14 @@ import com.example.android.airquality.utility.MultipleStationWidgetUpdateService
 
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
+
+    private static final String SHARED_PREFERENCES_VISIBILITY_KEY = "com.example.android.airquality.refreshButtonVisibilities";
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int i = 0; i < appWidgetIds.length; ++i) {
+            Log.v("LOG", "inside onUpdate");
             RemoteViews remoteViews = updateWidgetListView(context,
                     appWidgetIds[i]);
 
@@ -48,7 +53,6 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         //which layout to show on widget
         RemoteViews remoteViews = new RemoteViews(
                 context.getPackageName(), R.layout.multiple_station_listview);
-        Log.v("LOG", "context.getPackageName() inside updateWidgetListView: " + context.getPackageName());
 
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, ScrollableWidgetService.class);
@@ -80,6 +84,13 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.multiple_station_refresh, pendingIntent);
+        boolean visibility = readRefreshButtonVisibilityFromSharedPref(appWidgetId, context);
+        setRefreshButtonVisibility(visibility, remoteViews);
+    }
+
+    private boolean readRefreshButtonVisibilityFromSharedPref(int appWidgetId, Context context) {
+        SharedPreferences keyValues = context.getSharedPreferences(SHARED_PREFERENCES_VISIBILITY_KEY, Context.MODE_PRIVATE);
+        return keyValues.getBoolean(String.valueOf(appWidgetId), true);
     }
 
     @Override
@@ -91,13 +102,24 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     }
 
     @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        SharedPreferences keyValues = context.getSharedPreferences(SHARED_PREFERENCES_VISIBILITY_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor keyValuesEditor = keyValues.edit();
+        for (int id : appWidgetIds) {
+            keyValuesEditor.remove(String.valueOf(id));
+        }
+        keyValuesEditor.apply();
+        super.onDeleted(context, appWidgetIds);
+    }
+
+    @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         onReceiveUpdateIntent(context, intent);
         onReceiveRefreshButtonVisibilityIntent(context, intent);
     }
 
-    private void onReceiveUpdateIntent(Context context, Intent intent){
+    private void onReceiveUpdateIntent(Context context, Intent intent) {
         if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
             int appWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -119,8 +141,8 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetStationList);
     }
 
-    private void onReceiveRefreshButtonVisibilityIntent(Context context, Intent intent){
-        if (intent.getAction().equals(WidgetConfigActivity.SHOW_REFRESH_BUTTON)){
+    private void onReceiveRefreshButtonVisibilityIntent(Context context, Intent intent) {
+        if (intent.getAction().equals(WidgetConfigActivity.SHOW_REFRESH_BUTTON)) {
             if (intent.hasExtra(WidgetConfigActivity.VISIBILITY_KEY) && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
                 boolean visibility = intent.getBooleanExtra(WidgetConfigActivity.VISIBILITY_KEY, true);
                 int appWidgetId = intent.getIntExtra(
@@ -129,7 +151,8 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
                 RemoteViews remoteViews = new RemoteViews(
                         context.getPackageName(), R.layout.multiple_station_listview);
-                setRefreshButtonVisibility(visibility,remoteViews);
+                setRefreshButtonVisibility(visibility, remoteViews);
+                saveRefreshButtonVisibilityToSharedPref(visibility, appWidgetId, context);
 
                 AppWidgetManager appWidgetManager = AppWidgetManager
                         .getInstance(context);
@@ -138,13 +161,18 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private void setRefreshButtonVisibility(boolean visible, RemoteViews remoteViews){
+    private void saveRefreshButtonVisibilityToSharedPref(boolean visible, int appWidgetId, Context context) {
+        SharedPreferences keyValues = context.getSharedPreferences(SHARED_PREFERENCES_VISIBILITY_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor keyValuesEditor = keyValues.edit();
+        keyValuesEditor.putBoolean(String.valueOf(appWidgetId), visible);
+        keyValuesEditor.apply();
+    }
+
+    private void setRefreshButtonVisibility(boolean visible, RemoteViews remoteViews) {
         if (visible) {
             remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.VISIBLE);
         } else {
             remoteViews.setViewVisibility(R.id.multiple_station_refresh, View.GONE);
         }
     }
-
-    //TODO: save refresh button visibility to shared preferences, and restore after device restart
 }
