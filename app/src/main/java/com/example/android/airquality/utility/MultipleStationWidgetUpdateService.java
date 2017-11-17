@@ -54,7 +54,6 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toaster.toast(getString(R.string.fetching_data));
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
             appWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
