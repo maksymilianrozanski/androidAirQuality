@@ -11,13 +11,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import xdroid.toaster.Toaster;
 
-import static com.example.android.airquality.utility.QueryUtilities.createUrl;
 import static com.example.android.airquality.utility.QueryUtilities.passJSONString;
 import static com.example.android.airquality.utility.QueryUtilities.retryMakingHttpRequestIfException;
 
@@ -36,7 +36,7 @@ public class QueryStationSensors {
     }
 
     public static List<Sensor> fetchSensorData(int stationId) throws IOException {
-        URL url = createUrl(BEGINNING_OF_URL_SENSORS_LIST + stationId);
+        URL url = new URL(BEGINNING_OF_URL_SENSORS_LIST + stationId);
 
         String jsonResponse = retryMakingHttpRequestIfException(url);
 
@@ -79,7 +79,14 @@ public class QueryStationSensors {
         for (int i = 0; i < sensorList.size(); i++) {
             Sensor currentSensor = sensorList.get(i);
             int currentSensorId = currentSensor.getId();
-            URL url = createUrl(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
+            URL url;
+
+            try {
+                url = new URL(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return sensorList;
+            }
 
             String jsonResponse;
             try {

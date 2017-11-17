@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,7 +67,13 @@ public class StationList {
 
     private List<Station> fetchStationDataFromWeb(String requestUrl, Context context) {
         stations = null;
-        URL url = QueryUtilities.createUrl(requestUrl);
+        URL url;
+        try {
+            url = new URL(requestUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
         String jsonResponse;
 
         //trying to get correct response from server up to 5 times
