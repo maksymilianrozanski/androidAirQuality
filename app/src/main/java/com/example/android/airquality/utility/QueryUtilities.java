@@ -87,7 +87,7 @@ public class QueryUtilities {
         return output.toString();
     }
 
-    public static String passJSONString(JSONObject jsonObject, String jsonKey) {
+    public static String getStringFromJSONObject(JSONObject jsonObject, String jsonKey) {
         String stringToReturn;
         try {
             if (jsonObject.getString(jsonKey) != null) {
@@ -96,7 +96,7 @@ public class QueryUtilities {
                 stringToReturn = "not specified";
             }
         } catch (JSONException e) {
-            Log.v("passJSONString", "JSONException when passing string");
+            Log.v("getStringFromJSONObject", "JSONException when passing string");
             stringToReturn = "not specified";
             return stringToReturn;
         }

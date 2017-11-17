@@ -123,18 +123,18 @@ public class StationList {
     private Station createStation(JSONArray stations, int indexOfStation) throws JSONException {
         JSONObject currentObject = (JSONObject) stations.get(indexOfStation);
 
-        String id = QueryUtilities.passJSONString(currentObject, "id");
-        String name = QueryUtilities.passJSONString(currentObject, "stationName");
-        String gegrLat = QueryUtilities.passJSONString(currentObject, "gegrLat");
-        String gegrLon = QueryUtilities.passJSONString(currentObject, "gegrLon");
+        String id = QueryUtilities.getStringFromJSONObject(currentObject, "id");
+        String name = QueryUtilities.getStringFromJSONObject(currentObject, "stationName");
+        String gegrLat = QueryUtilities.getStringFromJSONObject(currentObject, "gegrLat");
+        String gegrLon = QueryUtilities.getStringFromJSONObject(currentObject, "gegrLon");
         String cityId;
         String cityName;
 
         try {
             if (currentObject.getJSONObject("city") != null) {
                 JSONObject currentCity = currentObject.getJSONObject("city");
-                cityId = QueryUtilities.passJSONString(currentCity, "id");
-                cityName = QueryUtilities.passJSONString(currentCity, "name");
+                cityId = QueryUtilities.getStringFromJSONObject(currentCity, "id");
+                cityName = QueryUtilities.getStringFromJSONObject(currentCity, "name");
             } else {
                 cityId = "not specified";
                 cityName = "not specified";

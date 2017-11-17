@@ -18,7 +18,7 @@ import java.util.List;
 
 import xdroid.toaster.Toaster;
 
-import static com.example.android.airquality.utility.QueryUtilities.passJSONString;
+import static com.example.android.airquality.utility.QueryUtilities.getStringFromJSONObject;
 import static com.example.android.airquality.utility.QueryUtilities.retryMakingHttpRequestIfException;
 
 public class QueryStationSensors {
@@ -69,9 +69,9 @@ public class QueryStationSensors {
 
     private static Sensor createSensor(JSONArray sensorArray, int indexOfSensor) throws JSONException {
         JSONObject currentObject = (JSONObject) sensorArray.get(indexOfSensor);
-        int sensorsId = Integer.parseInt(passJSONString(currentObject, "id"));
+        int sensorsId = Integer.parseInt(getStringFromJSONObject(currentObject, "id"));
         JSONObject sensorsParamJSON = currentObject.getJSONObject("param");
-        String sensorsParam = passJSONString(sensorsParamJSON, "paramFormula");
+        String sensorsParam = getStringFromJSONObject(sensorsParamJSON, "paramFormula");
         return new Sensor(sensorsId, sensorsParam);
     }
 
