@@ -65,8 +65,12 @@ public class MultipleStationWidgetUpdateService extends Service {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    StationList.getStationListInstance(getApplicationContext())
-                            .sortStationsByDistance(getApplicationContext(), location);
+                    try {
+                        StationList.getStationListInstance(getApplicationContext())
+                                .sortStationsByDistance(getApplicationContext(), location);
+                    } catch (NullPointerException e) {
+                        Toaster.toast(R.string.no_location_access);
+                    }
                     fetchDataFromWeb();
                 }
             });

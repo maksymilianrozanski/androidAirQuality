@@ -55,4 +55,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4
     testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
     androidTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
+    androidTestCompile 'org.mockito:mockito-core:2.8.0'
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
+    androidTestCompile 'org.mockito:mockito-android:2.12.0'
 }

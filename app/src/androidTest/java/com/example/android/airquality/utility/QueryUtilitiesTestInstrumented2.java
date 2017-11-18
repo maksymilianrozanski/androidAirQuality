@@ -14,7 +14,7 @@ public class QueryUtilitiesTestInstrumented2 {
     @Test
     public void getStringFromJsonObjectTest() throws Exception{
 
-        JSONObject jsonObject = new JSONObject("[{\"key1\":\"PM10\"}]");
+        JSONObject jsonObject = new JSONObject("{\"key1\":\"PM10\"}");
 
 
 

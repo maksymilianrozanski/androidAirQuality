@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import xdroid.toaster.Toaster;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Station>> {
 
     private static final String LOG_TAG = MainActivity.class.getName();
@@ -222,7 +224,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 @Override
                 public void onSuccess(Location location) {
                     StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
-                    stationListInstance.sortStationsByDistance(getApplicationContext(), location);
+                    try {
+                        stationListInstance.sortStationsByDistance(getApplicationContext(), location);
+                    } catch (NullPointerException e) {
+                        Toaster.toast(R.string.no_location_access);
+                    }
                     stationAdapter.clear();
                     stationAdapter.addAll(stationListInstance.getStations());
                 }

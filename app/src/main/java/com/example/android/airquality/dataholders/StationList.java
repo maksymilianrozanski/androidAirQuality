@@ -146,18 +146,18 @@ public class StationList {
         return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
     }
 
-    public void sortStationsByDistance(Context context, Location location) {
+    public void sortStationsByDistance(Context context, Location location) throws NullPointerException{
         stations = fetchStationDataFromSharedPreferences(context);
 
         if (location != null) {
-            double userLatitude = 0;
-            double userLongitude = 0;
+            double userLatitude;
+            double userLongitude;
             try {
                 userLatitude = location.getLatitude();
                 userLongitude = location.getLongitude();
-                Log.v(LOG_TAG, "user latitude: " + userLatitude + "user longitude: " + userLongitude);
             } catch (NullPointerException e) {
                 Log.e(LOG_TAG, "Null pointer exception" + e);
+                throw e;
             }
             for (Station station : stations) {
                 station.setDistanceFromUser(userLatitude, userLongitude);
@@ -166,7 +166,7 @@ public class StationList {
             JSONArray jsonArray = passStationListToJSONArray(stations);
             saveStationsToSharedPreferences(jsonArray.toString(), context);
         } else {
-            Toaster.toast(context.getString(R.string.no_location_permission));
+            Toaster.toast(context.getString(R.string.no_location_access));
         }
     }
 
