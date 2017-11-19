@@ -16,9 +16,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import xdroid.toaster.Toaster;
 
@@ -52,11 +54,17 @@ public class StationList {
         return stations;
     }
 
-    public List<Station> getStationsSortedByCityName(){
+    public List<Station> getStationsSortedByCityName() {
         List<Station> stationsSortedByCityName = new ArrayList<>(getStations());
-//TODO: correct sorting to use polish letters in correct order (ó, ż, ą etc.)
-        Collections.sort(stationsSortedByCityName, (Station station0, Station station1) ->
-                (station0).getCityName().compareTo((station1).getCityName()));
+        Collator collator = Collator.getInstance(new Locale("pl", "PL"));
+
+        Collections.sort(stationsSortedByCityName, (Station station0, Station station1) -> {
+            if (collator.compare(station0.getCityName(), station1.getCityName()) > 0) {
+                return 1;
+            } else if (collator.compare(station0.getCityName(), station1.getCityName()) < 0) {
+                return -1;
+            } else return 0;
+        });
         return stationsSortedByCityName;
     }
 
@@ -154,7 +162,7 @@ public class StationList {
         return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
     }
 
-    public void sortStationsByDistance(Context context, Location location) throws NullPointerException{
+    public void sortStationsByDistance(Context context, Location location) throws NullPointerException {
         stations = fetchStationDataFromSharedPreferences(context);
 
         if (location != null) {

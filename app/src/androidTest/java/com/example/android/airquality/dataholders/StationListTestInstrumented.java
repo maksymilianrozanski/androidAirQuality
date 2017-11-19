@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.text.Collator;
 import java.util.List;
+import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -92,11 +94,12 @@ public class StationListTestInstrumented {
     public void gettingListSortedByCityName() {
         StationList stationList = StationList.getStationListInstance(context);
         List<Station> sortedList = stationList.getStationsSortedByCityName();
+        Collator collator = Collator.getInstance(new Locale("pl", "PL"));
 
-        for (int i = 0; i < sortedList.size()-1; i++){
+        for (int i = 0; i < sortedList.size() - 1; i++) {
             String currentCityName = sortedList.get(i).getCityName();
-            String nextCityName = sortedList.get(i+1).getCityName();
-            Assert.assertTrue(currentCityName.compareTo(nextCityName) <= 0);
+            String nextCityName = sortedList.get(i + 1).getCityName();
+            Assert.assertTrue(collator.compare(currentCityName, nextCityName) <= 0);
         }
     }
 }
