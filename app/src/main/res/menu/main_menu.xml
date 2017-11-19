@@ -9,4 +9,7 @@
     <item
         android:id="@+id/sortStations"
         android:title="sort stations by distance"/>
+    <item
+        android:id="@+id/sortStationsByCityName"
+        android:title="sort stations by city name"/>
 </menu>

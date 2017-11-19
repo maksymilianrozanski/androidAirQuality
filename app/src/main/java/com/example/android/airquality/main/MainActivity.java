@@ -159,6 +159,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.sortStations:
                 sortStationsByDistance();
                 return true;
+            case R.id.sortStationsByCityName:
+                sortStationsByCityName();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -236,5 +239,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             askForLocationPermissionIfNoPermission();
         }
+    }
+
+    private void sortStationsByCityName() {
+        StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
+        stationAdapter.clear();
+        stationAdapter.addAll(stationListInstance.getStationsSortedByCityName());
     }
 }

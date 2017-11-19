@@ -54,7 +54,7 @@ public class StationList {
 
     public List<Station> getStationsSortedByCityName(){
         List<Station> stationsSortedByCityName = new ArrayList<>(getStations());
-
+//TODO: correct sorting to use polish letters in correct order (ó, ż, ą etc.)
         Collections.sort(stationsSortedByCityName, (Station station0, Station station1) ->
                 (station0).getCityName().compareTo((station1).getCityName()));
         return stationsSortedByCityName;
