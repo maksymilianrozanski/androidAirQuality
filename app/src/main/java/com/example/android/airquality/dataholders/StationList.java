@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import xdroid.toaster.Toaster;
@@ -50,6 +51,18 @@ public class StationList {
 
     public List<Station> getStations() {
         return stations;
+    }
+
+    public List<Station> getStationsSortedByCityName(){
+        List<Station> stationsSortedByCityName = new ArrayList<>(getStations());
+
+        Collections.sort(stationsSortedByCityName, new Comparator<Station>() {
+            @Override
+            public int compare(Station station0, Station station1) {
+                return (station0).getCityName().compareTo((station1).getCityName());
+            }
+        });
+        return stationsSortedByCityName;
     }
 
     private List<Station> fetchStationDataFromSharedPreferences(Context context) {

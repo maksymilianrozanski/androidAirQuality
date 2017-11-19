@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -84,5 +86,17 @@ public class StationListTestInstrumented {
         Location location = null;
         StationList stationList = StationList.getStationListInstance(context);
         stationList.sortStationsByDistance(context, location);
+    }
+
+    @Test
+    public void gettingListSortedByCityName() {
+        StationList stationList = StationList.getStationListInstance(context);
+        List<Station> sortedList = stationList.getStationsSortedByCityName();
+
+        for (int i = 0; i < sortedList.size()-1; i++){
+            String currentCityName = sortedList.get(i).getCityName();
+            String nextCityName = sortedList.get(i+1).getCityName();
+            Assert.assertTrue(currentCityName.compareTo(nextCityName) <= 0);
+        }
     }
 }
