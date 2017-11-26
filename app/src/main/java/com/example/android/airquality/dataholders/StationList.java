@@ -8,34 +8,39 @@ import android.util.Log;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.utility.QueryUtilities;
+import com.example.android.airquality.utility.StationsRestService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 import xdroid.toaster.Toaster;
 
 public class StationList {
 
     //url for data - list of stations
-    private static final String URL_QUERY = "http://api.gios.gov.pl/pjp-api/rest/station/findAll";
+    private static final String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
     private static final String LOG_TAG = StationList.class.getSimpleName();
     private List<Station> stations;
     private static StationList instance = null;
+    private StationsRestService stationsRestService;
+    private Retrofit retrofit;
 
     private StationList(Context context) {
         fetchStationDataFromSharedPreferences(context);
         if (stations == null) {
-            fetchStationDataFromWeb(URL_QUERY, context);
+            fetchStationDataFromWeb(context);
         }
     }
 
@@ -81,21 +86,12 @@ public class StationList {
         return stations;
     }
 
-    private List<Station> fetchStationDataFromWeb(String requestUrl, Context context) {
+    private void fetchStationDataFromWeb(Context context) {
         stations = null;
-        URL url;
-        try {
-            url = new URL(requestUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-        String jsonResponse;
-
         //trying to get correct response from server up to 5 times
         for (int j = 1; j < 6; ) {
             try {
-                jsonResponse = QueryUtilities.retryMakingHttpRequestIfException(url);
+                String jsonResponse = getHttpResponseRetrofit();
                 stations = extractFeatureFromJson(jsonResponse, context);
                 saveStationsToSharedPreferences(jsonResponse, context);
                 break;
@@ -104,7 +100,25 @@ public class StationList {
                 j++;
             }
         }
-        return stations;
+    }
+
+    private String getHttpResponseRetrofit() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(STATIONS_BASE_URL)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .client(client)
+                .build();
+        stationsRestService = retrofit.create(StationsRestService.class);
+
+        retrofit2.Call<ResponseBody> call = stationsRestService.getAllStations();
+        try {
+            return call.execute().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private List<Station> extractFeatureFromJson(String stationJSON, Context context) throws JSONException {
