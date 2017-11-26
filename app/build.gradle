@@ -62,4 +62,7 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
     androidTestCompile 'org.mockito:mockito-android:2.12.0'
+    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.8.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
 }

@@ -3,6 +3,7 @@ package com.example.android.airquality.dataholders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -30,7 +31,8 @@ import xdroid.toaster.Toaster;
 public class StationList {
 
     //url for data - list of stations
-    private static final String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public static String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
     private static final String LOG_TAG = StationList.class.getSimpleName();
     private List<Station> stations;
     private static StationList instance = null;
