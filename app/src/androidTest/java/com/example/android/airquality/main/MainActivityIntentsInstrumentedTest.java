@@ -40,6 +40,11 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
 
     private MockWebServer server;
     private static final String EXPECTED_STATION_INDEX_0_NAME = "mocked station name 1";
+    private static final int EXPECTED_STATION_INDEX_0_ID = 236;
+    private static final String EXPECTED_STATION_INDEX_5_NAME = "Jelenia Góra - Ogińskiego";
+    private static final int EXPECTED_STATION_INDEX_5_ID = 9153;
+    private static final String EXPECTED_STATION_INDEX_25_NAME = "Bolesławiec";
+    private static final int EXPECTED_STATION_INDEX_25_ID = 10035;
 
     @Rule
     public IntentsTestRule<MainActivity> activityRule
@@ -77,7 +82,43 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
 
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).perform(click());
 
-        intended(allOf(hasExtra("StationId", 236), hasExtra("StationName", EXPECTED_STATION_INDEX_0_NAME),
+        intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_0_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_0_NAME),
+                toPackage("com.example.android.airquality")));
+    }
+
+    @Test
+    public void checkSendingIntent2() throws Exception {
+        String fileName = "stationsResponse.json";
+
+        server.enqueue(new MockResponse().setResponseCode(200)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        Intent intent = new Intent();
+        activityRule.launchActivity(intent);
+
+        stubAllExternalIntents();
+
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(5).perform(click());
+
+        intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_5_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_5_NAME),
+                toPackage("com.example.android.airquality")));
+    }
+
+    @Test
+    public void checkSendingIntent3() throws Exception {
+        String fileName = "stationsResponse.json";
+
+        server.enqueue(new MockResponse().setResponseCode(200)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        Intent intent = new Intent();
+        activityRule.launchActivity(intent);
+
+        stubAllExternalIntents();
+
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(25).perform(click());
+
+        intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_25_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_25_NAME),
                 toPackage("com.example.android.airquality")));
     }
 
