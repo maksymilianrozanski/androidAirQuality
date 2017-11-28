@@ -85,6 +85,8 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         server.shutdown();
 
+        onView(withText("mocked station name 1")).check(matches(isDisplayed()));
+
         MockWebServer mockWebServerNew = new MockWebServer();
         mockWebServerNew.start();
 
@@ -96,6 +98,8 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
+
+        onView(withText("mocked station name 1 updated")).check(matches(isDisplayed()));
     }
 
     @After
