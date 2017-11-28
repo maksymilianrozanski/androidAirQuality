@@ -128,6 +128,7 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
 
     @After
     public void tearDown() throws Exception {
+        super.tearDown();
         server.shutdown();
     }
 }

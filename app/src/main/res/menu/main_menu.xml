@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/reload"
-        android:title="reload data" />
+        android:title="@string/reload_data" />
     <item
         android:id="@+id/findNearestStation"
-        android:title="find nearest station"/>
+        android:title="@string/find_nearest_station"/>
     <item
         android:id="@+id/sortStations"
-        android:title="sort stations by distance"/>
+        android:title="@string/sort_stations_by_distance"/>
     <item
         android:id="@+id/sortStationsByCityName"
-        android:title="sort stations by city name"/>
+        android:title="@string/sort_stations_by_city_name"/>
 </menu>

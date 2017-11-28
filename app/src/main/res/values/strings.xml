@@ -12,4 +12,8 @@
     <string name="refresh">refresh</string>
     <string name="could_not_connect_to_server">Could not connect to server</string>
     <string name="display_refresh_button">display refresh button</string>
+    <string name="reload_data">reload data</string>
+    <string name="find_nearest_station">find nearest station</string>
+    <string name="sort_stations_by_distance">sort stations by distance</string>
+    <string name="sort_stations_by_city_name">sort stations by city name</string>
 </resources>

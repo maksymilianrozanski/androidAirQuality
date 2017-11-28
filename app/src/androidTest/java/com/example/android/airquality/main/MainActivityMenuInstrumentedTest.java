@@ -21,20 +21,16 @@ import java.io.File;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
-
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityInstrumentedTest extends InstrumentationTestCase {
+public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
     private MockWebServer server;
-    private static final String expectedStation0Name = "mocked station name 1";
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivityRule
@@ -59,7 +55,7 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
     }
 
     @Test
-    public void correctResponseTest() throws Exception{
+    public void displayingMenuTest() throws Exception {
         String fileName = "stationsResponse.json";
 
         server.enqueue(new MockResponse().setResponseCode(200)
@@ -68,9 +64,15 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).perform(click());
-        onView(withId(R.id.sensorsViewStationName)).check(matches(withText(expectedStation0Name)));
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.reload_data)).check(matches(isDisplayed()));
+        onView(withText(R.string.find_nearest_station)).check(matches(isDisplayed()));
+        onView(withText(R.string.sort_stations_by_distance)).check(matches(isDisplayed()));
+        onView(withText(R.string.sort_stations_by_city_name)).check(matches(isDisplayed()));
+
+        Thread.sleep(2000);
     }
+
 
     @After
     public void tearDown() throws Exception {
