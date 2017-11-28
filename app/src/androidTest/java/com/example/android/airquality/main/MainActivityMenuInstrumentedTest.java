@@ -69,8 +69,6 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         onView(withText(R.string.find_nearest_station)).check(matches(isDisplayed()));
         onView(withText(R.string.sort_stations_by_distance)).check(matches(isDisplayed()));
         onView(withText(R.string.sort_stations_by_city_name)).check(matches(isDisplayed()));
-
-        Thread.sleep(2000);
     }
 
 

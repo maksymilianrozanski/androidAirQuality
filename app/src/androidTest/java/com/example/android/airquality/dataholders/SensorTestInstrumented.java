@@ -33,7 +33,6 @@ public class SensorTestInstrumented {
         assertTrue(sensor.getParam().equals(sensorCreatedFromParcel.getParam()));
         assertTrue(sensor.getValue() == sensorCreatedFromParcel.getValue());
         assertTrue(sensor.getLastDate().equals(sensorCreatedFromParcel.getLastDate()));
-
     }
 
 }
