@@ -23,6 +23,7 @@ import okhttp3.mockwebserver.MockWebServer;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -46,7 +47,7 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
     }
 
     @Before
-    public void clearSharedPreferences(){
+    public void clearSharedPreferences() {
         File root = InstrumentationRegistry.getTargetContext().getFilesDir().getParentFile();
         String[] sharedPreferencesFileNames = new File(root, "shared_prefs").list();
         for (String fileName : sharedPreferencesFileNames) {
@@ -71,6 +72,31 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         onView(withText(R.string.sort_stations_by_city_name)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void reloadDataTest() throws Exception {
+        String fileName = "stationsResponse.json";
+        String fileName2 = "stationsResponse2.json";
+
+        server.enqueue(new MockResponse().setResponseCode(200)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        Intent intent = new Intent();
+        mainActivityRule.launchActivity(intent);
+
+        server.shutdown();
+
+        MockWebServer mockWebServerNew = new MockWebServer();
+        mockWebServerNew.start();
+
+        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+        StationList.STATIONS_BASE_URL = mockWebServerNew.url("/").toString();
+
+        mockWebServerNew.enqueue(new MockResponse().setResponseCode(200)
+        .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
+
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.reload_data)).perform(click());
+    }
 
     @After
     public void tearDown() throws Exception {

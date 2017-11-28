@@ -33,6 +33,7 @@ public class StationList {
     //url for data - list of stations
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     public static String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
+    private static boolean requestedUpdate = false;
     private static final String LOG_TAG = StationList.class.getSimpleName();
     private List<Station> stations;
     private static StationList instance = null;
@@ -49,6 +50,10 @@ public class StationList {
     public static StationList getStationListInstance(Context context) {
         if (instance == null) {
             instance = new StationList(context);
+        }
+        if (requestedUpdate) {
+            instance.stations = instance.fetchStationDataFromWeb(context);
+            requestedUpdate = false;
         }
         return instance;
     }
@@ -88,7 +93,7 @@ public class StationList {
         return stations;
     }
 
-    private void fetchStationDataFromWeb(Context context) {
+    private List<Station> fetchStationDataFromWeb(Context context) {
         stations = null;
         //trying to get correct response from server up to 5 times
         for (int j = 1; j < 6; ) {
@@ -96,12 +101,19 @@ public class StationList {
                 String jsonResponse = getHttpResponseRetrofit();
                 stations = extractFeatureFromJson(jsonResponse, context);
                 saveStationsToSharedPreferences(jsonResponse, context);
-                break;
+                return stations;
             } catch (JSONException | IOException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request", e);
                 j++;
             }
         }
+        stations = new ArrayList<>();
+        Toaster.toast(R.string.could_not_connect_to_server);
+        return stations;
+    }
+
+    public static void setRequestForUpdatingStations() {
+        requestedUpdate = true;
     }
 
     private String getHttpResponseRetrofit() throws IOException {
@@ -145,7 +157,7 @@ public class StationList {
         return stations;
     }
 
-    private void deleteStationsFromSharedPreferences(Context context) {
+    private static void deleteStationsFromSharedPreferences(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.android.airquality", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("STATIONS", "");

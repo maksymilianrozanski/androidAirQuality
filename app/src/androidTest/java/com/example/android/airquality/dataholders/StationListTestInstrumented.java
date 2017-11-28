@@ -21,7 +21,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 @RunWith(AndroidJUnit4.class)
 public class StationListTestInstrumented {
 
-
     private SharedPreferences sharedPrefs = Mockito.mock(SharedPreferences.class);
     private SharedPreferences.Editor editor = Mockito.mock(SharedPreferences.Editor.class);
 

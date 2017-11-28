@@ -16,8 +16,6 @@ public class QueryUtilitiesTestInstrumented2 {
 
         JSONObject jsonObject = new JSONObject("{\"key1\":\"PM10\"}");
 
-
-
         String obtainedValue = QueryUtilities.getStringFromJSONObject(jsonObject, "key1");
         String expectedValue = jsonObject.getString("key1");
         assertTrue(obtainedValue.equals(expectedValue));

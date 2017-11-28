@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void reloadStations() {
         if (isConnected(getApplicationContext())) {
+            StationList.setRequestForUpdatingStations();
             loaderManager.restartLoader(STATION_LOADER_ID, null, this);
         } else {
             Toast.makeText(getApplicationContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
