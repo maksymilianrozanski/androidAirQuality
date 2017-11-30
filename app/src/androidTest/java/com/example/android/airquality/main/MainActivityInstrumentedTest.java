@@ -25,9 +25,12 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.not;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -50,7 +53,7 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
     }
 
     @Before
-    public void clearSharedPreferences(){
+    public void clearSharedPreferences() {
         File root = InstrumentationRegistry.getTargetContext().getFilesDir().getParentFile();
         String[] sharedPreferencesFileNames = new File(root, "shared_prefs").list();
         for (String fileName : sharedPreferencesFileNames) {
@@ -59,7 +62,7 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
     }
 
     @Test
-    public void correctResponseTest() throws Exception{
+    public void correctResponseTest() throws Exception {
         String fileName = "stationsResponse.json";
 
         server.enqueue(new MockResponse().setResponseCode(200)
@@ -72,9 +75,23 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
         onView(withId(R.id.sensorsViewStationName)).check(matches(withText(expectedStation0Name)));
     }
 
+    @Test
+    public void invalidResponseTest() throws Exception {
+        String fileName = "stationsResponse.json";
+
+        server.enqueue(new MockResponse().setResponseCode(503).setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        Intent intent = new Intent();
+        mainActivityRule.launchActivity(intent);
+
+        onView(withText(R.string.could_not_connect_to_server)).inRoot(withDecorView(not(mainActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+    }
+
     @After
     public void tearDown() throws Exception {
         super.tearDown();
         server.shutdown();
+        mainActivityRule.finishActivity();
+        Thread.sleep(1000);
     }
 }

@@ -94,7 +94,7 @@ public class StationList {
     }
 
     private List<Station> fetchStationDataFromWeb(Context context) {
-        stations = null;
+//        stations = null;
         //trying to get correct response from server up to 5 times
         for (int j = 1; j < 6; ) {
             try {
@@ -102,13 +102,17 @@ public class StationList {
                 stations = extractFeatureFromJson(jsonResponse, context);
                 saveStationsToSharedPreferences(jsonResponse, context);
                 return stations;
-            } catch (JSONException | IOException e) {
+            } catch (JSONException | IOException | NullPointerException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request", e);
                 j++;
             }
         }
-        stations = new ArrayList<>();
+//        stations = new ArrayList<>();
         Toaster.toast(R.string.could_not_connect_to_server);
+        if (stations != null) {
+            return stations;
+        }
+        stations = new ArrayList<>();
         return stations;
     }
 
@@ -129,7 +133,7 @@ public class StationList {
         retrofit2.Call<ResponseBody> call = stationsRestService.getAllStations();
         try {
             return call.execute().body().string();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             throw e;
         }
