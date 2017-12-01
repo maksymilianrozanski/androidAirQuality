@@ -1,16 +1,19 @@
 package com.example.android.airquality.utility;
 
+import android.support.test.runner.AndroidJUnit4;
+import android.test.InstrumentationTestCase;
+
 import com.example.android.airquality.dataholders.Station;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
-public class NearestStationFinderTest {
+@RunWith(AndroidJUnit4.class)
+public class QueryUtilitiesNearestStationFinderTestInstrumented extends InstrumentationTestCase {
     private double userLatitude;
     private double userLongitude;
     private List<Station> stations;
