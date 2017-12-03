@@ -187,10 +187,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-
                                 StationList stations = StationList.getStationListInstance(getApplicationContext());
-
-
                                 Integer nearestStationId = NearestStationFinder.findNearestStation
                                         (location.getLatitude(), location.getLongitude(), stations.getStations());
 
@@ -204,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 }
                                 startActivity(intent);
                             } else {
+                                Toaster.toast(R.string.no_location_access);
                                 Log.e(LOG_TAG, "location == null");
                             }
                         }

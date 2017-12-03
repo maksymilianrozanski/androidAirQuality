@@ -73,10 +73,8 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         onView(withText(R.string.sort_stations_by_city_name)).check(matches(isDisplayed()));
     }
 
-    @Test
+    @Test   //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927
     public void findNearestStationTest() throws Exception {
-
-        //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927
         String fileName = "stationsResponse.json";
         server.enqueue(new MockResponse().setResponseCode(200)
                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
