@@ -26,6 +26,7 @@ import static android.support.test.espresso.Espresso.openActionBarOverflowOrOpti
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -70,6 +71,22 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         onView(withText(R.string.find_nearest_station)).check(matches(isDisplayed()));
         onView(withText(R.string.sort_stations_by_distance)).check(matches(isDisplayed()));
         onView(withText(R.string.sort_stations_by_city_name)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void findNearestStationTest() throws Exception {
+
+        //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927
+        String fileName = "stationsResponse.json";
+        server.enqueue(new MockResponse().setResponseCode(200)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        Intent intent = new Intent();
+        mainActivityRule.launchActivity(intent);
+
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.find_nearest_station)).perform(click());
+        onView(withId(R.id.sensorsViewStationName)).check(matches(withText("Warszawa-Marszałkowska")));
     }
 
     @Test
