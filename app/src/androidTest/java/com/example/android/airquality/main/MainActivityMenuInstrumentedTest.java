@@ -21,6 +21,7 @@ import java.io.File;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -28,6 +29,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
@@ -109,12 +111,35 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         StationList.STATIONS_BASE_URL = mockWebServerNew.url("/").toString();
 
         mockWebServerNew.enqueue(new MockResponse().setResponseCode(200)
-        .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
 
         onView(withText("mocked station name 1 updated")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void sortByCityNameTest() throws Exception {
+        String fileName = "stationsResponse.json";
+
+        server.enqueue(new MockResponse().setResponseCode(200)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        Intent intent = new Intent();
+        mainActivityRule.launchActivity(intent);
+
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.sort_stations_by_city_name)).perform(click());
+        
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.stationname)).check(matches(withText("Augustów - mobilne ")));
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.cityname)).check(matches(withText("Augustów")));
+
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(1).onChildView(withId(R.id.stationname)).check(matches(withText("Belsk-IGFPAN")));
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(1).onChildView(withId(R.id.cityname)).check(matches(withText("Belsk Duży")));
+
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(19).onChildView(withId(R.id.stationname)).check(matches(withText("KMŚ Puszcza Borecka")));
+        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(19).onChildView(withId(R.id.cityname)).check(matches(withText("Diabla Góra")));
     }
 
     @After
