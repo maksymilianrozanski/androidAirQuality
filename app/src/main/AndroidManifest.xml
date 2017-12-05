@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.SingleStationActivity" />
+        <activity android:name=".main.SingleStationActivity"
+            android:parentActivityName=".main.MainActivity"/>
 
         <receiver android:name=".layout.SingleStationWidget">
             <intent-filter>
