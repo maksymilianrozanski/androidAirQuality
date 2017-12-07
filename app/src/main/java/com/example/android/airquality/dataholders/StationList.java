@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.utility.QueryStationSensors;
 import com.example.android.airquality.utility.QueryUtilities;
 import com.example.android.airquality.utility.StationsRestService;
 
@@ -242,5 +243,37 @@ public class StationList {
             }
         }
         return jsonArray;
+    }
+
+    public Sensor findSensorWithHighestPercentValue(int stationId) throws IOException {
+        List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
+        return getSensorWithHighestValue(sensors);
+    }
+
+    private Sensor getSensorWithHighestValue(List<Sensor> sensors) {
+        if (sensors.size() == 1) return sensors.get(0);
+        double highestValue = Double.MIN_VALUE;
+        Sensor sensorHighestCalculatedValue = sensors.get(0);
+        for (int i = 1; i < sensors.size(); i++) {
+            double calculatedValue = sensors.get(i).percentOfMaxValue();
+            if (calculatedValue > highestValue) {
+                highestValue = calculatedValue;
+                sensorHighestCalculatedValue = sensors.get(i);
+            }
+        }
+        return sensorHighestCalculatedValue;
+    }
+
+    public String findStationName(int stationId) throws IOException{
+        return findStationWithId(stationId).getName();
+    }
+
+    private Station findStationWithId(int stationId) throws IOException {
+        for (Station currentStation : stations) {
+            if (Integer.parseInt(currentStation.getId()) == stationId) {
+                return currentStation;
+            }
+        }
+        throw new IOException("Station with this id does not exist, requested id = " + stationId);
     }
 }

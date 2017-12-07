@@ -101,4 +101,14 @@ public class StationListTestInstrumented {
             Assert.assertTrue(collator.compare(currentCityName, nextCityName) <= 0);
         }
     }
+
+    @Test
+    public void findStationNameTest() throws Exception{
+        int idOfStation = 400;
+        String expectedName = "Kraków, Aleja Krasińskiego";
+        StationList stationList = StationList.getStationListInstance(context);
+        String returnedStationName = stationList.findStationName(idOfStation);
+
+        Assert.assertTrue(returnedStationName.equals(expectedName));
+    }
 }

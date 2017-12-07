@@ -8,18 +8,16 @@ import android.util.Log;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Sensor;
-import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.layout.SingleStationWidget;
 
 import java.io.IOException;
-import java.util.List;
 
 import xdroid.toaster.Toaster;
 
 public class WidgetUpdateService extends IntentService {
 
-    public static final String REQUESTED_STATION_INDEX = "imsg";
+    public static final String REQUESTED_STATION_ID = "imsg";
     public static final String OUTPUT_SENSOR = "omsg";
     public static final String OUTPUT_STATION_NAME = "outputStationName";
     private static final String LOG_TAG = WidgetUpdateService.class.getName();
@@ -30,16 +28,18 @@ public class WidgetUpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        int requestedStationIndex;
+        int idOfStation;
         try {
-            requestedStationIndex = intent.getIntExtra(REQUESTED_STATION_INDEX, 0);
+            idOfStation = intent.getIntExtra(REQUESTED_STATION_ID, 0);
         } catch (NullPointerException e) {
-            requestedStationIndex = 0;
+            idOfStation = 0;
             Log.e(LOG_TAG, "No IntExtra in intent" + e);
         }
+        StationList stationList = StationList.getStationListInstance(getApplicationContext());
+
         Sensor sensor;
         try {
-            sensor = fetchSensorWithHighestPercentValue(requestedStationIndex);
+            sensor = stationList.findSensorWithHighestPercentValue(idOfStation);
         } catch (IOException e) {
             Toaster.toast(R.string.could_not_connect_to_server);
             return;
@@ -47,32 +47,15 @@ public class WidgetUpdateService extends IntentService {
         Intent intentSendBackToWidget = new Intent(this.getApplicationContext(), SingleStationWidget.class);
         intentSendBackToWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intentSendBackToWidget.putExtra(OUTPUT_SENSOR, sensor);
-        intentSendBackToWidget.putExtra(OUTPUT_STATION_NAME, getStationName(requestedStationIndex));
-        sendBroadcast(intentSendBackToWidget);
-    }
 
-    private String getStationName(int indexOnStationList) {
-        return StationList.getStationListInstance(getApplicationContext()).getStation(indexOnStationList).getName();
-    }
-
-    private Sensor fetchSensorWithHighestPercentValue(int stationIndex) throws IOException {
-        List<Station> stationList = StationList.getStationListInstance(getApplicationContext()).getStations();
-        Station station = stationList.get(stationIndex);
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()));
-        return getSensorWithHighestValue(sensors);
-    }
-
-    private Sensor getSensorWithHighestValue(List<Sensor> sensors) {
-        if (sensors.size() == 1) return sensors.get(0);
-        double highestValue = Double.MIN_VALUE;
-        Sensor sensorHighestCalculatedValue = sensors.get(0);
-        for (int i = 1; i < sensors.size(); i++) {
-            double calculatedValue = sensors.get(i).percentOfMaxValue();
-            if (calculatedValue > highestValue) {
-                highestValue = calculatedValue;
-                sensorHighestCalculatedValue = sensors.get(i);
-            }
+        try {
+            intentSendBackToWidget.putExtra(OUTPUT_STATION_NAME, stationList.findStationName(idOfStation));
+        }catch (IOException e){
+            Toaster.toast(R.string.error_occurred);
+            Log.e(LOG_TAG, "IOException, couldn't find station name, station id = "
+                    + idOfStation + "exception:" + e);
+            return;
         }
-        return sensorHighestCalculatedValue;
+        sendBroadcast(intentSendBackToWidget);
     }
 }

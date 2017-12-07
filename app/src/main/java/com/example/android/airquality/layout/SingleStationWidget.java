@@ -14,6 +14,8 @@ import com.example.android.airquality.utility.WidgetUpdateService;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
 public class SingleStationWidget extends AppWidgetProvider {
+    //TODO: set id of station in widget from config activity
+    private static int tempStationId = 400;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
@@ -23,7 +25,7 @@ public class SingleStationWidget extends AppWidgetProvider {
 
         Intent intentSendToService = new Intent(context, WidgetUpdateService.class);
 
-        intentSendToService.putExtra(WidgetUpdateService.REQUESTED_STATION_INDEX, 0);
+        intentSendToService.putExtra(WidgetUpdateService.REQUESTED_STATION_ID, tempStationId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, 0);
         views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
 
