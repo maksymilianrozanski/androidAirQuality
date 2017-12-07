@@ -94,7 +94,6 @@ public class StationList {
     }
 
     private List<Station> fetchStationDataFromWeb(Context context) {
-//        stations = null;
         //trying to get correct response from server up to 5 times
         for (int j = 1; j < 6; ) {
             try {
@@ -107,7 +106,6 @@ public class StationList {
                 j++;
             }
         }
-//        stations = new ArrayList<>();
         Toaster.toast(R.string.could_not_connect_to_server);
         if (stations != null) {
             return stations;
