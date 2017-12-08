@@ -14,7 +14,8 @@
         android:id="@+id/requestPermissionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/request_location_permission"/>
+        android:text="@string/request_location_permission"
+        android:background="@drawable/button_background_rounded_corners"/>
 
     <CheckBox
         android:id="@+id/displayRefreshButtonCheckBox"
@@ -26,7 +27,8 @@
         android:id="@+id/widgetStartButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start_widget"/>
+        android:text="@string/start_widget"
+        android:background="@drawable/button_background_rounded_corners"/>
     
 
 </LinearLayout>
