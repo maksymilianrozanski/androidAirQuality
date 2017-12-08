@@ -59,8 +59,9 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
+        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())
+                && intent.hasExtra(WidgetUpdateService.OUTPUT_SENSOR)
+                && intent.hasExtra(WidgetUpdateService.OUTPUT_STATION_NAME)) {
             Sensor sensorFromIntent = intent.getParcelableExtra(WidgetUpdateService.OUTPUT_SENSOR);
             String stationName = intent.getStringExtra(WidgetUpdateService.OUTPUT_STATION_NAME);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
@@ -81,6 +82,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
                 appWidgetManager.updateAppWidget(thisWidget, views);
             }
         }
+        super.onReceive(context, intent);
     }
 
     private String removeSecondsFromDate(String notFormattedDate) {
