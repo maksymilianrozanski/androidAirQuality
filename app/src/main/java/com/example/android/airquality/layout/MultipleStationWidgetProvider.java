@@ -142,9 +142,9 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     }
 
     private void onReceiveRefreshButtonVisibilityIntent(Context context, Intent intent) {
-        if (intent.getAction().equals(WidgetConfigActivity.SHOW_REFRESH_BUTTON)) {
-            if (intent.hasExtra(WidgetConfigActivity.VISIBILITY_KEY) && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-                boolean visibility = intent.getBooleanExtra(WidgetConfigActivity.VISIBILITY_KEY, true);
+        if (intent.getAction().equals(MultipleStationWidgetConfigActivity.SHOW_REFRESH_BUTTON)) {
+            if (intent.hasExtra(MultipleStationWidgetConfigActivity.VISIBILITY_KEY) && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
+                boolean visibility = intent.getBooleanExtra(MultipleStationWidgetConfigActivity.VISIBILITY_KEY, true);
                 int appWidgetId = intent.getIntExtra(
                         AppWidgetManager.EXTRA_APPWIDGET_ID,
                         AppWidgetManager.INVALID_APPWIDGET_ID);

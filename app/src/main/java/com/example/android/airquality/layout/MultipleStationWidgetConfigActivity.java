@@ -23,7 +23,7 @@ import com.example.android.airquality.vieweditors.StationLoader;
 
 import java.util.List;
 
-public class WidgetConfigActivity extends Activity implements OnClickListener, LoaderManager.LoaderCallbacks<List<Station>> {
+public class MultipleStationWidgetConfigActivity extends Activity implements OnClickListener, LoaderManager.LoaderCallbacks<List<Station>> {
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int MY_PERMISSION_REQUEST = 0;
@@ -110,7 +110,7 @@ public class WidgetConfigActivity extends Activity implements OnClickListener, L
         CheckBox checkBox = (CheckBox) findViewById(R.id.displayRefreshButtonCheckBox);
         Log.v("LOG", "state of checkbox: " + checkBox.isChecked());
         Intent refreshButtonVisibility = new Intent(getApplicationContext(), MultipleStationWidgetProvider.class);
-        refreshButtonVisibility.setAction(WidgetConfigActivity.SHOW_REFRESH_BUTTON);
+        refreshButtonVisibility.setAction(MultipleStationWidgetConfigActivity.SHOW_REFRESH_BUTTON);
         refreshButtonVisibility.putExtra(VISIBILITY_KEY, checkBox.isChecked());
         refreshButtonVisibility.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         sendBroadcast(refreshButtonVisibility);

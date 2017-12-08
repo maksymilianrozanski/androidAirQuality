@@ -1,5 +1,6 @@
 package com.example.android.airquality.layout;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
@@ -7,29 +8,40 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
+import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.utility.WidgetUpdateService;
 import com.example.android.airquality.vieweditors.StationAdapter;
 import com.example.android.airquality.vieweditors.StationLoader;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleStationWidgetConfigActivity extends Activity implements LoaderManager.LoaderCallbacks<List<Station>> {
+import xdroid.toaster.Toaster;
+
+public class SingleStationWidgetConfigActivity extends Activity implements LoaderManager.LoaderCallbacks<List<Station>>, View.OnClickListener {
 
     private static final String LOG_TAG = SingleStationWidgetConfigActivity.class.getName();
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int STATION_LOADER_ID = 1;
     public static final String SHARED_PREF_KEY_WIDGET = "com.example.android.airquality.singleStationWidget";
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private StationAdapter stationAdapter;
     LoaderManager loaderManager = getLoaderManager();
 
@@ -45,6 +57,8 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
         assignAppWidgetId();
+
+        setButtons();
 
         stationListView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             Station station = stationAdapter.getItem(position);
@@ -102,5 +116,61 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
         stationAdapter.clear();
+    }
+
+    private void setButtons() {
+        Button sortByCityName = (Button) findViewById(R.id.sortStationsByCityNameSingleWidgetConfig);
+        sortByCityName.setOnClickListener(this);
+        Button sortByDistance = (Button) findViewById(R.id.sortStationsByDistanceSingleWidgetConfig);
+        sortByDistance.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.sortStationsByCityNameSingleWidgetConfig:
+                sortByCityName();
+                break;
+            case R.id.sortStationsByDistanceSingleWidgetConfig:
+                sortByDistance();
+                break;
+        }
+    }
+
+    private void sortByCityName() {
+        StationList stationList = StationList.getStationListInstance(getApplicationContext());
+        stationAdapter.clear();
+        stationAdapter.addAll(stationList.getStationsSortedByCityName());
+    }
+
+    private void sortByDistance() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, (Location location) -> {
+                StationList stationList = StationList.getStationListInstance(getApplicationContext());
+                try {
+                    stationList.sortStationsByDistance(getApplicationContext(), location);
+                } catch (NullPointerException e) {
+                    Toaster.toast(R.string.no_location_access);
+                }
+                stationAdapter.clear();
+                stationAdapter.addAll(stationList.getStations());
+            });
+        } else {
+            askForLocationPermissionIfNoPermission();
+        }
+    }
+
+    //TODO: remove duplicate code (askForLocationPermissionIfNoPermission() - here and MainActivity).
+    private static final int MY_PERMISSION_REQUEST = 0;
+
+    private boolean askForLocationPermissionIfNoPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.v(LOG_TAG, "No permission, asking for permission");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST);
+            return false;
+        }
+        return true;
     }
 }
