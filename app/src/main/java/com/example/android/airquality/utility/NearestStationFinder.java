@@ -1,5 +1,11 @@
 package com.example.android.airquality.utility;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+
 import com.example.android.airquality.dataholders.Station;
 
 import java.util.List;
@@ -39,5 +45,14 @@ public class NearestStationFinder {
                         Math.pow(Math.sin((stationLongitudeRadian - userLongitudeRadian) / 2), 2)
         )));
         return distance;
+    }
+
+    public static boolean askForLocationPermissionIfNoPermission(Activity activity, int permissionRequest ) {
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, permissionRequest);
+            return false;
+        }
+        return true;
     }
 }

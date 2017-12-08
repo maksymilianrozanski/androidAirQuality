@@ -10,7 +10,6 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -179,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void goToNearestStation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        askForLocationPermissionIfNoPermission();
+        NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation()
@@ -209,16 +208,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    private boolean askForLocationPermissionIfNoPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.v(LOG_TAG, "No permission, asking for permission");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST);
-            return false;
-        }
-        return true;
-    }
-
     private void sortStationsByDistance() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -236,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             });
         } else {
-            askForLocationPermissionIfNoPermission();
+            NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
         }
     }
 

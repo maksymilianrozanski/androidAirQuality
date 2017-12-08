@@ -1,15 +1,11 @@
 package com.example.android.airquality.layout;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +15,7 @@ import android.widget.CheckBox;
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
+import com.example.android.airquality.utility.NearestStationFinder;
 import com.example.android.airquality.vieweditors.StationLoader;
 
 import java.util.List;
@@ -69,15 +66,8 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
                 startWidget();
                 break;
             case R.id.requestPermissionButton:
-                askForLocationPermissionIfNoPermission();
+                NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
                 break;
-        }
-    }
-
-    private void askForLocationPermissionIfNoPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST);
         }
     }
 

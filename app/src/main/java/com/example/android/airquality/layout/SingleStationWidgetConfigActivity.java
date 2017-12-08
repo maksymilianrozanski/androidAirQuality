@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +22,7 @@ import android.widget.ListView;
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.dataholders.StationList;
+import com.example.android.airquality.utility.NearestStationFinder;
 import com.example.android.airquality.utility.WidgetUpdateService;
 import com.example.android.airquality.vieweditors.StationAdapter;
 import com.example.android.airquality.vieweditors.StationLoader;
@@ -41,6 +41,7 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     private static final int STATION_LOADER_ID = 1;
     public static final String SHARED_PREF_KEY_WIDGET = "com.example.android.airquality.singleStationWidget";
 
+    private static final int MY_PERMISSION_REQUEST = 0;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private StationAdapter stationAdapter;
     LoaderManager loaderManager = getLoaderManager();
@@ -157,20 +158,7 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
                 stationAdapter.addAll(stationList.getStations());
             });
         } else {
-            askForLocationPermissionIfNoPermission();
+            NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
         }
-    }
-
-    //TODO: remove duplicate code (askForLocationPermissionIfNoPermission() - here and MainActivity).
-    private static final int MY_PERMISSION_REQUEST = 0;
-
-    private boolean askForLocationPermissionIfNoPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.v(LOG_TAG, "No permission, asking for permission");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST);
-            return false;
-        }
-        return true;
     }
 }
