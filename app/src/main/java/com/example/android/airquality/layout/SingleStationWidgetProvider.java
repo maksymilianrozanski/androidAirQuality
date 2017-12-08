@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
@@ -13,9 +14,7 @@ import com.example.android.airquality.dataholders.Sensor;
 import com.example.android.airquality.utility.WidgetUpdateService;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
-public class SingleStationWidget extends AppWidgetProvider {
-    //TODO: set id of station in widget from config activity
-    private static int tempStationId = 400;
+public class SingleStationWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
@@ -25,8 +24,8 @@ public class SingleStationWidget extends AppWidgetProvider {
 
         Intent intentSendToService = new Intent(context, WidgetUpdateService.class);
 
-        intentSendToService.putExtra(WidgetUpdateService.REQUESTED_STATION_ID, tempStationId);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, 0);
+        intentSendToService.putExtra(WidgetUpdateService.WIDGET_ID_TO_UPDATE, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -40,13 +39,27 @@ public class SingleStationWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onEnabled(Context context) {}
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SingleStationWidgetConfigActivity.SHARED_PREF_KEY_WIDGET, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        for (int id : appWidgetIds) {
+            editor.remove(String.valueOf(id));
+        }
+        editor.apply();
+    }
 
     @Override
-    public void onDisabled(Context context) {}
+    public void onEnabled(Context context) {
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
             Sensor sensorFromIntent = intent.getParcelableExtra(WidgetUpdateService.OUTPUT_SENSOR);
             String stationName = intent.getStringExtra(WidgetUpdateService.OUTPUT_STATION_NAME);
@@ -59,11 +72,15 @@ public class SingleStationWidget extends AppWidgetProvider {
                 views.setTextViewText(R.id.widgetNameAndValueOfParam, sensorFromIntent.getParam() + ": " + highestPercentValue + "%");
                 views.setTextViewText(R.id.widgetUpdateDate, removeSecondsFromDate(sensorFromIntent.getLastDate()));
             }
-            ComponentName thisWidget = new ComponentName(context, SingleStationWidget.class);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            appWidgetManager.updateAppWidget(thisWidget, views);
+            if (intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID) != null) {
+                int widgetIdToUpdate = Integer.parseInt(intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID));
+                appWidgetManager.updateAppWidget(widgetIdToUpdate, views);
+            } else {
+                ComponentName thisWidget = new ComponentName(context, SingleStationWidgetProvider.class);
+                appWidgetManager.updateAppWidget(thisWidget, views);
+            }
         }
-        super.onReceive(context, intent);
     }
 
     private String removeSecondsFromDate(String notFormattedDate) {

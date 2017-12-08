@@ -55,6 +55,7 @@ public class QueryUtilities {
                 jsonResponse = readFromStream(inputStream);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                throw new IOException("Response code !=200");
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the JSON results.");

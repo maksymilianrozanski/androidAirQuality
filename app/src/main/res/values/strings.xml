@@ -16,4 +16,5 @@
     <string name="find_nearest_station">find nearest station</string>
     <string name="sort_stations_by_distance">sort stations by distance</string>
     <string name="sort_stations_by_city_name">sort stations by city name</string>
+    <string name="select_station_to_display">Select station to display in widget</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.android.airquality.utility;
 
+import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.google.mockwebserver.MockResponse;
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.net.URL;
 
 import static junit.framework.Assert.assertTrue;
@@ -43,14 +45,14 @@ public class QueryUtilitiesTestInstrumented {
         assertTrue(response.equals(mockedResponse));
     }
 
-    @Test
+    @LargeTest
+    @Test(expected = IOException.class)
     public void httpRequestTestResponseCode404() throws Exception {
         String mockedResponse = "my server response...";
         mServer.enqueue(new MockResponse().setResponseCode(404).setBody(mockedResponse));
         URL url = mServer.getUrl("/");
 
         String response = QueryUtilities.retryMakingHttpRequestIfException(url);
-        assertTrue(response.equals(""));
     }
 
     @Test
