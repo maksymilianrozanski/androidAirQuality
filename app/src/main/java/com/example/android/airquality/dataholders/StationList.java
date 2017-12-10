@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -260,6 +261,7 @@ public class StationList {
     }
 
     public List<Sensor> removeSensorsWhereValueOlderThan(List<Sensor> sensors, int timeInHours) {
+        calendar = new GregorianCalendar();
         for (int i = 0; i < sensors.size(); i++) {
             try {
                 if (sensors.get(i).getTimeInMillis() < (calendar.getTimeInMillis() - (timeInHours * 3600000))) {
