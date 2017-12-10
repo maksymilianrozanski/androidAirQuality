@@ -45,7 +45,7 @@ public class WidgetUpdateService extends IntentService {
 
         Sensor sensor;
         try {
-            sensor = stationList.findSensorWithHighestPercentValue(idOfStation);
+            sensor = stationList.findSensorWithHighestPercentValue(idOfStation, 5);
         } catch (IOException e) {
             Toaster.toast(R.string.could_not_connect_to_server);
             return;

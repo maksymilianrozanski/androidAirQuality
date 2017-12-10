@@ -249,11 +249,6 @@ public class StationList {
         return jsonArray;
     }
 
-    public Sensor findSensorWithHighestPercentValue(int stationId) throws IOException {
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
-        return getSensorWithHighestValue(sensors);
-    }
-
     public Sensor findSensorWithHighestPercentValue(int stationId, int ignoreOlderThanHours) throws IOException {
         List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
         sensors = removeSensorsWhereValueOlderThan(sensors, ignoreOlderThanHours);
