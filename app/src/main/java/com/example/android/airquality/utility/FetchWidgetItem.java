@@ -46,6 +46,7 @@ public class FetchWidgetItem extends Thread {
         List<Station> stationList = StationList.getStationListInstance(context).getStations();
         Station station = stationList.get(stationIndex);
         List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()));
+        StationList.getStationListInstance(context).removeSensorsWhereValueOlderThan(sensors, 5);
         return getSensorWithHighestValue(sensors);
     }
 

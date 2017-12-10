@@ -156,7 +156,7 @@ public class StationListTestInstrumented {
         sensors.add(sensor4);
         Assert.assertTrue(sensors.size() == 4);
 
-        sensors = stationList.removeSensorsWhereValueOlderThan(sensors, 2);
+        stationList.removeSensorsWhereValueOlderThan(sensors, 2);
 
         Assert.assertTrue(sensors.size() == 3);
         Assert.assertTrue(sensors.get(0).getId() == 1);

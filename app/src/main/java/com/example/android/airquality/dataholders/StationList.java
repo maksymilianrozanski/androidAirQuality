@@ -259,7 +259,6 @@ public class StationList {
         return getSensorWithHighestValue(sensors);
     }
 
-    @VisibleForTesting
     public List<Sensor> removeSensorsWhereValueOlderThan(List<Sensor> sensors, int timeInHours) {
         for (int i = 0; i < sensors.size(); i++) {
             try {

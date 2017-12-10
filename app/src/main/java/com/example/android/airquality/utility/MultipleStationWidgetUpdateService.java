@@ -109,6 +109,8 @@ public class MultipleStationWidgetUpdateService extends Service {
                 Log.e(LOG_TAG, "Exception: " + e);
             }
         }
+
+
     }
 
     private ArrayList<WidgetItem> createWidgetItemListWithStationNames(int numberOfStations) {
