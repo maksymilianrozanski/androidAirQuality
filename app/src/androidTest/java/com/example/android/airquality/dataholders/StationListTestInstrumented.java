@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.text.Collator;
-import java.time.Clock;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +29,7 @@ public class StationListTestInstrumented {
     private Context context = Mockito.mock(Context.class);
     private Location location = Mockito.mock(Location.class);
     private String jsonString;
-    private Clock mockedClock = Mockito.mock(Clock.class);
+    private Calendar mockedCalendar = Mockito.mock(Calendar.class);
 
     @Before
     public void setJsonString() {
@@ -120,9 +120,9 @@ public class StationListTestInstrumented {
         StationList stationList = StationList.getStationListInstance(context);
 
         //time = "1999-01-01 09:45:00
-        Mockito.when(mockedClock.millis()).thenReturn(915183900L * 1000);
+        Mockito.when(mockedCalendar.getTimeInMillis()).thenReturn(915183900L * 1000);
 
-        stationList.clock = mockedClock;
+        stationList.calendar = mockedCalendar;
 
         List<Sensor> sensors = new ArrayList<>();
 

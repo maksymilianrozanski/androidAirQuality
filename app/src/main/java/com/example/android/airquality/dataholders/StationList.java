@@ -1,6 +1,5 @@
 package com.example.android.airquality.dataholders;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -20,8 +19,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.Collator;
 import java.text.ParseException;
-import java.time.Clock;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +41,8 @@ public class StationList {
     private static StationList instance = null;
     private StationsRestService stationsRestService;
     private Retrofit retrofit;
+    @VisibleForTesting
+    public Calendar calendar;
 
     private StationList(Context context) {
         fetchStationDataFromSharedPreferences(context);
@@ -259,15 +260,10 @@ public class StationList {
     }
 
     @VisibleForTesting
-    public Clock clock;
-
-    //TODO: fix to use method in lower API
-    @VisibleForTesting
-    @TargetApi(26)
     public List<Sensor> removeSensorsWhereValueOlderThan(List<Sensor> sensors, int timeInHours) {
         for (int i = 0; i < sensors.size(); i++) {
             try {
-                if (sensors.get(i).getTimeInMillis() < (clock.millis() - (timeInHours * 3600000))) {
+                if (sensors.get(i).getTimeInMillis() < (calendar.getTimeInMillis() - (timeInHours * 3600000))) {
                     sensors.remove(i);
                     i = i - 1;
                 }
