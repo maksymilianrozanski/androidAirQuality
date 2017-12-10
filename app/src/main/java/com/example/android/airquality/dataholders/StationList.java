@@ -1,5 +1,6 @@
 package com.example.android.airquality.dataholders;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -18,6 +19,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.Collator;
+import java.text.ParseException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +34,6 @@ import xdroid.toaster.Toaster;
 
 public class StationList {
 
-    //url for data - list of stations
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     public static String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
     private static boolean requestedUpdate = false;
@@ -250,6 +252,33 @@ public class StationList {
         return getSensorWithHighestValue(sensors);
     }
 
+    public Sensor findSensorWithHighestPercentValue(int stationId, int ignoreOlderThanHours) throws IOException {
+        List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
+        sensors = removeSensorsWhereValueOlderThan(sensors, ignoreOlderThanHours);
+        return getSensorWithHighestValue(sensors);
+    }
+
+    @VisibleForTesting
+    public Clock clock;
+
+    //TODO: fix to use method in lower API
+    @VisibleForTesting
+    @TargetApi(26)
+    public List<Sensor> removeSensorsWhereValueOlderThan(List<Sensor> sensors, int timeInHours) {
+        for (int i = 0; i < sensors.size(); i++) {
+            try {
+                if (sensors.get(i).getTimeInMillis() < (clock.millis() - (timeInHours * 3600000))) {
+                    sensors.remove(i);
+                    i = i - 1;
+                }
+            } catch (ParseException e) {
+                sensors.remove(i);
+                i = i - 1;
+            }
+        }
+        return sensors;
+    }
+
     private Sensor getSensorWithHighestValue(List<Sensor> sensors) {
         if (sensors.size() == 1) return sensors.get(0);
         double highestValue = Double.MIN_VALUE;
@@ -264,7 +293,7 @@ public class StationList {
         return sensorHighestCalculatedValue;
     }
 
-    public String findStationName(int stationId) throws IOException{
+    public String findStationName(int stationId) throws IOException {
         return findStationWithId(stationId).getName();
     }
 

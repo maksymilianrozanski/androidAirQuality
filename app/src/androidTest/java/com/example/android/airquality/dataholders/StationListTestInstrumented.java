@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.text.Collator;
+import java.time.Clock;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +29,7 @@ public class StationListTestInstrumented {
     private Context context = Mockito.mock(Context.class);
     private Location location = Mockito.mock(Location.class);
     private String jsonString;
+    private Clock mockedClock = Mockito.mock(Clock.class);
 
     @Before
     public void setJsonString() {
@@ -103,12 +106,61 @@ public class StationListTestInstrumented {
     }
 
     @Test
-    public void findStationNameTest() throws Exception{
+    public void findStationNameTest() throws Exception {
         int idOfStation = 400;
         String expectedName = "Kraków, Aleja Krasińskiego";
         StationList stationList = StationList.getStationListInstance(context);
         String returnedStationName = stationList.findStationName(idOfStation);
 
         Assert.assertTrue(returnedStationName.equals(expectedName));
+    }
+
+    @Test
+    public void removeSensorsWhereValueOlderThanTest() throws Exception {
+        StationList stationList = StationList.getStationListInstance(context);
+
+        //time = "1999-01-01 09:45:00
+        Mockito.when(mockedClock.millis()).thenReturn(915183900L * 1000);
+
+        stationList.clock = mockedClock;
+
+        List<Sensor> sensors = new ArrayList<>();
+
+        Sensor sensor1 = new Sensor();
+        sensor1.setId(1);
+        sensor1.setParam("PM10");
+        sensor1.setValue(100);
+        sensor1.setLastDate("1999-01-01 09:30:10");
+
+        Sensor sensor2 = new Sensor();
+        sensor2.setId(2);
+        sensor2.setParam("PM10");
+        sensor2.setValue(80);
+        sensor2.setLastDate("1999-01-01 09:30:10");
+
+        Sensor sensor3 = new Sensor();
+        sensor3.setId(3);
+        sensor3.setParam("PM10");
+        sensor3.setValue(110);
+        sensor3.setLastDate("1999-01-01 02:10:10");
+
+        Sensor sensor4 = new Sensor();
+        sensor4.setId(4);
+        sensor4.setParam("PM10");
+        sensor4.setValue(110);
+        sensor4.setLastDate("1999-01-01 09:30:10");
+
+        sensors.add(sensor1);
+        sensors.add(sensor2);
+        sensors.add(sensor3);
+        sensors.add(sensor4);
+        Assert.assertTrue(sensors.size() == 4);
+
+        sensors = stationList.removeSensorsWhereValueOlderThan(sensors, 2);
+
+        Assert.assertTrue(sensors.size() == 3);
+        Assert.assertTrue(sensors.get(0).getId() == 1);
+        Assert.assertTrue(sensors.get(1).getId() == 2);
+        Assert.assertTrue(sensors.get(2).getId() == 4);
     }
 }
