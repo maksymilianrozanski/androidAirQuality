@@ -7,6 +7,10 @@ import android.util.Log;
 import com.example.android.airquality.main.MainActivity;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Sensor implements Parcelable {
 
     private int id;
@@ -90,7 +94,7 @@ public class Sensor implements Parcelable {
         }
     };
 
-    public double percentOfMaxValue(){
+    public double percentOfMaxValue() {
         double percentValue;
         try {
             percentValue = (this.getValue() / SensorAdapter.getMaxConcentrations().get(this.getParam()) * 100);
@@ -99,5 +103,18 @@ public class Sensor implements Parcelable {
             return -1;
         }
         return percentValue;
+    }
+
+    public long getTimeInMillis() throws ParseException {
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        Date date;
+        try {
+            date = simpleDateFormat.parse(this.getLastDate());
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, "ParseException: " + e);
+            throw e;
+        }
+        return date.getTime();
     }
 }

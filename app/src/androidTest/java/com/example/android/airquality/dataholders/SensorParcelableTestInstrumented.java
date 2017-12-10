@@ -6,14 +6,16 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import java.text.ParseException;
+
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
 public class SensorParcelableTestInstrumented {
 
     @Test
-    public void parcelableImplementationTest(){
+    public void parcelableImplementationTest() {
 
         Sensor sensor = new Sensor();
         sensor.setId(100);
@@ -35,4 +37,25 @@ public class SensorParcelableTestInstrumented {
         assertTrue(sensor.getLastDate().equals(sensorCreatedFromParcel.getLastDate()));
     }
 
+    @Test
+    public void getTimeInMillisTest() throws Exception {
+        Sensor sensor = new Sensor();
+        sensor.setId(100);
+        sensor.setParam("PM10");
+        sensor.setValue(321.2d);
+        sensor.setLastDate("1970-01-01 00:00:30");
+        long calculatedTime = sensor.getTimeInMillis();
+        long expectedTime = 30000L;
+        assertTrue(calculatedTime == expectedTime);
+    }
+
+    @Test(expected = ParseException.class)
+    public void getTimeInMillisTest2() throws Exception{
+        Sensor sensor = new Sensor();
+        sensor.setId(100);
+        sensor.setParam("PM10");
+        sensor.setValue(321.2d);
+        sensor.setLastDate("1970-01-01 0070:30");
+        long calculatedTime = sensor.getTimeInMillis();
+    }
 }
