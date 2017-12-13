@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.airquality.R;
-import com.example.android.airquality.utility.QueryStationSensors;
 import com.example.android.airquality.utility.QueryUtilities;
 import com.example.android.airquality.utility.StationsRestService;
 
@@ -18,11 +17,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.Collator;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +30,7 @@ import xdroid.toaster.Toaster;
 
 public class StationList {
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     public static String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
     private static boolean requestedUpdate = false;
     private static final String LOG_TAG = StationList.class.getSimpleName();
@@ -42,8 +38,6 @@ public class StationList {
     private static StationList instance = null;
     private StationsRestService stationsRestService;
     private Retrofit retrofit;
-    @VisibleForTesting
-    public Calendar calendar;
 
     private StationList(Context context) {
         fetchStationDataFromSharedPreferences(context);
@@ -247,42 +241,6 @@ public class StationList {
             }
         }
         return jsonArray;
-    }
-
-    public Sensor findSensorWithHighestPercentValue(int stationId, int ignoreOlderThanHours) throws IOException {
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
-        sensors = removeSensorsWhereValueOlderThan(sensors, ignoreOlderThanHours);
-        return getSensorWithHighestValue(sensors);
-    }
-
-    public List<Sensor> removeSensorsWhereValueOlderThan(List<Sensor> sensors, int timeInHours) {
-        calendar = new GregorianCalendar();
-        for (int i = 0; i < sensors.size(); i++) {
-            try {
-                if (sensors.get(i).getTimeInMillis() < (calendar.getTimeInMillis() - (timeInHours * 3600000))) {
-                    sensors.remove(i);
-                    i = i - 1;
-                }
-            } catch (ParseException e) {
-                sensors.remove(i);
-                i = i - 1;
-            }
-        }
-        return sensors;
-    }
-
-    private Sensor getSensorWithHighestValue(List<Sensor> sensors) {
-        if (sensors.size() == 1) return sensors.get(0);
-        double highestValue = Double.MIN_VALUE;
-        Sensor sensorHighestCalculatedValue = sensors.get(0);
-        for (int i = 1; i < sensors.size(); i++) {
-            double calculatedValue = sensors.get(i).percentOfMaxValue();
-            if (calculatedValue > highestValue) {
-                highestValue = calculatedValue;
-                sensorHighestCalculatedValue = sensors.get(i);
-            }
-        }
-        return sensorHighestCalculatedValue;
     }
 
     public String findStationName(int stationId) throws IOException {

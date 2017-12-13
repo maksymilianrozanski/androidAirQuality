@@ -117,14 +117,13 @@ public class StationListTestInstrumented {
 
     @Test
     public void removeSensorsWhereValueOlderThanTest() throws Exception {
-        StationList stationList = StationList.getStationListInstance(context);
+        List<Sensor> sensors = new ArrayList<>();
+        SensorList sensorList = new SensorList(sensors);
 
         //time = "1999-01-01 09:45:00
         Mockito.when(mockedCalendar.getTimeInMillis()).thenReturn(915183900L * 1000);
 
-        stationList.calendar = mockedCalendar;
-
-        List<Sensor> sensors = new ArrayList<>();
+        sensorList.calendar = mockedCalendar;
 
         Sensor sensor1 = new Sensor();
         sensor1.setId(1);
@@ -156,7 +155,8 @@ public class StationListTestInstrumented {
         sensors.add(sensor4);
         Assert.assertTrue(sensors.size() == 4);
 
-        stationList.removeSensorsWhereValueOlderThan(sensors, 2);
+        //TODO: move test to Sensor class tests
+        sensorList.removeSensorsWhereValueOlderThan(2);
 
         Assert.assertTrue(sensors.size() == 3);
         Assert.assertTrue(sensors.get(0).getId() == 1);

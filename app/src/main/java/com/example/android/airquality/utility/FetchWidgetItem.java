@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Sensor;
+import com.example.android.airquality.dataholders.SensorList;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.layout.WidgetItem;
@@ -46,28 +47,9 @@ public class FetchWidgetItem extends Thread {
         List<Station> stationList = StationList.getStationListInstance(context).getStations();
         Station station = stationList.get(stationIndex);
         List<Sensor> sensors = QueryStationSensors.fetchSensorData(Integer.parseInt(station.getId()));
-        StationList.getStationListInstance(context).removeSensorsWhereValueOlderThan(sensors, 5);
-        return getSensorWithHighestValue(sensors);
-    }
-
-    //TODO: fix if station is invalid/has no sensors
-    private Sensor getSensorWithHighestValue(List<Sensor> sensors) {
-        if (sensors.size() == 1) return sensors.get(0);
-        double highestValue = sensors.get(0).percentOfMaxValue();
-        Sensor sensorHighestCalculatedValue = sensors.get(0);
-        for (int i = 1; i < sensors.size(); i++) {
-            double calculatedValue;
-            try {
-                calculatedValue = sensors.get(i).percentOfMaxValue();
-            } catch (NullPointerException e) {
-                calculatedValue = Double.MIN_VALUE;
-            }
-            if (calculatedValue > highestValue) {
-                highestValue = calculatedValue;
-                sensorHighestCalculatedValue = sensors.get(i);
-            }
-        }
-        return sensorHighestCalculatedValue;
+        SensorList sensorList = new SensorList(sensors);
+        sensorList.removeSensorsWhereValueOlderThan(5);
+        return sensorList.getSensorWithHighestValue();
     }
 
     private String removeSecondsFromDate(String notFormattedDate) {

@@ -10,11 +10,13 @@ import android.util.Log;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Sensor;
+import com.example.android.airquality.dataholders.SensorList;
 import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.layout.SingleStationWidgetConfigActivity;
 import com.example.android.airquality.layout.SingleStationWidgetProvider;
 
 import java.io.IOException;
+import java.util.List;
 
 import xdroid.toaster.Toaster;
 
@@ -45,7 +47,7 @@ public class WidgetUpdateService extends IntentService {
 
         Sensor sensor;
         try {
-            sensor = stationList.findSensorWithHighestPercentValue(idOfStation, 5);
+            sensor = findSensorWithHighestPercentValue(idOfStation, 5);
         } catch (IOException e) {
             Toaster.toast(R.string.could_not_connect_to_server);
             return;
@@ -64,6 +66,13 @@ public class WidgetUpdateService extends IntentService {
             return;
         }
         sendBroadcast(intentSendBackToWidget);
+    }
+
+    private Sensor findSensorWithHighestPercentValue(int stationId, int ignoreOlderThanHours) throws IOException {
+        List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
+        SensorList sensorList = new SensorList(sensors);
+        sensorList.removeSensorsWhereValueOlderThan(ignoreOlderThanHours);
+        return sensorList.getSensorWithHighestValue();
     }
 
     private int getStationIdFromSharedPref(int appWidgetId) {
