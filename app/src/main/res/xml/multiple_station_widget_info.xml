@@ -4,7 +4,7 @@
     android:initialLayout="@layout/multiple_station_listview"
     android:minHeight="40dp"
     android:minWidth="40dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/multiple_station_widget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="2700000"
     android:widgetCategory="home_screen"/>
