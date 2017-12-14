@@ -35,7 +35,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
 
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
-        setContentView(R.layout.widget_config_activity);
+        setContentView(R.layout.multiple_station_widget_config_activity);
 
         assignAppWidgetId();
 
