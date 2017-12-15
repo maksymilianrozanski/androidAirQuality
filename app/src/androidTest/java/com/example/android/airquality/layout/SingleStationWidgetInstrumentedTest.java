@@ -1,0 +1,34 @@
+package com.example.android.airquality.layout;
+
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
+import android.test.InstrumentationTestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
+
+@RunWith(AndroidJUnit4.class)
+public class SingleStationWidgetInstrumentedTest extends InstrumentationTestCase{
+
+    private UiDevice mDevice;
+
+    @Before
+    public void before() throws Exception{
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+        assertThat(mDevice, notNullValue());
+
+        // Start from the home screen
+        mDevice.pressHome();
+    }
+
+    @Test
+    public void firstTest() throws Exception {
+        Thread.sleep(2000);
+    }
+}
