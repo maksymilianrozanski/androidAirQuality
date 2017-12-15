@@ -58,7 +58,7 @@
         </activity>
 
         <service
-            android:name=".utility.WidgetUpdateService"
+            android:name=".utility.SingleStationWidgetUpdateService"
             android:enabled="true" />
         <service
             android:name=".layout.ScrollableWidgetService"

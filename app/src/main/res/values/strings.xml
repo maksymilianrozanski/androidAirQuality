@@ -19,4 +19,5 @@
     <string name="select_station_to_display">Select station to display in widget</string>
     <string name="sort_by_city_name">Sort by city name</string>
     <string name="sort_by_distance">Sort by distance</string>
+    <string name="tap_to_refresh">Tap to refresh</string>
 </resources>

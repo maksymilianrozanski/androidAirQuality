@@ -20,16 +20,16 @@ import java.util.List;
 
 import xdroid.toaster.Toaster;
 
-public class WidgetUpdateService extends IntentService {
+public class SingleStationWidgetUpdateService extends IntentService {
 
     public static final String WIDGET_ID_TO_UPDATE = "incomingMessage";
     public static final String OUTPUT_SENSOR = "omsg";
     public static final String OUTPUT_STATION_NAME = "outputStationName";
     public static final String APP_WIDGET_ID_KEY = "widgetData:";
-    private static final String LOG_TAG = WidgetUpdateService.class.getName();
+    private static final String LOG_TAG = SingleStationWidgetUpdateService.class.getName();
 
-    public WidgetUpdateService() {
-        super(WidgetUpdateService.class.getName());
+    public SingleStationWidgetUpdateService() {
+        super(SingleStationWidgetUpdateService.class.getName());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class WidgetUpdateService extends IntentService {
         int idOfStation;
         int appWidgetId;
         try {
-            appWidgetId = intent.getIntExtra(WidgetUpdateService.WIDGET_ID_TO_UPDATE, 0);
+            appWidgetId = intent.getIntExtra(SingleStationWidgetUpdateService.WIDGET_ID_TO_UPDATE, 0);
             idOfStation = getStationIdFromSharedPref(appWidgetId);
         } catch (NullPointerException e) {
             Log.e(LOG_TAG, "No IntExtra in intent" + e);

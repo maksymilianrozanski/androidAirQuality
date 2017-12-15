@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Sensor;
-import com.example.android.airquality.utility.WidgetUpdateService;
+import com.example.android.airquality.utility.SingleStationWidgetUpdateService;
 import com.example.android.airquality.vieweditors.SensorAdapter;
 
 public class SingleStationWidgetProvider extends AppWidgetProvider {
@@ -20,11 +20,11 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
-        views.setTextViewText(R.id.widgetStationName, "Tap to refresh");
+        views.setTextViewText(R.id.widgetStationName, context.getString(R.string.tap_to_refresh));
 
-        Intent intentSendToService = new Intent(context, WidgetUpdateService.class);
+        Intent intentSendToService = new Intent(context, SingleStationWidgetUpdateService.class);
 
-        intentSendToService.putExtra(WidgetUpdateService.WIDGET_ID_TO_UPDATE, appWidgetId);
+        intentSendToService.putExtra(SingleStationWidgetUpdateService.WIDGET_ID_TO_UPDATE, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
 
@@ -60,10 +60,10 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())
-                && intent.hasExtra(WidgetUpdateService.OUTPUT_SENSOR)
-                && intent.hasExtra(WidgetUpdateService.OUTPUT_STATION_NAME)) {
-            Sensor sensorFromIntent = intent.getParcelableExtra(WidgetUpdateService.OUTPUT_SENSOR);
-            String stationName = intent.getStringExtra(WidgetUpdateService.OUTPUT_STATION_NAME);
+                && intent.hasExtra(SingleStationWidgetUpdateService.OUTPUT_SENSOR)
+                && intent.hasExtra(SingleStationWidgetUpdateService.OUTPUT_STATION_NAME)) {
+            Sensor sensorFromIntent = intent.getParcelableExtra(SingleStationWidgetUpdateService.OUTPUT_SENSOR);
+            String stationName = intent.getStringExtra(SingleStationWidgetUpdateService.OUTPUT_STATION_NAME);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
             if (sensorFromIntent != null) {
                 views.setTextViewText(R.id.widgetStationName, stationName);

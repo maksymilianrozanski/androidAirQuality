@@ -23,7 +23,7 @@ import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.Station;
 import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.utility.NearestStationFinder;
-import com.example.android.airquality.utility.WidgetUpdateService;
+import com.example.android.airquality.utility.SingleStationWidgetUpdateService;
 import com.example.android.airquality.vieweditors.StationAdapter;
 import com.example.android.airquality.vieweditors.StationLoader;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -78,8 +78,8 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             setResult(Activity.RESULT_OK, intent);
 
-            Intent intentSendToService = new Intent(getApplicationContext(), WidgetUpdateService.class);
-            intentSendToService.putExtra(WidgetUpdateService.WIDGET_ID_TO_UPDATE, currentStationId);
+            Intent intentSendToService = new Intent(getApplicationContext(), SingleStationWidgetUpdateService.class);
+            intentSendToService.putExtra(SingleStationWidgetUpdateService.WIDGET_ID_TO_UPDATE, currentStationId);
             sendBroadcast(intentSendToService);
 
             this.finish();
@@ -89,7 +89,7 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     private void saveWidgetIdAndStationId(int appWidgetId, int stationId) {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF_KEY_WIDGET, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(WidgetUpdateService.APP_WIDGET_ID_KEY + String.valueOf(appWidgetId), stationId);
+        editor.putInt(SingleStationWidgetUpdateService.APP_WIDGET_ID_KEY + String.valueOf(appWidgetId), stationId);
         editor.apply();
     }
 

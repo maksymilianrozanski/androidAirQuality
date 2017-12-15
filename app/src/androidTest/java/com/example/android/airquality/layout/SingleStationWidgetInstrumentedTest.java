@@ -13,22 +13,22 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class SingleStationWidgetInstrumentedTest extends InstrumentationTestCase{
+public class SingleStationWidgetInstrumentedTest extends InstrumentationTestCase {
 
-    private UiDevice mDevice;
+    private UiDevice device;
 
     @Before
-    public void before() throws Exception{
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    public void before() throws Exception {
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-        assertThat(mDevice, notNullValue());
+        assertThat(device, notNullValue());
 
         // Start from the home screen
-        mDevice.pressHome();
+        device.pressHome();
     }
 
     @Test
     public void firstTest() throws Exception {
-        Thread.sleep(2000);
+
     }
 }
