@@ -78,7 +78,7 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        stubAllExternalIntents();
+        stubAllIntents();
 
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).perform(click());
 
@@ -96,7 +96,7 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        stubAllExternalIntents();
+        stubAllIntents();
 
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(5).perform(click());
 
@@ -114,7 +114,7 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
         Intent intent = new Intent();
         activityRule.launchActivity(intent);
 
-        stubAllExternalIntents();
+        stubAllIntents();
 
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(25).perform(click());
 
@@ -122,8 +122,9 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
                 toPackage("com.example.android.airquality")));
     }
 
-    private void stubAllExternalIntents() {
+    private void stubAllIntents() {
         intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+        intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
     }
 
     @After

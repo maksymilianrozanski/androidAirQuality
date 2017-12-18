@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.utility.QueryUtilities;
+import com.example.android.airquality.utility.ServiceGenerator;
 import com.example.android.airquality.utility.StationsRestService;
 
 import org.json.JSONArray;
@@ -22,10 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 import xdroid.toaster.Toaster;
 
 public class StationList {
@@ -36,7 +35,6 @@ public class StationList {
     private static final String LOG_TAG = StationList.class.getSimpleName();
     private List<Station> stations;
     private static StationList instance = null;
-    private StationsRestService stationsRestService;
     private Retrofit retrofit;
 
     private StationList(Context context) {
@@ -118,14 +116,7 @@ public class StationList {
     }
 
     private String getHttpResponseRetrofit() throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(STATIONS_BASE_URL)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .client(client)
-                .build();
-        stationsRestService = retrofit.create(StationsRestService.class);
+        StationsRestService stationsRestService = ServiceGenerator.createService(StationsRestService.class);
 
         retrofit2.Call<ResponseBody> call = stationsRestService.getAllStations();
         try {
