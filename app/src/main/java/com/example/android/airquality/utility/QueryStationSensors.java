@@ -1,6 +1,5 @@
 package com.example.android.airquality.utility;
 
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,8 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +18,10 @@ import okhttp3.ResponseBody;
 import xdroid.toaster.Toaster;
 
 import static com.example.android.airquality.utility.QueryUtilities.getStringFromJSONObject;
-import static com.example.android.airquality.utility.QueryUtilities.retryMakingHttpRequestIfException;
 
 public class QueryStationSensors {
 
     private static final String LOG_TAG = QueryStationSensors.class.getSimpleName();
-
-    //beginning of url to query - need to add sensor id at the end
-    //return type of param and array of dates + values
-    @VisibleForTesting
-    public static String BEGINNING_OF_URL_SENSOR_DATA = "http://api.gios.gov.pl/pjp-api/rest/data/getData/";
 
     private StationsRestService stationsRestService;
 
@@ -72,6 +63,20 @@ public class QueryStationSensors {
         }
     }
 
+    private String getResponseSensorData(int sensorId) throws IOException {
+        if (stationsRestService == null) {
+            stationsRestService = ServiceGenerator.createService(StationsRestService.class);
+        }
+
+        retrofit2.Call<ResponseBody> call = stationsRestService.getSensorValues(sensorId);
+        try {
+            return call.execute().body().string();
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     private static List<Sensor> extractListOfSensorsFromJson(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
@@ -101,24 +106,24 @@ public class QueryStationSensors {
         return new Sensor(sensorsId, sensorsParam);
     }
 
-    private static List<Sensor> addDataToSensorList(List<Sensor> sensorList) {
+    private List<Sensor> addDataToSensorList(List<Sensor> sensorList) throws IOException {
         for (int i = 0; i < sensorList.size(); i++) {
             Sensor currentSensor = sensorList.get(i);
             int currentSensorId = currentSensor.getId();
-            URL url;
 
-            try {
-                url = new URL(BEGINNING_OF_URL_SENSOR_DATA + currentSensorId);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return sensorList;
+            String jsonResponse = null;
+            for (int j = 1; j < 6; ) {
+                try {
+                    jsonResponse = getResponseSensorData(currentSensorId);
+                    break;
+                } catch (IOException | NullPointerException e) {
+                    Log.e(LOG_TAG, "Problem making the HTTP request", e);
+                    j++;
+                }
             }
 
-            String jsonResponse;
-            try {
-                jsonResponse = retryMakingHttpRequestIfException(url);
-            } catch (IOException e) {
-                continue;
+            if (jsonResponse == null) {
+                throw new IOException(LOG_TAG + "couldn't fetch sensor data");
             }
             currentSensor = addValueAndDate(currentSensor, jsonResponse);
             sensorList.set(i, currentSensor);

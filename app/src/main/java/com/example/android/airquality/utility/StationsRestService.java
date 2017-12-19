@@ -12,4 +12,7 @@ public interface StationsRestService {
 
     @GET("pjp-api/rest/station/sensors/{stationId}/")
     Call<ResponseBody> getListOfSensors(@Path("stationId") int stationId);
+
+    @GET("pjp-api/rest/data/getData/{sensorId}/")
+    Call<ResponseBody> getSensorValues(@Path("sensorId") int sensorId);
 }

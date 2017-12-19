@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.example.android.airquality.R;
 import com.example.android.airquality.dataholders.StationList;
-import com.example.android.airquality.utility.QueryStationSensors;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,8 +31,6 @@ import static org.hamcrest.Matchers.anything;
 public class SingleStationActivityInstrumentedTest extends InstrumentationTestCase {
 
     private MockWebServer server;
-    private MockWebServer sensorsDataServer1;
-
 
     @Rule
     public ActivityTestRule<SingleStationActivity> activityRule
@@ -48,10 +45,6 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
 
         StationList.STATIONS_BASE_URL = server.url("/").toString();
-
-        sensorsDataServer1 = new MockWebServer();
-        sensorsDataServer1.start();
-        QueryStationSensors.BEGINNING_OF_URL_SENSOR_DATA = sensorsDataServer1.url("/").toString();
     }
 
     @Test
@@ -70,14 +63,18 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
                     } catch (Exception e) {
                         Log.e("log", "error inside test method" + e);
                     }
+                } else if (request.getPath().equals("/pjp-api/rest/data/getData/16784/")) {
+                    try {
+                        return new MockResponse().setResponseCode(200)
+                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensorValuesFileName));
+                    } catch (Exception e) {
+                        Log.e("log", "error inside test method" + e);
+                    }
                 }
                 Log.e("Log", "invalid request to mocked server");
                 return null;
             }
         });
-
-        sensorsDataServer1.enqueue(new MockResponse().setResponseCode(200)
-                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensorValuesFileName)));
 
         Intent intent = new Intent();
         intent.putExtra("StationId", 10139);
@@ -98,6 +95,5 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
     public void tearDown() throws Exception {
         super.tearDown();
         server.shutdown();
-        sensorsDataServer1.shutdown();
     }
 }
