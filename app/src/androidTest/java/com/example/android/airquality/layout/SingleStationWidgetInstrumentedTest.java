@@ -2,8 +2,14 @@ package com.example.android.airquality.layout;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject2;
 import android.test.InstrumentationTestCase;
+
+import com.example.android.airquality.R;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +33,20 @@ public class SingleStationWidgetInstrumentedTest extends InstrumentationTestCase
         device.pressHome();
     }
 
-    @Test
+    @Test   //TODO: mock server
     public void firstTest() throws Exception {
+        Thread.sleep(1000);
+        final String initialWidgetText = InstrumentationRegistry.getTargetContext().getString(R.string.tap_to_refresh);
+        Thread.sleep(1000);
 
+        UiObject2 singleStationWidget = device.findObject(By.text(initialWidgetText));
+
+        Thread.sleep(1000);
+        singleStationWidget.click();
+        Thread.sleep(1000);
+
+        UiObject2 stationName = device.findObject(By.text("mocked station name 1"));
+
+        Assert.assertTrue(stationName != null);
     }
 }
