@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
 import xdroid.toaster.Toaster;
 
 public class StationList {
@@ -35,7 +34,7 @@ public class StationList {
     private static final String LOG_TAG = StationList.class.getSimpleName();
     private List<Station> stations;
     private static StationList instance = null;
-    private Retrofit retrofit;
+    private StationsRestService stationsRestService;
 
     private StationList(Context context) {
         fetchStationDataFromSharedPreferences(context);
@@ -116,8 +115,9 @@ public class StationList {
     }
 
     private String getHttpResponseRetrofit() throws IOException {
-        StationsRestService stationsRestService = ServiceGenerator.createService(StationsRestService.class);
-
+        if (stationsRestService == null) {
+            stationsRestService = ServiceGenerator.createService(StationsRestService.class);
+        }
         retrofit2.Call<ResponseBody> call = stationsRestService.getAllStations();
         try {
             return call.execute().body().string();

@@ -12,7 +12,6 @@ import com.example.android.airquality.dataholders.StationList;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,7 +89,6 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         onView(withId(R.id.sensorsViewStationName)).check(matches(withText("Warszawa-Marszałkowska")));
     }
 
-    @Ignore     //TODO: //can't modify base url with current code
     @Test
     public void reloadDataTest() throws Exception {
         String fileName = "stationsResponse.json";
@@ -98,22 +96,15 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         server.enqueue(new MockResponse().setResponseCode(200)
                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+        server.enqueue(new MockResponse().setResponseCode(200)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
 
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
-        server.shutdown();
-
         onView(withText("mocked station name 1")).check(matches(isDisplayed()));
 
-        MockWebServer mockWebServerNew = new MockWebServer();
-        mockWebServerNew.start();
-
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
-        StationList.STATIONS_BASE_URL = mockWebServerNew.url("/").toString();
-
-        mockWebServerNew.enqueue(new MockResponse().setResponseCode(200)
-                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
@@ -133,7 +124,7 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.sort_stations_by_city_name)).perform(click());
-        
+
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.stationname)).check(matches(withText("Augustów - mobilne ")));
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.cityname)).check(matches(withText("Augustów")));
 
