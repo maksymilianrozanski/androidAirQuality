@@ -37,7 +37,8 @@ public class SensorLoader extends AsyncTaskLoader<List<Sensor>> {
             return null;
         }
         try {
-            return QueryStationSensors.fetchSensorData(stationId);
+            QueryStationSensors queryStationSensors = new QueryStationSensors();
+            return queryStationSensors.fetchSensorData(stationId);
         }catch (IOException e){
             Log.e(LOG_TAG, "fetching data failed");
             Toaster.toast(R.string.could_not_connect_to_server);

@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import xdroid.toaster.Toaster;
 
 import static com.example.android.airquality.utility.QueryUtilities.getStringFromJSONObject;
@@ -35,18 +36,44 @@ public class QueryStationSensors {
     @VisibleForTesting
     public static String BEGINNING_OF_URL_SENSOR_DATA = "http://api.gios.gov.pl/pjp-api/rest/data/getData/";
 
-    private QueryStationSensors() {
+    private StationsRestService stationsRestService;
+
+    public QueryStationSensors() {
     }
 
-    public static List<Sensor> fetchSensorData(int stationId) throws IOException {
-        URL url = new URL(BEGINNING_OF_URL_SENSORS_LIST + stationId);
-
-        String jsonResponse = retryMakingHttpRequestIfException(url);
+    public List<Sensor> fetchSensorData(int stationId) throws IOException {
+        String jsonResponse = null;
+        for (int j = 1; j < 6; ) {
+            try {
+                jsonResponse = getResponseListOfSensors(stationId);
+                break;
+            } catch (IOException | NullPointerException e) {
+                Log.e(LOG_TAG, "Problem making the HTTP request", e);
+                j++;
+            }
+        }
+        if (jsonResponse == null) {
+            throw new IOException(LOG_TAG + "couldn't fetch sensor data");
+        }
 
         List<Sensor> sensors = extractListOfSensorsFromJson(jsonResponse);
         sensors = addDataToSensorList(sensors);
 
         return sensors;
+    }
+
+    private String getResponseListOfSensors(int stationId) throws IOException {
+        if (stationsRestService == null) {
+            stationsRestService = ServiceGenerator.createService(StationsRestService.class);
+        }
+
+        retrofit2.Call<ResponseBody> call = stationsRestService.getListOfSensors(stationId);
+        try {
+            return call.execute().body().string();
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private static List<Sensor> extractListOfSensorsFromJson(String jsonResponse) {

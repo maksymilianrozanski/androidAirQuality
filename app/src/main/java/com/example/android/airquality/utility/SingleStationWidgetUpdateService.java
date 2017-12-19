@@ -69,7 +69,8 @@ public class SingleStationWidgetUpdateService extends IntentService {
     }
 
     private Sensor findSensorWithHighestPercentValue(int stationId, int ignoreOlderThanHours) throws IOException {
-        List<Sensor> sensors = QueryStationSensors.fetchSensorData(stationId);
+        QueryStationSensors queryStationSensors = new QueryStationSensors();
+        List<Sensor> sensors = queryStationSensors.fetchSensorData(stationId);
         SensorList sensorList = new SensorList(sensors);
         sensorList.removeSensorsWhereValueOlderThan(ignoreOlderThanHours);
         return sensorList.getSensorWithHighestValue();
