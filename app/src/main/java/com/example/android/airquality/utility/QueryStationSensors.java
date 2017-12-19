@@ -27,10 +27,6 @@ public class QueryStationSensors {
 
     private static final String LOG_TAG = QueryStationSensors.class.getSimpleName();
 
-    //beginning of url to query - need to add station id at the end - return list of sensors
-    @VisibleForTesting
-    public static String BEGINNING_OF_URL_SENSORS_LIST = "http://api.gios.gov.pl/pjp-api/rest/station/sensors/";
-
     //beginning of url to query - need to add sensor id at the end
     //return type of param and array of dates + values
     @VisibleForTesting

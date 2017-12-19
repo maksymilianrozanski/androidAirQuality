@@ -10,6 +10,6 @@ public interface StationsRestService {
     @GET("pjp-api/rest/station/findAll/")
     Call<ResponseBody> getAllStations();
 
-    @GET("pjp-api/rest/station/sensors/{stationId}")
+    @GET("pjp-api/rest/station/sensors/{stationId}/")
     Call<ResponseBody> getListOfSensors(@Path("stationId") int stationId);
 }

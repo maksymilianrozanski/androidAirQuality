@@ -5,8 +5,10 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 
 import com.example.android.airquality.R;
+import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.utility.QueryStationSensors;
 
 import org.junit.After;
@@ -15,8 +17,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -27,7 +31,7 @@ import static org.hamcrest.Matchers.anything;
 @RunWith(AndroidJUnit4.class)
 public class SingleStationActivityInstrumentedTest extends InstrumentationTestCase {
 
-    private MockWebServer sensorsListServer;
+    private MockWebServer server;
     private MockWebServer sensorsDataServer1;
 
 
@@ -39,10 +43,11 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
     public void setUp() throws Exception {
         super.setUp();
         //station id 10139
-        sensorsListServer = new MockWebServer();
-        sensorsListServer.start();
+        server = new MockWebServer();
+        server.start();
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
-        QueryStationSensors.BEGINNING_OF_URL_SENSORS_LIST = sensorsListServer.url("/").toString();
+
+        StationList.STATIONS_BASE_URL = server.url("/").toString();
 
         sensorsDataServer1 = new MockWebServer();
         sensorsDataServer1.start();
@@ -54,8 +59,22 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
         String sensorsFileName = "sensorsPiastow10139.json";
         String sensorValuesFileName = "sensor16784values.json";
 
-        sensorsListServer.enqueue(new MockResponse().setResponseCode(200)
-                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensorsFileName)));
+        server.setDispatcher(new Dispatcher() {
+            @Override
+            public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
+                Log.v("Log", "request to mocked server: " + request.getPath());
+                if (request.getPath().equals("/pjp-api/rest/station/sensors/10139/")) {
+                    try {
+                        return new MockResponse().setResponseCode(200)
+                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensorsFileName));
+                    } catch (Exception e) {
+                        Log.e("log", "error inside test method" + e);
+                    }
+                }
+                Log.e("Log", "invalid request to mocked server");
+                return null;
+            }
+        });
 
         sensorsDataServer1.enqueue(new MockResponse().setResponseCode(200)
                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensorValuesFileName)));
@@ -78,7 +97,7 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
     @After
     public void tearDown() throws Exception {
         super.tearDown();
-        sensorsListServer.shutdown();
+        server.shutdown();
         sensorsDataServer1.shutdown();
     }
 }
