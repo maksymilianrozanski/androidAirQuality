@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 import xdroid.toaster.Toaster;
 
 import static com.example.android.airquality.utility.QueryUtilities.getStringFromJSONObject;
@@ -56,7 +57,13 @@ public class QueryStationSensors {
 
         retrofit2.Call<ResponseBody> call = stationsRestService.getListOfSensors(stationId);
         try {
-            return call.execute().body().string();
+            Response<ResponseBody> response = call.execute();
+            System.out.println("response code: " + response.code());
+            if (response.code() == 200) {
+                return response.body().string();
+            } else {
+                throw new IOException(LOG_TAG + ",server response code: " + response.code());
+            }
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             throw e;
