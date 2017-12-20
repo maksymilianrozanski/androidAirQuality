@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
-import retrofit2.Response;
 import xdroid.toaster.Toaster;
 
 public class StationList {
@@ -120,18 +119,7 @@ public class StationList {
             stationsRestService = ServiceGenerator.createService(StationsRestService.class);
         }
         retrofit2.Call<ResponseBody> call = stationsRestService.getAllStations();
-        try {
-            Response<ResponseBody> response = call.execute();
-            System.out.println("response code: " + response.code());
-            if (response.code() == 200) {
-                return response.body().string();
-            } else {
-                throw new IOException(LOG_TAG + ",server response code: " + response.code());
-            }
-        } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        return ServiceGenerator.getResponseBody(call);
     }
 
     private List<Station> extractFeatureFromJson(String stationJSON, Context context) throws JSONException {
