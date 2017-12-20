@@ -77,7 +77,13 @@ public class QueryStationSensors {
 
         retrofit2.Call<ResponseBody> call = stationsRestService.getSensorValues(sensorId);
         try {
-            return call.execute().body().string();
+            Response<ResponseBody> response = call.execute();
+            System.out.println("response code: " + response.code());
+            if (response.code() == 200) {
+                return response.body().string();
+            } else {
+                throw new IOException(LOG_TAG + ",server response code: " + response.code());
+            }
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             throw e;
