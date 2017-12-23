@@ -213,7 +213,9 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         device.pressHome();
     }
 
-    @Test   //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927
+    //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927,
+    //place multiple station widget on home screen,set refresh button  to visible
+    @Test
     public void widgetTest() throws Exception {
         mainActivityRule.launchActivity(new Intent());
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
@@ -227,8 +229,16 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
 
         refreshButton.click();
 
-        String expectedZeroStation = "Warszawa-Marszałkowska";
-        UiObject stationIndexZero = device.findObject(new UiSelector().text(expectedZeroStation));
-        Assert.assertTrue(stationIndexZero.getText().equals(expectedZeroStation));
+        String expectedZeroStationName = "Warszawa-Marszałkowska";
+        UiObject stationIndexZeroNameObject = device.findObject(new UiSelector().text(expectedZeroStationName));
+        Assert.assertTrue(stationIndexZeroNameObject.getText().equals(expectedZeroStationName));
+
+        String expectedStationZeroValue = "PM2.5: 114%";
+        UiObject stationIndexZeroObjectValue = device.findObject(new UiSelector().text(expectedStationZeroValue));
+        Assert.assertTrue(stationIndexZeroObjectValue.getText().equals(expectedStationZeroValue));
+
+        String expectedDate = "2017-12-19 13:00";
+        UiObject stationIndexZeroDate = device.findObject(new UiSelector().text(expectedDate));
+        Assert.assertTrue(stationIndexZeroDate.getText().equals(expectedDate));
     }
 }
