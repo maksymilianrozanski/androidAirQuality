@@ -1,6 +1,7 @@
 package com.example.android.airquality.utility;
 
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.example.android.airquality.dataholders.Sensor;
@@ -19,6 +20,9 @@ public class FetchWidgetItem extends Thread {
     private int indexNumber;
     private Context context;
     private ArrayList<WidgetItem> widgetItems;
+
+    @VisibleForTesting
+    public static int timeInHours = 5;
 
     FetchWidgetItem(int indexNumber, Context context, ArrayList<WidgetItem> widgetItems) {
         this.indexNumber = indexNumber;
@@ -49,7 +53,7 @@ public class FetchWidgetItem extends Thread {
         QueryStationSensors queryStationSensors = new QueryStationSensors();
         List<Sensor> sensors = queryStationSensors.fetchSensorData(Integer.parseInt(station.getId()));
         SensorList sensorList = new SensorList(sensors);
-        sensorList.removeSensorsWhereValueOlderThan(5);
+        sensorList.removeSensorsWhereValueOlderThan(timeInHours);
         return sensorList.getSensorWithHighestValue();
     }
 
