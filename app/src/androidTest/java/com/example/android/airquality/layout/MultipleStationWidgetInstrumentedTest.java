@@ -92,107 +92,103 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 try {
-                    if (request.getPath().equals("/pjp-api/rest/station/findAll/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/station/sensors/544/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station544FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/station/sensors/530/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station530FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/station/sensors/531/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station531FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/station/sensors/552/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station552FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/station/sensors/488/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station488FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/station/sensors/550/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station550FileName));
-                    }   //values for station 544
-                    else if (request.getPath().equals("/pjp-api/rest/data/getData/3688/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3688FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3694/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3694FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3691/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3691FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/16287/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor16287FileName));
-                    }   //values for station 530
-                    else if (request.getPath().equals("/pjp-api/rest/data/getData/3576/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3576FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3584/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3584FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3575/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3575FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3580/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3580FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3585/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3585FileName));
-                    }   //values for station 531
-                    else if (request.getPath().equals("/pjp-api/rest/data/getData/3591/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3591FileName));
-                    }   //values for station 552
-                    else if (request.getPath().equals("/pjp-api/rest/data/getData/3764/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3764FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3760/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3760FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/14688/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor14688FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3762/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3762FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3769/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3769FileName));
-                    }   //values for station 488
-                    else if (request.getPath().equals("/pjp-api/rest/data/getData/3339/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3339FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/14779/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor14779FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/14352/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor14352FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3348/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3348FileName));
-                    }    //values for station 550
-                    else if (request.getPath().equals("/pjp-api/rest/data/getData/3730/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3730FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3725/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3725FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3731/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3731FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3727/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3727FileName));
-                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3736/")) {
-                        return new MockResponse().setResponseCode(200)
-                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3736FileName));
-                    } else {
-                        Log.e("Inside_Test", "Requested url other than specified: " + request.getPath());
+                    switch (request.getPath()) {
+                        case "/pjp-api/rest/station/findAll/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName));
+                        case "/pjp-api/rest/station/sensors/544/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station544FileName));
+                        case "/pjp-api/rest/station/sensors/530/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station530FileName));
+                        case "/pjp-api/rest/station/sensors/531/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station531FileName));
+                        case "/pjp-api/rest/station/sensors/552/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station552FileName));
+                        case "/pjp-api/rest/station/sensors/488/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station488FileName));
+                        case "/pjp-api/rest/station/sensors/550/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station550FileName));
+                        case "/pjp-api/rest/data/getData/3688/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3688FileName));
+                        case "/pjp-api/rest/data/getData/3694/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3694FileName));
+                        case "/pjp-api/rest/data/getData/3691/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3691FileName));
+                        case "/pjp-api/rest/data/getData/16287/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor16287FileName));
+                        case "/pjp-api/rest/data/getData/3576/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3576FileName));
+                        case "/pjp-api/rest/data/getData/3584/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3584FileName));
+                        case "/pjp-api/rest/data/getData/3575/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3575FileName));
+                        case "/pjp-api/rest/data/getData/3580/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3580FileName));
+                        case "/pjp-api/rest/data/getData/3585/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3585FileName));
+                        case "/pjp-api/rest/data/getData/3591/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3591FileName));
+                        case "/pjp-api/rest/data/getData/3764/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3764FileName));
+                        case "/pjp-api/rest/data/getData/3760/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3760FileName));
+                        case "/pjp-api/rest/data/getData/14688/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor14688FileName));
+                        case "/pjp-api/rest/data/getData/3762/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3762FileName));
+                        case "/pjp-api/rest/data/getData/3769/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3769FileName));
+                        case "/pjp-api/rest/data/getData/3339/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3339FileName));
+                        case "/pjp-api/rest/data/getData/14779/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor14779FileName));
+                        case "/pjp-api/rest/data/getData/14352/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor14352FileName));
+                        case "/pjp-api/rest/data/getData/3348/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3348FileName));
+                        case "/pjp-api/rest/data/getData/3730/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3730FileName));
+                        case "/pjp-api/rest/data/getData/3725/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3725FileName));
+                        case "/pjp-api/rest/data/getData/3731/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3731FileName));
+                        case "/pjp-api/rest/data/getData/3727/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3727FileName));
+                        case "/pjp-api/rest/data/getData/3736/":
+                            return new MockResponse().setResponseCode(200)
+                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3736FileName));
+                        default:
+                            Log.e("Inside_Test", "Requested url other than specified: " + request.getPath());
+                            break;
                     }
                 } catch (Exception e) {
                     Log.e("Log", "exception" + e);
