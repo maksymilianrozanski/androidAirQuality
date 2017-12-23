@@ -48,8 +48,9 @@ public class FetchWidgetItem extends Thread {
     }
 
     private Sensor fetchSensorWithHighestPercentValue(Context context, int stationIndex) throws IOException {
-        List<Station> stationList = StationList.getStationListInstance(context).getStations();
-        Station station = stationList.get(stationIndex);
+        int stationId = widgetItems.get(stationIndex).getStationId();
+        StationList stationList = StationList.getStationListInstance(context);
+        Station station = stationList.findStationWithId(stationId);
         QueryStationSensors queryStationSensors = new QueryStationSensors();
         List<Sensor> sensors = queryStationSensors.fetchSensorData(Integer.parseInt(station.getId()));
         SensorList sensorList = new SensorList(sensors);

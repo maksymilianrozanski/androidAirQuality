@@ -17,6 +17,7 @@ import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.main.MainActivity;
 import com.example.android.airquality.main.RestServiceTestHelper;
 import com.example.android.airquality.utility.FetchWidgetItem;
+import com.example.android.airquality.utility.SimpleIdlingResource;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -53,9 +54,8 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         String station530FileName = "station530sensors.json";
         String station531FileName = "station531sensors.json";
         String station552FileName = "station552sensors.json";
-        String station488FileName = "station488sensors.json";   //piastów - pułaskiego
-
-        String station550FileName = "station550sensors.json";   //Ursynów
+        String station488FileName = "station488sensors.json";
+        String station550FileName = "station550sensors.json";
 
         String sensor3688FileName = "sensor3688.json";
         String sensor3694FileName = "sensor3694.json";
@@ -81,8 +81,9 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         String sensor14352FileName = "sensor14352.json";
         String sensor3348FileName = "sensor3348.json";
 
-        String sensor3730FileName = "sensor3730.json";      //Ursynów
+        String sensor3730FileName = "sensor3730.json";
         String sensor3725FileName = "sensor3725.json";
+        String sensor3731FileName = "sensor3731.json";
         String sensor3727FileName = "sensor3727.json";
         String sensor3736FileName = "sensor3736.json";
 
@@ -113,8 +114,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
                     } else if (request.getPath().equals("/pjp-api/rest/station/sensors/550/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), station550FileName));
-                    }
-                    //values for station 544
+                    }   //values for station 544
                     else if (request.getPath().equals("/pjp-api/rest/data/getData/3688/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3688FileName));
@@ -127,8 +127,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
                     } else if (request.getPath().equals("/pjp-api/rest/data/getData/16287/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor16287FileName));
-                    }
-                    //values for station 530
+                    }   //values for station 530
                     else if (request.getPath().equals("/pjp-api/rest/data/getData/3576/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3576FileName));
@@ -144,13 +143,11 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
                     } else if (request.getPath().equals("/pjp-api/rest/data/getData/3585/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3585FileName));
-                    }
-                    //values for station 531
+                    }   //values for station 531
                     else if (request.getPath().equals("/pjp-api/rest/data/getData/3591/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3591FileName));
-                    }
-                    //values for station 552
+                    }   //values for station 552
                     else if (request.getPath().equals("/pjp-api/rest/data/getData/3764/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3764FileName));
@@ -166,8 +163,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
                     } else if (request.getPath().equals("/pjp-api/rest/data/getData/3769/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3769FileName));
-                    }
-                    //values for station 488
+                    }   //values for station 488
                     else if (request.getPath().equals("/pjp-api/rest/data/getData/3339/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3339FileName));
@@ -187,14 +183,15 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
                     } else if (request.getPath().equals("/pjp-api/rest/data/getData/3725/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3725FileName));
+                    } else if (request.getPath().equals("/pjp-api/rest/data/getData/3731/")) {
+                        return new MockResponse().setResponseCode(200)
+                                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3731FileName));
                     } else if (request.getPath().equals("/pjp-api/rest/data/getData/3727/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3727FileName));
                     } else if (request.getPath().equals("/pjp-api/rest/data/getData/3736/")) {
                         return new MockResponse().setResponseCode(200)
                                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3736FileName));
-
-
                     } else {
                         Log.e("Inside_Test", "Requested url other than specified: " + request.getPath());
                     }
@@ -209,8 +206,6 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         StationList.STATIONS_BASE_URL = server.url("/").toString();
         FetchWidgetItem.timeInHours = 1440;     //about two months in hours since 19/12/2017 17:30
-
-        //TODO: mock device time (19/12/2017 17:30), write code to: re-download list of stations, check if widget is correctly displayed
     }
 
     @Before
@@ -235,21 +230,21 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         String refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh);
         UiObject2 refreshButton = device.findObject(By.text("REFRESH"));
 
+        SimpleIdlingResource resource = SimpleIdlingResource.getInstance();
+        resource.setIsIdle(false);
+
         refreshButton.click();
 
-        Thread runnable = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    Log.e("Log", "Interrupted exception");
-                }
-
+        for (int i = 0; i < 2; ) {
+            Thread.sleep(500);
+            Log.d("Log", "before checking is resource idle");
+            boolean currentValue = resource.isIdle();
+            Log.d("Log", "idle resource value: " + currentValue);
+            if (currentValue == true) {
+                Log.d("Log", "breaking for loop");
+                break;
             }
-        };
-        runnable.run();
-        runnable.join();
+        }
 
         String expectedZeroStation = "Warszawa-Marszałkowska";
         UiObject stationIndexZero = device.findObject(new UiSelector().text(expectedZeroStation));

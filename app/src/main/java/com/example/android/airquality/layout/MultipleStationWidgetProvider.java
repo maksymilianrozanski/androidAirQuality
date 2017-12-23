@@ -16,6 +16,7 @@ import android.widget.RemoteViews;
 import com.example.android.airquality.R;
 import com.example.android.airquality.main.SingleStationActivity;
 import com.example.android.airquality.utility.MultipleStationWidgetUpdateService;
+import com.example.android.airquality.utility.SimpleIdlingResource;
 
 
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
@@ -117,6 +118,9 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
         onReceiveUpdateIntent(context, intent);
         onReceiveRefreshButtonVisibilityIntent(context, intent);
+
+        SimpleIdlingResource resource = SimpleIdlingResource.getInstance();
+        resource.setIsIdle(true);
     }
 
     private void onReceiveUpdateIntent(Context context, Intent intent) {

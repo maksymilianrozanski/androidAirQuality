@@ -233,7 +233,7 @@ public class StationList {
         return findStationWithId(stationId).getName();
     }
 
-    private Station findStationWithId(int stationId) throws IOException {
+    public Station findStationWithId(int stationId) throws IOException {
         for (Station currentStation : stations) {
             if (Integer.parseInt(currentStation.getId()) == stationId) {
                 return currentStation;

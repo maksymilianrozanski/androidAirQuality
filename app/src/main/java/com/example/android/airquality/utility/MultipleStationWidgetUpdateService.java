@@ -80,7 +80,7 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     private void fetchDataFromWeb() {
         if (MainActivity.isConnected(getApplicationContext())) {
-            widgetItemList = createWidgetItemListWithStationNames(5);
+            widgetItemList = createWidgetItemListWithStationNamesAndIds(5);
             fetchSensorDataForWidgetItems(widgetItemList);
             saveWidgetItemList();
             Intent widgetUpdateIntent = new Intent();
@@ -113,7 +113,7 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     }
 
-    private ArrayList<WidgetItem> createWidgetItemListWithStationNames(int numberOfStations) {
+    private ArrayList<WidgetItem> createWidgetItemListWithStationNamesAndIds(int numberOfStations) {
         ArrayList<WidgetItem> widgetItemList = new ArrayList<>();
         for (int i = 0; i < numberOfStations; i++) {
             WidgetItem widgetItem = new WidgetItem();

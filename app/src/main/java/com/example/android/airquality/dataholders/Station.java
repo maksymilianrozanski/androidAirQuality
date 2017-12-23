@@ -3,12 +3,9 @@ package com.example.android.airquality.dataholders;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.android.airquality.utility.NearestStationFinder;
-
-/**
- * Created by Max on 16.08.2017.
- */
 
 public class Station implements Comparable<Station>, Parcelable {
 
@@ -89,8 +86,13 @@ public class Station implements Comparable<Station>, Parcelable {
     }
 
     public void setDistanceFromUser(double userLatitude, double userLongitude) {
-        this.distanceFromUser = NearestStationFinder.calculateDistance(userLatitude, userLongitude,
-                Double.parseDouble(gegrLat), Double.parseDouble(gegrLon));
+        try {
+            this.distanceFromUser = NearestStationFinder.calculateDistance(userLatitude, userLongitude,
+                    Double.parseDouble(gegrLat), Double.parseDouble(gegrLon));
+        }catch (NumberFormatException e){
+            Log.e("Log", "NumberFormatException: " + e + ", Station name: " + this.name + ", Station id: " + this.getId());
+            this.distanceFromUser = Double.MAX_VALUE;
+        }
     }
 
     @Override

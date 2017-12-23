@@ -1,9 +1,5 @@
 package com.example.android.airquality.layout;
 
-/**
- * Created by Max on 20.10.2017.
- */
-
 public class WidgetItem {
     private String stationName, nameAndValueOfParam, updateDate;
     private int stationId;
@@ -17,7 +13,7 @@ public class WidgetItem {
         this.updateDate = updateDate;
     }
 
-    String getStationName() {
+    public String getStationName() {
         return stationName;
     }
 
@@ -41,7 +37,7 @@ public class WidgetItem {
         this.updateDate = updateDate;
     }
 
-    int getStationId() {
+    public int getStationId() {
         return stationId;
     }
 
