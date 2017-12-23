@@ -17,7 +17,6 @@ import com.example.android.airquality.dataholders.StationList;
 import com.example.android.airquality.main.MainActivity;
 import com.example.android.airquality.main.RestServiceTestHelper;
 import com.example.android.airquality.utility.FetchWidgetItem;
-import com.example.android.airquality.utility.SimpleIdlingResource;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -230,21 +229,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         String refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh);
         UiObject2 refreshButton = device.findObject(By.text("REFRESH"));
 
-        SimpleIdlingResource resource = SimpleIdlingResource.getInstance();
-        resource.setIsIdle(false);
-
         refreshButton.click();
-
-        for (int i = 0; i < 2; ) {
-            Thread.sleep(500);
-            Log.d("Log", "before checking is resource idle");
-            boolean currentValue = resource.isIdle();
-            Log.d("Log", "idle resource value: " + currentValue);
-            if (currentValue == true) {
-                Log.d("Log", "breaking for loop");
-                break;
-            }
-        }
 
         String expectedZeroStation = "Warszawa-Marszałkowska";
         UiObject stationIndexZero = device.findObject(new UiSelector().text(expectedZeroStation));

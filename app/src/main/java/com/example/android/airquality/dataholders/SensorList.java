@@ -2,6 +2,7 @@ package com.example.android.airquality.dataholders;
 
 import android.support.annotation.VisibleForTesting;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -11,7 +12,8 @@ public class SensorList {
 
     private List<Sensor> sensors;
     @VisibleForTesting
-    public Calendar calendar;
+    Calendar calendar;
+    private static final String LOG_TAG = SensorList.class.getName();
 
     public SensorList(List<Sensor> sensors) {
         this.sensors = sensors;
@@ -43,8 +45,8 @@ public class SensorList {
         }
     }
 
-    //    //TODO: fix if station is invalid/has no sensors
-    public Sensor getSensorWithHighestValue() {
+    public Sensor getSensorWithHighestValue() throws IOException {
+        if (sensors.size() == 0) throw new IOException(LOG_TAG + "sensor list is empty");
         if (sensors.size() == 1) return sensors.get(0);
         double highestValue = sensors.get(0).percentOfMaxValue();
         Sensor sensorHighestCalculatedValue = sensors.get(0);
