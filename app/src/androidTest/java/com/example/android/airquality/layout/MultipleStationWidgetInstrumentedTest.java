@@ -222,8 +222,8 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
 
         device.pressHome();
 
-        String refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh);
-        UiObject2 refreshButton = device.findObject(By.text("REFRESH"));
+        String refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh).toUpperCase();
+        UiObject2 refreshButton = device.findObject(By.text(refreshButtonText));
 
         refreshButton.click();
 
