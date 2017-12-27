@@ -37,7 +37,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCase {
+public class MultipleStationWidgetInstrumentedTest2 extends InstrumentationTestCase {
 
     private UiDevice device;
     private MockWebServer server;
@@ -124,8 +124,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
                             return new MockResponse().setResponseCode(200)
                                     .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3691FileName));
                         case "/pjp-api/rest/data/getData/16287/":
-                            return new MockResponse().setResponseCode(200)
-                                    .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor16287FileName));
+                            return new MockResponse().setResponseCode(503);  //service unavailable response code
                         case "/pjp-api/rest/data/getData/3576/":
                             return new MockResponse().setResponseCode(200)
                                     .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3576FileName));
@@ -216,7 +215,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
     //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927,
     //place multiple station widget on home screen,set refresh button  to visible
     @Test
-    public void widgetTest() throws Exception {
+    public void widgetTestResponseCode503() throws Exception {
         mainActivityRule.launchActivity(new Intent());
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
@@ -235,11 +234,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
 
         String expectedZeroStationValue = "PM2.5: 114%";
         UiObject stationIndexZeroObjectValue = device.findObject(new UiSelector().text(expectedZeroStationValue));
-        Assert.assertTrue(stationIndexZeroObjectValue.getText().equals(expectedZeroStationValue));
-
-        String expectedZeroStationDate = "2017-12-19 13:00";
-        UiObject stationIndexZeroDate = device.findObject(new UiSelector().text(expectedZeroStationDate));
-        Assert.assertTrue(stationIndexZeroDate.getText().equals(expectedZeroStationDate));
+        Assert.assertFalse(stationIndexZeroObjectValue.exists());
 
         String expectedOneStationName = "Warszawa-Komunikacyjna";
         UiObject stationIndexOneNameObject = device.findObject(new UiSelector().text(expectedOneStationName));
