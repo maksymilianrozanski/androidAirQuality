@@ -37,7 +37,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class MultipleStationWidgetInstrumentedTest2 extends InstrumentationTestCase {
-//TODO: test do not pass
+
     private UiDevice device;
     private MockWebServer server;
 
@@ -198,7 +198,7 @@ public class MultipleStationWidgetInstrumentedTest2 extends InstrumentationTestC
 
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         StationList.STATIONS_BASE_URL = server.url("/").toString();
-        FetchWidgetItem.timeInHours = 1440;     //about two months in hours since 19/12/2017 17:30
+        FetchWidgetItem.timeInHours = 400;     //time in hours since 19/12/2017 17:30   //TODO: make value calculated automatically
     }
 
     @Before
