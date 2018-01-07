@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AirQuality</string>
+    <string name="no_internet_connection">Brak połączenia z Internetem</string>
+    <string name="fetching_data">Pobieranie danych...</string>
+    <string name="error_occurred">Wystąpił błąd.</string>
+    <string name="no_location_access">Brak dostępu do danych lokalizacji</string>
+    <string name="multiple_station_widget_config">Aby używać tego widgetu zezwól na dostęp do lokalizacji urządzenia.</string>
+    <string name="request_location_permission">przyznaj dostęp</string>
+    <string name="start_widget">uruchom widget</string>
+    <string name="empty_view_text">Brak danych</string>
+    <string name="refresh">odśwież</string>
+    <string name="could_not_connect_to_server">Brak połączenia z serwerem</string>
+    <string name="display_refresh_button">wyświetlaj przycisk odśwież</string>
+    <string name="reload_data">odśwież dane</string>
+    <string name="find_nearest_station">znajdź najbliższą stację</string>
+    <string name="sort_stations_by_distance">sortuj stacje wg odległości</string>
+    <string name="sort_stations_by_city_name">sortuj stacje wg nazwy miasta</string>
+    <string name="select_station_to_display">Wybierz stację do wyświetlania w widgecie</string>
+    <string name="sort_by_city_name">Sortuj wg nazw miast</string>
+    <string name="sort_by_distance">Sortuj wg odległości</string>
+    <string name="tap_to_refresh">Naciśnij aby odświeżyć</string>
+</resources>
