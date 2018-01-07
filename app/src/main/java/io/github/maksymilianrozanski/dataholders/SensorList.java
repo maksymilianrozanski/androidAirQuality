@@ -23,13 +23,13 @@ public class SensorList {
         return sensors;
     }
 
-    public void removeSensorsWhereValueOlderThan(int timeInHours) {
+    public void removeSensorsWhereValueOlderThan(long timeInHours) {
         if (calendar == null) {
             calendar = new GregorianCalendar();
         }
 
         for (int i = 0; i < sensors.size(); ) {
-            long oldestAcceptableTime = (calendar.getTimeInMillis() - (timeInHours * 3600000));
+            long oldestAcceptableTime = (calendar.getTimeInMillis() - (timeInHours * 3600000L));
             long sensorTime;
             try {
                 sensorTime = sensors.get(i).getTimeInMillis();

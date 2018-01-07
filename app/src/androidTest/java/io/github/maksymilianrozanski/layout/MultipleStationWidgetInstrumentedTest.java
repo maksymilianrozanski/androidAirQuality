@@ -199,7 +199,7 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
 
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         StationList.STATIONS_BASE_URL = server.url("/").toString();
-        FetchWidgetItem.timeInHours = 400;     //time in hours since 19/12/2017 17:30   //TODO: make value calculated automatically
+        FetchWidgetItem.timeInHours = 14000;     //time in hours since 19/12/2017 17:30   //TODO: make value calculated automatically
     }
 
     @Before
