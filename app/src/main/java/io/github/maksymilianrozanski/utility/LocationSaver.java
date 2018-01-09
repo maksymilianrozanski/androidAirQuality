@@ -3,13 +3,17 @@ package io.github.maksymilianrozanski.utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.annotation.VisibleForTesting;
 
 public class LocationSaver {
 
     private Context context;
-    private static final String sharedPreferencesString = "io.github.maksymilianrozanski";
-    private static final String latitudeKey = "LatitudeKey";
-    private static final String longitudeKey = "LongitudeKey";
+    @VisibleForTesting
+    static final String sharedPreferencesString = "io.github.maksymilianrozanski";
+    @VisibleForTesting
+    static final String latitudeKey = "LatitudeKey";
+    @VisibleForTesting
+    static final String longitudeKey = "LongitudeKey";
     private static final String defaultLatitude = "0";
     private static final String defaultLongitude = "0";
 

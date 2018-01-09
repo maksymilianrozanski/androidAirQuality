@@ -1,0 +1,50 @@
+package io.github.maksymilianrozanski.utility;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.InstrumentationTestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.doubleThat;
+import static org.mockito.ArgumentMatchers.matches;
+
+@RunWith(AndroidJUnit4.class)
+public class LocationSaverTestInstrumented extends InstrumentationTestCase {
+
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
+    private Context context;
+
+    @Before
+    public void before() throws Exception {
+        sharedPrefs = Mockito.mock(SharedPreferences.class);
+        context = Mockito.mock(Context.class);
+        editor = Mockito.mock(SharedPreferences.Editor.class);
+        Mockito.when(context.getSharedPreferences(matches(LocationSaver.sharedPreferencesString), anyInt())).thenReturn(sharedPrefs);
+        Mockito.when(sharedPrefs.edit()).thenReturn(editor);
+    }
+
+    @Test
+    public void saveLocationTest() throws Exception {
+        double exampleLatitude = 30d;
+        double exampleLongitude = 40d;
+
+        Location exampleLocation = new Location("locationToSave");
+        exampleLocation.setLatitude(exampleLatitude);
+        exampleLocation.setLongitude(exampleLongitude);
+
+        LocationSaver locationSaver = new LocationSaver(context);
+        locationSaver.saveLocation(exampleLocation);
+        Mockito.verify(editor, Mockito.times(1)).putString(LocationSaver.latitudeKey, String.valueOf(exampleLatitude));
+        Mockito.verify(editor, Mockito.times(1)).putString(LocationSaver.longitudeKey, String.valueOf(exampleLongitude));
+        Mockito.verify(editor, Mockito.times(1)).commit();
+    }
+}
