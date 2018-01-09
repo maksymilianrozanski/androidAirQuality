@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -28,11 +27,11 @@ import java.util.List;
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
+import io.github.maksymilianrozanski.utility.LocationSaver;
 import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.utility.SingleStationWidgetUpdateService;
 import io.github.maksymilianrozanski.vieweditors.StationAdapter;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
-import xdroid.toaster.Toaster;
 
 public class SingleStationWidgetConfigActivity extends Activity implements LoaderManager.LoaderCallbacks<List<Station>>, View.OnClickListener {
 
@@ -147,12 +146,14 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     private void sortByDistance() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, (Location location) -> {
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener((task) -> {
                 StationList stationList = StationList.getStationListInstance(getApplicationContext());
-                try {
-                    stationList.sortStationsByDistance(getApplicationContext(), location);
-                } catch (NullPointerException e) {
-                    Toaster.toast(R.string.no_location_access);
+                LocationSaver locationSaver = new LocationSaver(getApplicationContext());
+                if (task.isSuccessful() && task.getResult() != null) {
+                    stationList.sortStationsByDistance(getApplicationContext(), task.getResult());
+                    locationSaver.saveLocation(task.getResult());
+                } else {
+                    stationList.sortStationsByDistance(getApplicationContext(), locationSaver.getLocation());
                 }
                 stationAdapter.clear();
                 stationAdapter.addAll(stationList.getStations());

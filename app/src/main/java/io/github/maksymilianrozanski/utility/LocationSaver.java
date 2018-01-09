@@ -23,6 +23,9 @@ public class LocationSaver {
     }
 
     public void saveLocation(Location location){
+        if (location == null){
+            return;
+        }
         SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesString, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(latitudeKey, String.valueOf(location.getLatitude()));

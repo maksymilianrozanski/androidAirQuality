@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.doubleThat;
 import static org.mockito.ArgumentMatchers.matches;
 
 @RunWith(AndroidJUnit4.class)
