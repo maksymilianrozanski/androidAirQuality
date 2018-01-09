@@ -6,6 +6,7 @@ import android.location.Location;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,5 +47,19 @@ public class LocationSaverTestInstrumented extends InstrumentationTestCase {
         Mockito.verify(editor, Mockito.times(1)).putString(LocationSaver.latitudeKey, String.valueOf(exampleLatitude));
         Mockito.verify(editor, Mockito.times(1)).putString(LocationSaver.longitudeKey, String.valueOf(exampleLongitude));
         Mockito.verify(editor, Mockito.times(1)).commit();
+    }
+
+    @Test
+    public void getLocationTest() throws Exception {
+        String exampleLatitude = "31.0";
+        String exampleLongitude = "32.0";
+
+        Mockito.when(sharedPrefs.getString(matches(LocationSaver.latitudeKey), anyString())).thenReturn(exampleLatitude);
+        Mockito.when(sharedPrefs.getString(matches(LocationSaver.longitudeKey), anyString())).thenReturn(exampleLongitude);
+
+        LocationSaver locationSaver = new LocationSaver(context);
+        Location receivedLocation = locationSaver.getLocation();
+        Assert.assertTrue(receivedLocation.getLatitude() == Double.parseDouble(exampleLatitude));
+        Assert.assertTrue(receivedLocation.getLongitude() == Double.parseDouble(exampleLongitude));
     }
 }
