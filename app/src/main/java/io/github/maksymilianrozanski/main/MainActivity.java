@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,22 +214,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void sortStationsByDistance() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
-                    try {
-                        stationListInstance.sortStationsByDistance(getApplicationContext(), location);
-                    } catch (NullPointerException e) {
-                        Toaster.toast(R.string.no_location_access);
-                    }
-                    stationAdapter.clear();
-                    stationAdapter.addAll(stationListInstance.getStations());
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
+                LocationSaver locationSaver = new LocationSaver(getApplicationContext());
+                Location location;
+                if (task.isSuccessful() && task.getResult() != null) {
+                    location = task.getResult();
+                    locationSaver.saveLocation(location);
+                } else {
+                    location = locationSaver.getLocation();
                 }
+                stationListInstance.sortStationsByDistance(getApplicationContext(), location);
+                stationAdapter.clear();
+                stationAdapter.addAll(stationListInstance.getStations());
             });
-        } else {
+        } else
             NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
-        }
     }
 
     private void sortStationsByCityName() {
