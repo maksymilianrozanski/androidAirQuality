@@ -32,6 +32,7 @@ import java.util.List;
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
+import io.github.maksymilianrozanski.utility.LocationSaver;
 import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.vieweditors.StationAdapter;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
@@ -182,29 +183,32 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                StationList stations = StationList.getStationListInstance(getApplicationContext());
-                                Integer nearestStationId = NearestStationFinder.findNearestStation
-                                        (location.getLatitude(), location.getLongitude(), stations.getStations());
+                    .addOnCompleteListener(task -> {
+                        StationList stations = StationList.getStationListInstance(getApplicationContext());
+                        LocationSaver locationSaver = new LocationSaver(getApplicationContext());
+                        Location location;
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            location = task.getResult();
+                            locationSaver.saveLocation(location);
+                        } else {
+                            location = locationSaver.getLocation();
+                        }
+                        Integer nearestStationId = NearestStationFinder.findNearestStation
+                                (location.getLatitude(), location.getLongitude(), stations.getStations());
 
-                                Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
-                                intent.putExtra("StationId", nearestStationId);
-                                for (Station currentStation : stations.getStations()) {
-                                    if (Integer.parseInt(currentStation.getId()) == nearestStationId) {
-                                        intent.putExtra("StationName", currentStation.getName());
-                                        break;
-                                    }
-                                }
-                                startActivity(intent);
-                            } else {
-                                Toaster.toast(R.string.no_location_access);
-                                Log.e(LOG_TAG, "location == null");
+                        Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
+                        intent.putExtra("StationId", nearestStationId);
+                        for (Station currentStation : stations.getStations()) {
+                            if (Integer.parseInt(currentStation.getId()) == nearestStationId) {
+                                intent.putExtra("StationName", currentStation.getName());
+                                break;
                             }
                         }
+                        locationSaver.saveLocation(location);
+                        startActivity(intent);
                     });
+        } else {
+            Toaster.toast(R.string.no_location_access);
         }
     }
 
