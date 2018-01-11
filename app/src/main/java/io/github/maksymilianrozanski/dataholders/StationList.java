@@ -190,7 +190,6 @@ public class StationList {
         client = LocationServices.getFusedLocationProviderClient(activity);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             client.getLastLocation().addOnCompleteListener(task -> {
-                StationList stationListInstance = StationList.getStationListInstance(activity);
                 LocationSaver locationSaver = new LocationSaver(activity);
                 Location location;
                 if (task.isSuccessful() && task.getResult() != null) {
@@ -199,9 +198,9 @@ public class StationList {
                 } else {
                     location = locationSaver.getLocation();
                 }
-                stationListInstance.sortStationsByDistance(activity, location);
+                this.sortStationsByDistance(activity, location);
                 stationAdapter.clear();
-                stationAdapter.addAll(stationListInstance.getStations());
+                stationAdapter.addAll(this.getStations());
             });
         } else
             NearestStationFinder.askForLocationPermissionIfNoPermission(activity, permissionRequest);
