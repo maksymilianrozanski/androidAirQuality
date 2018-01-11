@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,7 +41,8 @@ public class MultipleStationWidgetUpdateService extends Service {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();
         String json = sharedPrefs.getString(LIST_TAG, null);
-        Type listType = new TypeToken<ArrayList<WidgetItem>>() {}.getType();
+        Type listType = new TypeToken<ArrayList<WidgetItem>>() {
+        }.getType();
         return widgetItemList = gson.fromJson(json, listType);
     }
 
@@ -62,17 +62,18 @@ public class MultipleStationWidgetUpdateService extends Service {
 
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    try {
-                        StationList.getStationListInstance(getApplicationContext())
-                                .sortStationsByDistance(getApplicationContext(), location);
-                    } catch (NullPointerException e) {
-                        Toaster.toast(R.string.no_location_access);
-                    }
-                    fetchDataFromWeb();
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
+                LocationSaver locationSaver = new LocationSaver(getApplicationContext());
+                Location location;
+                if (task.isSuccessful() && task.getResult() != null) {
+                    location = task.getResult();
+                    locationSaver.saveLocation(location);
+                } else {
+                    location = locationSaver.getLocation();
                 }
+                stationListInstance.sortStationsByDistance(getApplicationContext(), location);
+                fetchDataFromWeb();
             });
         }
         return super.onStartCommand(intent, flags, startId);
@@ -125,7 +126,7 @@ public class MultipleStationWidgetUpdateService extends Service {
         return widgetItemList;
     }
 
-    private void saveWidgetItemList(){
+    private void saveWidgetItemList() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
