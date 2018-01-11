@@ -1,6 +1,5 @@
 package io.github.maksymilianrozanski.layout;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
@@ -8,11 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +16,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +23,6 @@ import java.util.List;
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
-import io.github.maksymilianrozanski.utility.LocationSaver;
-import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.utility.SingleStationWidgetUpdateService;
 import io.github.maksymilianrozanski.vieweditors.StationAdapter;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
@@ -145,24 +138,11 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     }
 
     private void sortByDistance() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener((task) -> {
-                StationList stationList = StationList.getStationListInstance(getApplicationContext());
-                LocationSaver locationSaver = new LocationSaver(getApplicationContext());
-                Location location;
-                if (task.isSuccessful() && task.getResult() != null) {
-                    location = task.getResult();
-                    locationSaver.saveLocation(task.getResult());
-                } else {
-                    location = locationSaver.getLocation();
-                }
-                stationList.sortStationsByDistance(getApplicationContext(), location);
-                stationAdapter.clear();
-                stationAdapter.addAll(stationList.getStations());
-            });
-        } else {
-            NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
-        }
+        StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
+                stationAdapter,
+                fusedLocationProviderClient,
+                this,
+                MY_PERMISSION_REQUEST
+        );
     }
 }

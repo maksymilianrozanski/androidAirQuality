@@ -212,24 +212,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void sortStationsByDistance() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
-                StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
-                LocationSaver locationSaver = new LocationSaver(getApplicationContext());
-                Location location;
-                if (task.isSuccessful() && task.getResult() != null) {
-                    location = task.getResult();
-                    locationSaver.saveLocation(location);
-                } else {
-                    location = locationSaver.getLocation();
-                }
-                stationListInstance.sortStationsByDistance(getApplicationContext(), location);
-                stationAdapter.clear();
-                stationAdapter.addAll(stationListInstance.getStations());
-            });
-        } else
-            NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
+        StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
+                stationAdapter,
+                fusedLocationProviderClient,
+                this,
+                MY_PERMISSION_REQUEST);
     }
 
     private void sortStationsByCityName() {

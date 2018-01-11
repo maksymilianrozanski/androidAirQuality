@@ -1,11 +1,19 @@
 package io.github.maksymilianrozanski.dataholders;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.maksymilianrozanski.R;
+import io.github.maksymilianrozanski.utility.LocationSaver;
+import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.utility.QueryUtilities;
 import io.github.maksymilianrozanski.utility.ServiceGenerator;
 import io.github.maksymilianrozanski.utility.StationsRestService;
@@ -174,6 +184,27 @@ public class StationList {
             cityName = "not specified";
         }
         return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
+    }
+
+    public void sortByDistanceAndUpdateAdapter(ArrayAdapter<Station> stationAdapter, FusedLocationProviderClient client, Activity activity, int permissionRequest){
+        client = LocationServices.getFusedLocationProviderClient(activity);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            client.getLastLocation().addOnCompleteListener(task -> {
+                StationList stationListInstance = StationList.getStationListInstance(activity);
+                LocationSaver locationSaver = new LocationSaver(activity);
+                Location location;
+                if (task.isSuccessful() && task.getResult() != null) {
+                    location = task.getResult();
+                    locationSaver.saveLocation(location);
+                } else {
+                    location = locationSaver.getLocation();
+                }
+                stationListInstance.sortStationsByDistance(activity, location);
+                stationAdapter.clear();
+                stationAdapter.addAll(stationListInstance.getStations());
+            });
+        } else
+            NearestStationFinder.askForLocationPermissionIfNoPermission(activity, permissionRequest);
     }
 
     public void sortStationsByDistance(Context context, Location location) throws NullPointerException {
