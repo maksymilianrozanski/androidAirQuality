@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -149,12 +150,14 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener((task) -> {
                 StationList stationList = StationList.getStationListInstance(getApplicationContext());
                 LocationSaver locationSaver = new LocationSaver(getApplicationContext());
+                Location location;
                 if (task.isSuccessful() && task.getResult() != null) {
-                    stationList.sortStationsByDistance(getApplicationContext(), task.getResult());
+                    location = task.getResult();
                     locationSaver.saveLocation(task.getResult());
                 } else {
-                    stationList.sortStationsByDistance(getApplicationContext(), locationSaver.getLocation());
+                    location = locationSaver.getLocation();
                 }
+                stationList.sortStationsByDistance(getApplicationContext(), location);
                 stationAdapter.clear();
                 stationAdapter.addAll(stationList.getStations());
             });
