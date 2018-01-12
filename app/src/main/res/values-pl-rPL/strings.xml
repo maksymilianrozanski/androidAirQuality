@@ -12,10 +12,10 @@
     <string name="refresh">odśwież</string>
     <string name="could_not_connect_to_server">Brak połączenia z serwerem</string>
     <string name="display_refresh_button">wyświetlaj przycisk odśwież</string>
-    <string name="reload_data">odśwież dane</string>
-    <string name="find_nearest_station">znajdź najbliższą stację</string>
-    <string name="sort_stations_by_distance">sortuj stacje wg odległości</string>
-    <string name="sort_stations_by_city_name">sortuj stacje wg nazwy miasta</string>
+    <string name="reload_data">Odśwież dane</string>
+    <string name="find_nearest_station">Znajdź najbliższą stację</string>
+    <string name="sort_stations_by_distance">Sortuj stacje wg odległości</string>
+    <string name="sort_stations_by_city_name">Sortuj stacje wg nazwy miasta</string>
     <string name="select_station_to_display">Wybierz stację do wyświetlania w widgecie</string>
     <string name="sort_by_city_name">Sortuj wg nazw miast</string>
     <string name="sort_by_distance">Sortuj wg odległości</string>

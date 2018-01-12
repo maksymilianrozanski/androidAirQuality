@@ -12,10 +12,10 @@
     <string name="refresh">refresh</string>
     <string name="could_not_connect_to_server">Could not connect to server</string>
     <string name="display_refresh_button">display refresh button</string>
-    <string name="reload_data">reload data</string>
-    <string name="find_nearest_station">find nearest station</string>
-    <string name="sort_stations_by_distance">sort stations by distance</string>
-    <string name="sort_stations_by_city_name">sort stations by city name</string>
+    <string name="reload_data">Reload data</string>
+    <string name="find_nearest_station">Find nearest station</string>
+    <string name="sort_stations_by_distance">Sort stations by distance</string>
+    <string name="sort_stations_by_city_name">Sort stations by city name</string>
     <string name="select_station_to_display">Select station to display in widget</string>
     <string name="sort_by_city_name">Sort by city name</string>
     <string name="sort_by_distance">Sort by distance</string>
