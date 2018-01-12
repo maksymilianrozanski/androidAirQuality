@@ -149,9 +149,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.reload:
-                reloadStations();
-                return true;
             case R.id.findNearestStation:
                 goToNearestStation();
                 return true;
@@ -160,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             case R.id.sortStationsByCityName:
                 sortStationsByCityName();
+                return true;
+            case R.id.reload:
+                reloadStations();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
