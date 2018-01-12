@@ -5,7 +5,10 @@ import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,8 +42,15 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
 
         assignAppWidgetId();
 
-        Button requestPermissionButton = (Button) findViewById(R.id.requestPermissionButton);
-        requestPermissionButton.setOnClickListener(this);
+        CheckBox requestPermissionCheckBox = (CheckBox) findViewById(R.id.requestPermissionCheckBox);
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            requestPermissionCheckBox.setChecked(true);
+            requestPermissionCheckBox.setEnabled(false);
+        } else {
+            requestPermissionCheckBox.setOnClickListener(this);
+        }
 
         Button startButton = (Button) findViewById(R.id.widgetStartButton);
         startButton.setOnClickListener(this);
@@ -65,9 +75,22 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
             case R.id.widgetStartButton:
                 startWidget();
                 break;
-            case R.id.requestPermissionButton:
+            case R.id.requestPermissionCheckBox:
                 NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        CheckBox requestPermissionCheckBox = (CheckBox) findViewById(R.id.requestPermissionCheckBox);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            requestPermissionCheckBox.setChecked(true);
+            requestPermissionCheckBox.setEnabled(false);
+        } else {
+            requestPermissionCheckBox.setChecked(false);
+            requestPermissionCheckBox.setEnabled(true);
         }
     }
 
@@ -96,7 +119,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
         this.finish();
     }
 
-    private void sendIntentRefreshButtonVisibility(){
+    private void sendIntentRefreshButtonVisibility() {
         CheckBox checkBox = (CheckBox) findViewById(R.id.displayRefreshButtonCheckBox);
         Log.v("LOG", "state of checkbox: " + checkBox.isChecked());
         Intent refreshButtonVisibility = new Intent(getApplicationContext(), io.github.maksymilianrozanski.layout.MultipleStationWidgetProvider.class);

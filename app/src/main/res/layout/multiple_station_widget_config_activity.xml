@@ -11,12 +11,12 @@
         android:text="@string/multiple_station_widget_config"
         android:textColor="@android:color/primary_text_light" />
 
-    <Button
-        android:id="@+id/requestPermissionButton"
+    <CheckBox
+        android:id="@+id/requestPermissionCheckBox"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/button_background_rounded_corners"
-        android:text="@string/request_location_permission" />
+        android:layout_height="wrap_content"
+        android:text="@string/request_location_permission"
+        android:textColor="@android:color/primary_text_light"/>
 
     <CheckBox
         android:id="@+id/displayRefreshButtonCheckBox"

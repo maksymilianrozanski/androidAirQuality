@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/reload"
-        android:title="@string/reload_data" />
-    <item
         android:id="@+id/findNearestStation"
         android:title="@string/find_nearest_station"/>
     <item
@@ -12,4 +9,7 @@
     <item
         android:id="@+id/sortStationsByCityName"
         android:title="@string/sort_stations_by_city_name"/>
+    <item
+        android:id="@+id/reload"
+        android:title="@string/reload_data" />
 </menu>
