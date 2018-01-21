@@ -31,4 +31,10 @@
         android:layout_height="48dp"
         android:background="@drawable/button_background_rounded_corners"
         android:text="@string/start_widget" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/multiple_station_widget_config_activity_explanation"
+        android:textColor="@android:color/primary_text_light"/>
 </LinearLayout>
