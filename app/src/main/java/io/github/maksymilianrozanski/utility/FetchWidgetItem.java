@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.maksymilianrozanski.dataholders.Sensor;
 import io.github.maksymilianrozanski.dataholders.SensorList;
@@ -34,8 +35,9 @@ public class FetchWidgetItem extends Thread {
     public void run() {
         Sensor tempSensor;
         WidgetItem currentWidgetItem;
+        AtomicBoolean isWidgetItemUpToDate = new AtomicBoolean(false);
         try {
-            tempSensor = fetchSensorWithHighestPercentValue(context, indexNumber);
+            tempSensor = fetchSensorWithHighestPercentValue(context, indexNumber, isWidgetItemUpToDate);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Fetching data not succeed.");
             return;
@@ -45,16 +47,22 @@ public class FetchWidgetItem extends Thread {
         String percentValue = String.format("%.0f", tempSensor.percentOfMaxValue());
         currentWidgetItem.setNameAndValueOfParam(paramType + ": " + percentValue + "%");
         currentWidgetItem.setUpdateDate(removeSecondsFromDate(tempSensor.getLastDate()));
+        currentWidgetItem.setUpToDate(isWidgetItemUpToDate);
     }
 
-    private Sensor fetchSensorWithHighestPercentValue(Context context, int stationIndex) throws IOException {
+    private Sensor fetchSensorWithHighestPercentValue(Context context, int stationIndex, AtomicBoolean isUpToDate) throws IOException {
         int stationId = widgetItems.get(stationIndex).getStationId();
         StationList stationList = StationList.getStationListInstance(context);
         Station station = stationList.findStationWithId(stationId);
         QueryStationSensors queryStationSensors = new QueryStationSensors();
         List<Sensor> sensors = queryStationSensors.fetchSensorData(Integer.parseInt(station.getId()));
         SensorList sensorList = new SensorList(sensors);
+        int sensorListSize = sensorList.getList().size();
         sensorList.removeSensorsWhereValueOlderThan(timeInHours);
+        int sensorListSizeAfterRemovingObsoleteSensors = sensorList.getList().size();
+        if (sensorListSize == sensorListSizeAfterRemovingObsoleteSensors) {
+            isUpToDate.set(true);
+        }
         return sensorList.getSensorWithHighestValue();
     }
 

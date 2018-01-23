@@ -251,5 +251,6 @@ public class MultipleStationWidgetInstrumentedTest extends InstrumentationTestCa
         String expectedOneStationDate = "2017-12-19 16:00";
         UiObject stationIndexOneDate = device.findObject(new UiSelector().text(expectedOneStationDate));
         Assert.assertTrue(stationIndexOneDate.getText().equals(expectedOneStationDate));
+        //TODO: add assertion, check: is background of 4th list item - station name grey: color NoData
     }
 }

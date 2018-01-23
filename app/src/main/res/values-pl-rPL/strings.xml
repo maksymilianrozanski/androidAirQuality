@@ -21,4 +21,6 @@
     <string name="sort_by_distance">Sortuj wg odległości</string>
     <string name="tap_to_refresh">Naciśnij aby odświeżyć</string>
     <string name="multiple_station_widget_config_activity_explanation">Widget wyświetla najwyższe wartości procentowe z 5 najbliższych stacji. Szary kolor oznacza, że aktualne dane nie są dostępne.</string>
+    <string name="station_name">Station name</string>
+    <string name="no_data">No data</string>
 </resources>

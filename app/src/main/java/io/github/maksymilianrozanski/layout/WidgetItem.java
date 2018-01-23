@@ -1,8 +1,11 @@
 package io.github.maksymilianrozanski.layout;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class WidgetItem {
     private String stationName, nameAndValueOfParam, updateDate;
     private int stationId;
+    private boolean isUpToDate = false;
 
     public WidgetItem() {
     }
@@ -43,5 +46,13 @@ public class WidgetItem {
 
     public void setStationId(int stationId) {
         this.stationId = stationId;
+    }
+
+    public boolean isUpToDate() {
+        return isUpToDate;
+    }
+
+    public void setUpToDate(AtomicBoolean upToDate) {
+        this.isUpToDate = upToDate.get();
     }
 }
