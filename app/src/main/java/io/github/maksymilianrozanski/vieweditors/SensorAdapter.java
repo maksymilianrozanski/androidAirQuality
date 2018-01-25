@@ -5,13 +5,17 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +29,7 @@ import static io.github.maksymilianrozanski.R.id.sensorType;
 public class SensorAdapter extends ArrayAdapter<Sensor> {
     private static final String LOG_TAG = MainActivity.class.getName();
     private static final Map<String, Integer> MAX_CONCENTRATIONS;
+    private static int acceptableDelayInHours = 5;
 
     public SensorAdapter(@NonNull Context context, List<Sensor> sensors) {
         super(context, 0, sensors);
@@ -50,6 +55,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         setSensorTypeViewText(listItemView, currentSensor);
         setParamValueViewText(listItemView, currentSensor);
         setDateViewText(listItemView, currentSensor);
+        setDateViewBackgroundColor(listItemView, currentSensor);
         setPercentViewText(listItemView, currentSensor);
 
         return listItemView;
@@ -93,6 +99,32 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             date = "error occurred";
         }
         dateView.setText(date);
+    }
+
+    private void setDateViewBackgroundColor(View listItemView, Sensor sensor) {
+        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
+        setDateTextViewBackgroundColor(dateView, sensor);
+    }
+
+    private void setDateTextViewBackgroundColor(TextView dateView, Sensor sensor) {
+        Calendar calendar = new GregorianCalendar();
+        long oldestAcceptableTime = (calendar.getTimeInMillis() - (acceptableDelayInHours * 3600000L));
+
+        long sensorTime;
+        try {
+            sensorTime = sensor.getTimeInMillis();
+        } catch (ParseException e) {
+            sensorTime = 1;
+        }
+        if (sensorTime <= oldestAcceptableTime) {
+            int greyColor = ContextCompat.getColor(getContext(), R.color.noData);
+            Log.d(LOG_TAG, "setting background to grey: " + greyColor);
+            dateView.setBackgroundColor(greyColor);
+        } else {
+            int whiteColor = ContextCompat.getColor(getContext(), R.color.white);
+            Log.d(LOG_TAG, "setting background to white: " + whiteColor);
+            dateView.setBackgroundColor(whiteColor);
+        }
     }
 
     private void setPercentViewText(View listItemView, Sensor sensor) {

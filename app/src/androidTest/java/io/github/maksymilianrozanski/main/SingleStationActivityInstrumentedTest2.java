@@ -35,7 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
-public class SingleStationActivityInstrumentedTest extends InstrumentationTestCase {
+public class SingleStationActivityInstrumentedTest2 extends InstrumentationTestCase {
 
     private MockWebServer server;
 
@@ -57,7 +57,7 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
     @Test
     public void checkDisplayingDataTest() throws Exception {
         String sensorsFileName = "sensorsPiastow10139.json";
-        String sensorValuesFileName = "sensor16784values.json";
+        String sensorValuesFileName = "sensor16784values_obsolete.json";
 
         server.setDispatcher(new Dispatcher() {
             @Override
@@ -93,11 +93,11 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
                 .onChildView(withId(R.id.paramValue)).check(matches(withText("100.00/50 μg/m³")));
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
-                .onChildView(withId(R.id.date)).check(matches(withText("2025-12-05 18:00:00")));
+                .onChildView(withId(R.id.date)).check(matches(withText("2017-12-05 18:00:00")));
 
-        int whiteColor = ContextCompat.getColor(activityRule.getActivity(), R.color.white);
+        int noDataColor = ContextCompat.getColor(activityRule.getActivity(), R.color.noData);
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
-                .onChildView(withId(R.id.date)).check(matches(withBackGroundColor(whiteColor)));
+                .onChildView(withId(R.id.date)).check(matches(withBackGroundColor(noDataColor)));
 
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
                 .onChildView(withId(R.id.percentValue)).check(matches(withText("200%")));
