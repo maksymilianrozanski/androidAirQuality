@@ -21,7 +21,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
-        views.setTextViewText(R.id.widgetStationName, context.getString(R.string.tap_to_refresh));
+        views.setTextViewText(R.id.widgetStationNameListItem, context.getString(R.string.tap_to_refresh));
 
         Intent intentSendToService = new Intent(context, SingleStationWidgetUpdateService.class);
 
@@ -67,7 +67,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
             String stationName = intent.getStringExtra(SingleStationWidgetUpdateService.OUTPUT_STATION_NAME);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
             if (sensorFromIntent != null) {
-                views.setTextViewText(R.id.widgetStationName, stationName);
+                views.setTextViewText(R.id.widgetStationNameListItem, stationName);
                 String highestPercentValue = String.format("%.0f", sensorFromIntent.percentOfMaxValue());
                 int colorOfValueBackground = SensorAdapter.chooseColorOfBackground(Double.parseDouble(highestPercentValue), context);
                 views.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);

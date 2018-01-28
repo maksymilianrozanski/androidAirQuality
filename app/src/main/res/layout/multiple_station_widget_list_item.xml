@@ -5,10 +5,10 @@
     android:id="@+id/multiple_station_list_item"
     android:background="@drawable/widget_card_background">
         <TextView
-            android:id="@+id/widgetStationName"
+            android:id="@+id/widgetStationNameListItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Station name"
+            android:text="@string/station_name"
             android:textColor="#000000"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -17,7 +17,7 @@
             android:id="@+id/widgetNameAndValueOfParam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No data"
+            android:text="@string/no_data"
             android:textColor="#000000"
             android:textSize="12sp" />
 

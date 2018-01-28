@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.layout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -40,13 +41,19 @@ class ListProvider implements
                 (context.getPackageName(), R.layout.multiple_station_widget_list_item);
         WidgetItem widgetItem = listItemList.get(position);
 
-        rv.setTextViewText(R.id.widgetStationName, widgetItem.getStationName());
+        rv.setTextViewText(R.id.widgetStationNameListItem, widgetItem.getStationName());
         rv.setTextViewText(R.id.widgetNameAndValueOfParam, widgetItem.getNameAndValueOfParam());
 
         int colorOfValueBackground = SensorAdapter.chooseColorOfBackground
                 (cutStringToDoublePercentValue(widgetItem.getNameAndValueOfParam()), context);
         rv.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
+
+        if (widgetItem.isUpToDate()){
+            rv.setInt(R.id.widgetStationNameListItem, "setBackgroundColor", ContextCompat.getColor(context, R.color.white));
+        }else {
+            rv.setInt(R.id.widgetStationNameListItem, "setBackgroundColor", ContextCompat.getColor(context, R.color.noData));
+        }
 
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra("StationId", widgetItem.getStationId());
