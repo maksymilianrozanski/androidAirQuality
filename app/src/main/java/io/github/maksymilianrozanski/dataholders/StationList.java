@@ -47,7 +47,7 @@ public class StationList {
 
     private StationList(Context context) {
         fetchStationDataFromSharedPreferences(context);
-        if (stations == null) {     //TODO: check: do not fetch from web if on main thread.
+        if (stations == null) {
             //TODO: Add espresso tests for server delay scenario during fetching list of stations from web, and then clicks by user on menu items
             fetchStationDataFromWeb(context);
         }

@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int MY_PERMISSION_REQUEST = 0;
 
     private StationAdapter stationAdapter;
+    private AtomicBoolean isStationListLoaded = new AtomicBoolean(false);
 
     LoaderManager loaderManager = getLoaderManager();
 
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<List<Station>> onCreateLoader(int id, Bundle args) {
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
         swipeRefreshLayout.setRefreshing(true);
+        isStationListLoaded.set(false);
         return new StationLoader(this);
     }
 
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         stationAdapter.clear();
         if (data != null && !data.isEmpty()) {
             stationAdapter.addAll(data);
+            isStationListLoaded.set(true);
         }
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
         swipeRefreshLayout.setRefreshing(false);
@@ -120,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
+        isStationListLoaded.set(false);
         stationAdapter.clear();
     }
 
@@ -144,6 +149,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.findNearestStation).setEnabled(isStationListLoaded.get());
+        menu.findItem(R.id.sortStations).setEnabled(isStationListLoaded.get());
+        menu.findItem(R.id.sortStationsByCityName).setEnabled(isStationListLoaded.get());
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
