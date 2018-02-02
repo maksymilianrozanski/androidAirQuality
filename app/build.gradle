@@ -6,12 +6,9 @@ android {
         applicationId "io.github.maksymilianrozanski"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 4
-        versionName "1.4"
+        versionCode 5
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        jackOptions {
-//            enabled true
-//        }
         multiDexEnabled true
     }
 
