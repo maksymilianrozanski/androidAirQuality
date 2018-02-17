@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AirQuality</string>
+    <string name="app_name">Smog widget</string>
     <string name="no_internet_connection">Brak połączenia z Internetem</string>
     <string name="fetching_data">Pobieranie danych...</string>
     <string name="error_occurred">Wystąpił błąd.</string>
