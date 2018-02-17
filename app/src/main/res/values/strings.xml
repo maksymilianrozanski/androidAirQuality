@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AirQuality</string>
+    <string name="app_name">Smog widget</string>
     <string name="no_internet_connection">No Internet connection</string>
     <string name="fetching_data">Fetching data...</string>
     <string name="error_occurred">An error occurred.</string>
