@@ -25,7 +25,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
 
         Intent intentSendToService = new Intent(context, SingleStationWidgetUpdateService.class);
 
-        intentSendToService.putExtra(SingleStationWidgetUpdateService.WIDGET_ID_TO_UPDATE, appWidgetId);
+        intentSendToService.putExtra(SingleStationWidgetUpdateService.WIDGET_STATION_ID_TO_UPDATE, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
 

@@ -21,7 +21,7 @@ import xdroid.toaster.Toaster;
 
 public class SingleStationWidgetUpdateService extends IntentService {
 
-    public static final String WIDGET_ID_TO_UPDATE = "incomingMessage";
+    public static final String WIDGET_STATION_ID_TO_UPDATE = "incomingMessage";
     public static final String OUTPUT_SENSOR = "omsg";
     public static final String OUTPUT_STATION_NAME = "outputStationName";
     public static final String APP_WIDGET_ID_KEY = "widgetData:";
@@ -36,7 +36,7 @@ public class SingleStationWidgetUpdateService extends IntentService {
         int idOfStation;
         int appWidgetId;
         try {
-            appWidgetId = intent.getIntExtra(SingleStationWidgetUpdateService.WIDGET_ID_TO_UPDATE, 0);
+            appWidgetId = intent.getIntExtra(SingleStationWidgetUpdateService.WIDGET_STATION_ID_TO_UPDATE, 0);
             idOfStation = getStationIdFromSharedPref(appWidgetId);
         } catch (NullPointerException e) {
             Log.e(LOG_TAG, "No IntExtra in intent" + e);
