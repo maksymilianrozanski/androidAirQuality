@@ -21,7 +21,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
-        views.setTextViewText(R.id.widgetStationNameListItem, context.getString(R.string.tap_to_refresh));
+        views.setTextViewText(R.id.widgetStationNameSingleStation, context.getString(R.string.tap_to_refresh));
 
         Intent intentSendToService = new Intent(context, SingleStationWidgetUpdateService.class);
 
