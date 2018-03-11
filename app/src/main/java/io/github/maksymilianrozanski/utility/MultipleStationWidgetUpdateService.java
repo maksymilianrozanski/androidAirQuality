@@ -32,8 +32,6 @@ import xdroid.toaster.Toaster;
 public class MultipleStationWidgetUpdateService extends Service {
 
     public static final String LIST_TAG = "io.github.maksymilianrozanski.widgetItemList";
-    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-
     private static final String LOG_TAG = MultipleStationWidgetUpdateService.class.getName();
     private static ArrayList<WidgetItem> widgetItemList = new ArrayList<>();
 
@@ -54,12 +52,6 @@ public class MultipleStationWidgetUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-            appWidgetId = intent.getIntExtra(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-        }
-
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
@@ -86,8 +78,6 @@ public class MultipleStationWidgetUpdateService extends Service {
             saveWidgetItemList();
             Intent widgetUpdateIntent = new Intent();
             widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    appWidgetId);
             sendBroadcast(widgetUpdateIntent);
         } else {
             Toaster.toast(R.string.no_internet_connection);
@@ -110,8 +100,6 @@ public class MultipleStationWidgetUpdateService extends Service {
                 Log.e(LOG_TAG, "Exception: " + e);
             }
         }
-
-
     }
 
     private ArrayList<WidgetItem> createWidgetItemListWithStationNamesAndIds(int numberOfStations) {
