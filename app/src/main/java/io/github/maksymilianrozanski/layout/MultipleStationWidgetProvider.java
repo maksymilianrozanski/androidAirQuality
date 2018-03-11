@@ -26,20 +26,19 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int i = 0; i < appWidgetIds.length; ++i) {
-            Log.v("LOG", "inside onUpdate");
+            Log.e("LOG", "inside onUpdate, appWidgetId: " + appWidgetIds[i]);
             RemoteViews remoteViews = updateWidgetListView(context,
                     appWidgetIds[i]);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i],
                     remoteViews);
-            sendIntentToUpdatingService(context, appWidgetIds[i]);
+            sendIntentToUpdatingService(context);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private void sendIntentToUpdatingService(Context context, int appWidgetId) {
+    private void sendIntentToUpdatingService(Context context) {
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
-        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
         try {
             pendingIntent.send();
@@ -80,7 +79,6 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
     private void setRefreshButton(Context context, int appWidgetId, RemoteViews remoteViews) {
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
-        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.multiple_station_refresh, pendingIntent);
         boolean visibility = readRefreshButtonVisibilityFromSharedPref(appWidgetId, context);
@@ -114,8 +112,10 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        onReceiveUpdateIntent(context, intent);
-        onReceiveRefreshButtonVisibilityIntent(context, intent);
+        if (intent.getAction() != null) {
+            onReceiveUpdateIntent(context, intent);
+            onReceiveRefreshButtonVisibilityIntent(context, intent);
+        }
     }
 
     private void onReceiveUpdateIntent(Context context, Intent intent) {

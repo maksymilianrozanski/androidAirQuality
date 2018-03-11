@@ -35,7 +35,7 @@ public class QueryStationSensors {
                 jsonResponse = getResponseListOfSensors(stationId);
                 break;
             } catch (IOException | NullPointerException e) {
-                Log.e(LOG_TAG, "Problem making the HTTP request", e);
+                Log.e(LOG_TAG, "Problem making the HTTP request");
                 j++;
             }
         }
@@ -82,7 +82,7 @@ public class QueryStationSensors {
                 sensors.add(createSensor(sensorArray, i));
             }
         } catch (JSONException e) {
-            Log.e("QueryUtilities", "Problem parsing the JSON results", e);
+            Log.e("QueryUtilities", "Problem parsing the JSON results");
             Toaster.toast(R.string.error_occurred);
         }
         return sensors;
@@ -107,7 +107,7 @@ public class QueryStationSensors {
                     jsonResponse = getResponseSensorData(currentSensorId);
                     break;
                 } catch (IOException | NullPointerException e) {
-                    Log.e(LOG_TAG, "Problem making the HTTP request", e);
+                    Log.e(LOG_TAG, "Problem making the HTTP request");
                     j++;
                 }
             }
@@ -132,18 +132,11 @@ public class QueryStationSensors {
             //get an array of JSONObjects
             JSONArray jsonDataValueArray = jsonObject.getJSONArray("values");
 
-            //get element of an array with most recent data, and check if "value" of measured param
-            //is not null
             for (int i = 0; i < jsonDataValueArray.length(); i++) {
-                //get "i" element of an array
                 JSONObject recentData = jsonDataValueArray.getJSONObject(i);
-                //get value of measured param
                 value = recentData.getString("value");
-//                Log.v(LOG_TAG, "value: " + value);
-                //if value is not null, get date and break the loop
                 if (!value.equals("null")) {
                     date = recentData.getString("date");
-//                    Log.v(LOG_TAG, "date: " + date);
                     break;
                 }
             }
@@ -154,7 +147,7 @@ public class QueryStationSensors {
                 inputSensor.setValue(0);
             }
         } catch (JSONException | NumberFormatException e) {
-            Log.e(LOG_TAG, "Error occurred", e);
+            Log.e(LOG_TAG, "Error occurred");
         }
         return inputSensor;
     }
