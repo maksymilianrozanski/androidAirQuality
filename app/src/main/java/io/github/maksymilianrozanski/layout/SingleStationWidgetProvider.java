@@ -17,26 +17,23 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
 public class SingleStationWidgetProvider extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
-
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
-        views.setTextViewText(R.id.widgetStationNameSingleStation, context.getString(R.string.tap_to_refresh));
-
-        Intent intentSendToService = new Intent(context, SingleStationWidgetUpdateService.class);
-
-        intentSendToService.putExtra(SingleStationWidgetUpdateService.WIDGET_STATION_ID_TO_UPDATE, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intentSendToService, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
-
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
+            view.setTextViewText(R.id.widgetStationNameSingleStation, context.getString(R.string.tap_to_refresh));
+            setActionOnClick(view, context, appWidgetId);
+
+            appWidgetManager.updateAppWidget(appWidgetId, view);
         }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    private void setActionOnClick(RemoteViews view, Context context, int appWidgetId){
+        Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
+        refreshIntent.putExtra(SingleStationWidgetUpdateService.WIDGET_STATION_ID_TO_UPDATE, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
     }
 
     @Override
