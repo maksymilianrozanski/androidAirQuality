@@ -3,7 +3,6 @@ package io.github.maksymilianrozanski.layout;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,10 +14,11 @@ import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Sensor;
 import io.github.maksymilianrozanski.utility.SingleStationWidgetUpdateService;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
-import xdroid.toaster.Toaster;
 
 
 public class SingleStationWidgetProvider extends AppWidgetProvider {
+
+    private static final String LOG_TAG = SingleStationWidgetProvider.class.getName();
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -38,7 +38,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
         try {
             PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT).send();
         } catch (PendingIntent.CanceledException e) {
-            Log.e("Log", "exception canceledException: " + e);
+            Log.e(LOG_TAG, "exception canceledException: " + e);
         }
     }
 
@@ -78,10 +78,13 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())
                 && intent.hasExtra(SingleStationWidgetUpdateService.OUTPUT_SENSOR)
-                && intent.hasExtra(SingleStationWidgetUpdateService.OUTPUT_STATION_NAME)) {
+                && intent.hasExtra(SingleStationWidgetUpdateService.OUTPUT_STATION_NAME)
+                && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
             Sensor sensorFromIntent = intent.getParcelableExtra(SingleStationWidgetUpdateService.OUTPUT_SENSOR);
             String stationName = intent.getStringExtra(SingleStationWidgetUpdateService.OUTPUT_STATION_NAME);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
+            int widgetIdFromIntent = Integer.parseInt(intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID));
+
             if (sensorFromIntent != null) {
                 views.setTextViewText(R.id.widgetStationNameSingleStation, stationName);
                 String highestPercentValue = String.format("%.0f", sensorFromIntent.percentOfMaxValue());
@@ -89,25 +92,10 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
                 views.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
                 views.setTextViewText(R.id.widgetNameAndValueOfParam, sensorFromIntent.getParam() + ": " + highestPercentValue + "%");
                 views.setTextViewText(R.id.widgetUpdateDate, removeSecondsFromDate(sensorFromIntent.getLastDate()));
-
-                int widgetId = 0;
-                if (intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID) != null) {
-                    widgetId = Integer.parseInt(intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID));
-                }
-                setRefreshOnClick(views, context, widgetId);
-
+                setRefreshOnClick(views, context, widgetIdFromIntent);
             }
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            if (intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID) != null) {
-                int widgetIdToUpdate = Integer.parseInt(intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID));
-                Toaster.toast("received update of widget with id: " + widgetIdToUpdate);
-                Log.d("Log", "received update of widget with id: " + widgetIdToUpdate);
-                appWidgetManager.partiallyUpdateAppWidget(widgetIdToUpdate, views);
-            } else {
-                Log.d("Log", "inside else, before ComponentName thisWidget...");
-                ComponentName thisWidget = new ComponentName(context, SingleStationWidgetProvider.class);
-                appWidgetManager.updateAppWidget(thisWidget, views);
-            }
+            appWidgetManager.partiallyUpdateAppWidget(widgetIdFromIntent, views);
         }
         super.onReceive(context, intent);
     }
