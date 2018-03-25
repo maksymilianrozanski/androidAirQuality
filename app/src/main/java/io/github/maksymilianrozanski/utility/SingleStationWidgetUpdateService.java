@@ -37,7 +37,6 @@ public class SingleStationWidgetUpdateService extends IntentService {
         int appWidgetId;
         try {
             appWidgetId = intent.getIntExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, 0);
-            Toaster.toast("inside onHandleIntent, requested update of widget id: " + appWidgetId);
             Log.d(LOG_TAG, "inside onHandleIntent, requested update of widget id: " + appWidgetId);
             idOfStation = getStationIdFromSharedPref(appWidgetId);
         } catch (NullPointerException e) {
