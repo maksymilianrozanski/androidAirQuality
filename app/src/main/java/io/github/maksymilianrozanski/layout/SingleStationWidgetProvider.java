@@ -29,7 +29,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
             appWidgetManager.updateAppWidget(appWidgetIds[i], view);
 
             try {
-                createRefreshIntent(context, appWidgetIds[i]).send();
+                createPendingRefreshIntent(context, appWidgetIds[i]).send();
             } catch (PendingIntent.CanceledException e) {
                 Log.e("Log", "exception canceledException: " + e);
             }
@@ -37,8 +37,8 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private PendingIntent createRefreshIntent(Context context, int appWidgetId) {
-        Log.d("Log", "createRefreshIntent called, appWidgetId");
+    private PendingIntent createPendingRefreshIntent(Context context, int appWidgetId) {
+        Log.d("Log", "createPendingRefreshIntent called, appWidgetId");
         Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
         refreshIntent.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, appWidgetId);
         return PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
