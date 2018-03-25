@@ -22,13 +22,13 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int i = 0; i < appWidgetIds.length; ++i) {
+        for (int appWidgetId : appWidgetIds) {
             RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
-            setRefreshOnClick(view, context, appWidgetIds[i]);
+            setRefreshOnClick(view, context, appWidgetId);
 
-            appWidgetManager.updateAppWidget(appWidgetIds[i], view);
+            appWidgetManager.updateAppWidget(appWidgetId, view);
 
-            sendRefreshIntent(context, appWidgetIds[i]);
+            sendRefreshIntent(context, appWidgetId);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
