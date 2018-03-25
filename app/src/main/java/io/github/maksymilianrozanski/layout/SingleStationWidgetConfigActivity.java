@@ -15,8 +15,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +33,6 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     public static final String SHARED_PREF_KEY_WIDGET = "io.github.maksymilianrozanski.singleStationWidget";
 
     private static final int MY_PERMISSION_REQUEST = 0;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private StationAdapter stationAdapter;
     LoaderManager loaderManager = getLoaderManager();
 
@@ -140,7 +137,6 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     private void sortByDistance() {
         StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
                 stationAdapter,
-                fusedLocationProviderClient,
                 this,
                 MY_PERMISSION_REQUEST
         );

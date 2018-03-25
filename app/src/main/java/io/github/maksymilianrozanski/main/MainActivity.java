@@ -228,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void sortStationsByDistance() {
         StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
                 stationAdapter,
-                fusedLocationProviderClient,
                 this,
                 MY_PERMISSION_REQUEST);
     }

@@ -187,8 +187,8 @@ public class StationList {
         return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
     }
 
-    public void sortByDistanceAndUpdateAdapter(ArrayAdapter<Station> stationAdapter, FusedLocationProviderClient client, Activity activity, int permissionRequest){
-        client = LocationServices.getFusedLocationProviderClient(activity);
+    public void sortByDistanceAndUpdateAdapter(ArrayAdapter<Station> stationAdapter, Activity activity, int permissionRequest){
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(activity);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             client.getLastLocation().addOnCompleteListener(task -> {
                 LocationSaver locationSaver = new LocationSaver(activity);
