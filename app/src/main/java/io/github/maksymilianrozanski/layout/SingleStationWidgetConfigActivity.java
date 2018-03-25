@@ -72,7 +72,7 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
             setResult(Activity.RESULT_OK, intent);
 
             Intent intentSendToService = new Intent(getApplicationContext(), SingleStationWidgetUpdateService.class);
-            intentSendToService.putExtra(SingleStationWidgetUpdateService.WIDGET_STATION_ID_TO_UPDATE, currentStationId);
+            intentSendToService.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, currentStationId);
             sendBroadcast(intentSendToService);
 
             this.finish();

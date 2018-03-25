@@ -7,31 +7,47 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Sensor;
 import io.github.maksymilianrozanski.utility.SingleStationWidgetUpdateService;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
+import xdroid.toaster.Toaster;
 
 
 public class SingleStationWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int appWidgetId : appWidgetIds) {
+        for (int i = 0; i < appWidgetIds.length; ++i) {
             RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.single_station_widget);
-            view.setTextViewText(R.id.widgetStationNameSingleStation, context.getString(R.string.tap_to_refresh));
-            setActionOnClick(view, context, appWidgetId);
+            setRefreshOnClick(view, context, appWidgetIds[i]);
 
-            appWidgetManager.updateAppWidget(appWidgetId, view);
+            appWidgetManager.updateAppWidget(appWidgetIds[i], view);
+
+            try {
+                createRefreshIntent(context, appWidgetIds[i]).send();
+            } catch (PendingIntent.CanceledException e) {
+                Log.e("Log", "exception canceledException: " + e);
+            }
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private void setActionOnClick(RemoteViews view, Context context, int appWidgetId){
+    private PendingIntent createRefreshIntent(Context context, int appWidgetId) {
+        Log.d("Log", "createRefreshIntent called, appWidgetId");
         Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
-        refreshIntent.putExtra(SingleStationWidgetUpdateService.WIDGET_STATION_ID_TO_UPDATE, appWidgetId);
+        refreshIntent.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, appWidgetId);
+        return PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void setRefreshOnClick(RemoteViews view, Context context, int appWidgetId) {
+        Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
+        refreshIntent.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, appWidgetId);
+        refreshIntent.setData(Uri.parse("http://" + String.valueOf(appWidgetId)));
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
     }
@@ -70,12 +86,22 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
                 views.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
                 views.setTextViewText(R.id.widgetNameAndValueOfParam, sensorFromIntent.getParam() + ": " + highestPercentValue + "%");
                 views.setTextViewText(R.id.widgetUpdateDate, removeSecondsFromDate(sensorFromIntent.getLastDate()));
+
+                int widgetId = 0;
+                if (intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID) != null) {
+                    widgetId = Integer.parseInt(intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID));
+                }
+                setRefreshOnClick(views, context, widgetId);
+
             }
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             if (intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID) != null) {
                 int widgetIdToUpdate = Integer.parseInt(intent.getStringExtra(AppWidgetManager.EXTRA_APPWIDGET_ID));
-                appWidgetManager.updateAppWidget(widgetIdToUpdate, views);
+                Toaster.toast("received update of widget with id: " + widgetIdToUpdate);
+                Log.d("Log", "received update of widget with id: " + widgetIdToUpdate);
+                appWidgetManager.partiallyUpdateAppWidget(widgetIdToUpdate, views);
             } else {
+                Log.d("Log", "inside else, before ComponentName thisWidget...");
                 ComponentName thisWidget = new ComponentName(context, SingleStationWidgetProvider.class);
                 appWidgetManager.updateAppWidget(thisWidget, views);
             }
