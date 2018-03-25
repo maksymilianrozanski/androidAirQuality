@@ -28,26 +28,29 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], view);
 
-            try {
-                createPendingRefreshIntent(context, appWidgetIds[i]).send();
-            } catch (PendingIntent.CanceledException e) {
-                Log.e("Log", "exception canceledException: " + e);
-            }
+            sendRefreshIntent(context, appWidgetIds[i]);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private PendingIntent createPendingRefreshIntent(Context context, int appWidgetId) {
-        Log.d("Log", "createPendingRefreshIntent called, appWidgetId");
+    private void sendRefreshIntent(Context context, int appWidgetId) {
+        Intent refreshIntent = createRefreshIntent(context, appWidgetId);
+        try {
+            PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT).send();
+        } catch (PendingIntent.CanceledException e) {
+            Log.e("Log", "exception canceledException: " + e);
+        }
+    }
+
+    private Intent createRefreshIntent(Context context, int appWidgetId) {
         Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
         refreshIntent.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, appWidgetId);
-        return PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        refreshIntent.setData(Uri.parse("http://" + String.valueOf(appWidgetId)));  //setData is used to compare intents
+        return refreshIntent;
     }
 
     private void setRefreshOnClick(RemoteViews view, Context context, int appWidgetId) {
-        Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
-        refreshIntent.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, appWidgetId);
-        refreshIntent.setData(Uri.parse("http://" + String.valueOf(appWidgetId)));
+        Intent refreshIntent = createRefreshIntent(context, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.singleStationWidgetLayout, pendingIntent);
     }
