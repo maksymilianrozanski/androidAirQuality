@@ -15,7 +15,7 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 class ListProvider implements
         RemoteViewsService.RemoteViewsFactory {
 
-    private ArrayList<io.github.maksymilianrozanski.layout.WidgetItem> listItemList = new ArrayList<>();
+    private ArrayList<WidgetItem> listItemList = new ArrayList<>();
     private Context context = null;
 
     ListProvider(Context context, ArrayList<WidgetItem> listItems) {

@@ -7,6 +7,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import io.github.maksymilianrozanski.main.MainActivity;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
@@ -107,7 +108,7 @@ public class Sensor implements Parcelable {
 
     public long getTimeInMillis() throws ParseException {
         String pattern = "yyyy-MM-dd HH:mm:ss";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
         Date date;
         try {
             date = simpleDateFormat.parse(this.getLastDate());
