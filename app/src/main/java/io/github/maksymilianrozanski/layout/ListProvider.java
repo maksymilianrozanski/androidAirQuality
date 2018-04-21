@@ -18,9 +18,11 @@ class ListProvider implements
     private ArrayList<WidgetItem> listItemList = new ArrayList<>();
     private Context context = null;
 
+    @SuppressWarnings("unchecked")
     ListProvider(Context context, ArrayList<WidgetItem> listItems) {
         this.context = context;
         if (listItems != null) {
+
             this.listItemList = (ArrayList<WidgetItem>) listItems.clone();
         }
     }
