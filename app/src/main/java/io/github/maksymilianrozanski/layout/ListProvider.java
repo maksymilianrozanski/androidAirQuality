@@ -16,7 +16,7 @@ class ListProvider implements
         RemoteViewsService.RemoteViewsFactory {
 
     private ArrayList<WidgetItem> listItemList = new ArrayList<>();
-    private Context context = null;
+    private Context context;
 
     @SuppressWarnings("unchecked")
     ListProvider(Context context, ArrayList<WidgetItem> listItems) {
