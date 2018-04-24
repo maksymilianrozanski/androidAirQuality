@@ -127,7 +127,7 @@ public class QueryStationSensors {
         }
         try {
             String value = "no data to display";
-            String date = "2018-01-01 11:00:00";
+            String date = "2018-01-01 00:00:00";
             JSONObject jsonObject = new JSONObject(jsonResponse);
             //get an array of JSONObjects
             JSONArray jsonDataValueArray = jsonObject.getJSONArray("values");
