@@ -121,7 +121,7 @@ public class Sensor implements Parcelable {
         return date.getTime();
     }
 
-    public boolean isDateDefault(){
-        return  (lastDate.equals(DEFAULT_DATE));
+    public boolean isDateDefault() {
+        return (lastDate.equals(DEFAULT_DATE));
     }
 }

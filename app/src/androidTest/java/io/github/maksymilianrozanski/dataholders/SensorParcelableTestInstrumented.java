@@ -58,4 +58,16 @@ public class SensorParcelableTestInstrumented {
         sensor.setLastDate("1970-01-01 0070:30");
         long calculatedTime = sensor.getTimeInMillis();
     }
+
+    @Test
+    public void getTimeInMillisTest3() throws Exception {
+        Sensor sensor = new Sensor();
+        sensor.setId(100);
+        sensor.setParam("PM10");
+        sensor.setValue(321.2d);
+        sensor.setLastDate("1970-01-01 00:00:33");
+        long calculatedTime = sensor.getTimeInMillis();
+        long expectedTime = 33000L;
+        assertTrue(calculatedTime == expectedTime);
+    }
 }

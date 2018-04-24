@@ -94,9 +94,13 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         String date;
         try {
-            date = sensor.getLastDate();
+            if (!sensor.isDateDefault()) {
+                date = sensor.getLastDate();
+            } else {
+                date = getContext().getString(R.string.no_data);
+            }
         } catch (NullPointerException e) {
-            date = "error occurred";
+            date = getContext().getString(R.string.error_occurred);
         }
         dateView.setText(date);
     }
