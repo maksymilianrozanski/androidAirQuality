@@ -1,5 +1,7 @@
 package io.github.maksymilianrozanski.dataholders;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,5 +72,16 @@ public class SensorTest {
         sensor.setParam("KeyNotInMap");
         Double value = sensor.percentOfMaxValue();
         assertTrue(value == -1);
+    }
+
+    @Test
+    public void isDateDefaultTest() {
+        Sensor sensor = new Sensor();
+        sensor.setLastDate("2018-01-01 00:00:00");
+        Assert.assertTrue(sensor.isDateDefault());
+
+        sensor = new Sensor();
+        sensor.setLastDate("2018-03-03 01:01:01");
+        Assert.assertFalse(sensor.isDateDefault());
     }
 }

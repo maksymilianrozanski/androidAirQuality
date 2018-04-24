@@ -14,6 +14,8 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
 public class Sensor implements Parcelable {
 
+    public static String DEFAULT_DATE = "2018-01-01 00:00:00";
+
     private int id;
     private String param;
     private double value;
@@ -117,5 +119,9 @@ public class Sensor implements Parcelable {
             throw e;
         }
         return date.getTime();
+    }
+
+    public boolean isDateDefault(){
+        return  (lastDate.equals(DEFAULT_DATE));
     }
 }
