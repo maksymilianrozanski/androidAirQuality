@@ -24,7 +24,7 @@ public class SensorTest {
 
     @Before
     public void initialize() throws Exception {
-        Map<String, Integer> maxConcentrationsMap = new HashMap<String, Integer>();
+        Map<String, Integer> maxConcentrationsMap = new HashMap<>();
         maxConcentrationsMap.put("C6H6", 5);
         maxConcentrationsMap.put("NO2", 200);
         maxConcentrationsMap.put("SO2", 125);
@@ -38,7 +38,7 @@ public class SensorTest {
     }
 
     @Test
-    public void percentOfMaxValueTest1() throws Exception {
+    public void percentOfMaxValueTest1() {
 
         Sensor sensor = new Sensor();
         sensor.setId(10);
@@ -52,7 +52,7 @@ public class SensorTest {
     }
 
     @Test
-    public void percentOfMaxValueTest2() throws Exception {
+    public void percentOfMaxValueTest2() {
         Sensor sensor = new Sensor();
         sensor.setId(10);
         sensor.setValue(75);
@@ -65,7 +65,7 @@ public class SensorTest {
     }
 
     @Test
-    public void percentOfMaxValueKeyNotInMap() throws Exception {
+    public void percentOfMaxValueKeyNotInMap() {
         Sensor sensor = new Sensor();
         sensor.setId(10);
         sensor.setValue(25);
