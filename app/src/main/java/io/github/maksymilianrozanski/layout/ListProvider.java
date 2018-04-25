@@ -29,7 +29,9 @@ class ListProvider implements
 
     @Override
     public int getCount() {
-        return listItemList.size();
+        if (listItemList != null) {
+            return listItemList.size();
+        } else return 0;
     }
 
     @Override
@@ -51,9 +53,9 @@ class ListProvider implements
         rv.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
 
-        if (widgetItem.isUpToDate()){
+        if (widgetItem.isUpToDate()) {
             rv.setInt(R.id.widgetStationNameListItem, "setBackgroundColor", ContextCompat.getColor(context, R.color.white));
-        }else {
+        } else {
             rv.setInt(R.id.widgetStationNameListItem, "setBackgroundColor", ContextCompat.getColor(context, R.color.noData));
         }
 
@@ -71,7 +73,7 @@ class ListProvider implements
             String secondPart = parts[1];
             String percentValue = secondPart.substring(0, secondPart.length() - 1);
             return Double.parseDouble(percentValue);
-        }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             return -1;
         }
     }
