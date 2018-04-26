@@ -1,5 +1,6 @@
 package io.github.maksymilianrozanski.utility;
 
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -121,13 +122,14 @@ public class QueryStationSensors {
         return sensorList;
     }
 
-    private static Sensor addValueAndDate(Sensor inputSensor, String jsonResponse) {
+    @VisibleForTesting
+    static Sensor addValueAndDate(Sensor inputSensor, String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
         try {
             String value = "no data to display";
-            String date = Sensor.DEFAULT_DATE;
+            String date =  "no data to display";
             JSONObject jsonObject = new JSONObject(jsonResponse);
             //get an array of JSONObjects
             JSONArray jsonDataValueArray = jsonObject.getJSONArray("values");
