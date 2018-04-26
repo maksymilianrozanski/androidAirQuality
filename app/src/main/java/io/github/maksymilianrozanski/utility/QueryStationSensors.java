@@ -127,7 +127,7 @@ public class QueryStationSensors {
         }
         try {
             String value = "no data to display";
-            String date = "no data to display";
+            String date = Sensor.DEFAULT_DATE;
             JSONObject jsonObject = new JSONObject(jsonResponse);
             //get an array of JSONObjects
             JSONArray jsonDataValueArray = jsonObject.getJSONArray("values");
@@ -135,7 +135,7 @@ public class QueryStationSensors {
             for (int i = 0; i < jsonDataValueArray.length(); i++) {
                 JSONObject recentData = jsonDataValueArray.getJSONObject(i);
                 value = recentData.getString("value");
-                if (!value.equals("null")) {
+                if (!value.equals("null") && !recentData.getString("date").equals("null")) {
                     date = recentData.getString("date");
                     break;
                 }

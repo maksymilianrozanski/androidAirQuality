@@ -1,5 +1,7 @@
 package io.github.maksymilianrozanski.dataholders;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +24,7 @@ public class SensorTest {
 
     @Before
     public void initialize() throws Exception {
-        Map<String, Integer> maxConcentrationsMap = new HashMap<String, Integer>();
+        Map<String, Integer> maxConcentrationsMap = new HashMap<>();
         maxConcentrationsMap.put("C6H6", 5);
         maxConcentrationsMap.put("NO2", 200);
         maxConcentrationsMap.put("SO2", 125);
@@ -36,7 +38,7 @@ public class SensorTest {
     }
 
     @Test
-    public void percentOfMaxValueTest1() throws Exception {
+    public void percentOfMaxValueTest1() {
 
         Sensor sensor = new Sensor();
         sensor.setId(10);
@@ -50,7 +52,7 @@ public class SensorTest {
     }
 
     @Test
-    public void percentOfMaxValueTest2() throws Exception {
+    public void percentOfMaxValueTest2() {
         Sensor sensor = new Sensor();
         sensor.setId(10);
         sensor.setValue(75);
@@ -63,12 +65,23 @@ public class SensorTest {
     }
 
     @Test
-    public void percentOfMaxValueKeyNotInMap() throws Exception {
+    public void percentOfMaxValueKeyNotInMap() {
         Sensor sensor = new Sensor();
         sensor.setId(10);
         sensor.setValue(25);
         sensor.setParam("KeyNotInMap");
         Double value = sensor.percentOfMaxValue();
         assertTrue(value == -1);
+    }
+
+    @Test
+    public void isDateDefaultTest() {
+        Sensor sensor = new Sensor();
+        sensor.setLastDate("2018-01-01 00:00:00");
+        Assert.assertTrue(sensor.isDateDefault());
+
+        sensor = new Sensor();
+        sensor.setLastDate("2018-03-03 01:01:01");
+        Assert.assertFalse(sensor.isDateDefault());
     }
 }

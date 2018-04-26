@@ -99,6 +99,5 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
         super.tearDown();
         server.shutdown();
         mainActivityRule.finishActivity();
-        Thread.sleep(1000);
     }
 }
