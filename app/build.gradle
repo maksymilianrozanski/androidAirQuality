@@ -6,8 +6,8 @@ android {
         applicationId "io.github.maksymilianrozanski"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 13
-        versionName "1.13"
+        versionCode 15
+        versionName "1.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 //        jackOptions {
 //            enabled true
