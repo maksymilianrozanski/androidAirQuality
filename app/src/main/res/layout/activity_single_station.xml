@@ -5,8 +5,7 @@
     android:layout_marginLeft="6dp"
     android:layout_marginRight="6dp"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:background="@drawable/card_background">
+    android:layout_marginBottom="4dp">
     <TextView
         android:id="@+id/sensorsViewStationName"
         android:layout_width="wrap_content"
