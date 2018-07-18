@@ -124,9 +124,9 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         String fileName2 = "stationsResponse2.json";
 
         server.enqueue(new MockResponse().setResponseCode(200)
-        .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
 
-        server.enqueue(new MockResponse().setResponseCode(200).setBodyDelay(5000, TimeUnit.MILLISECONDS)
+        server.enqueue(new MockResponse().setResponseCode(200).setBodyDelay(2500, TimeUnit.MILLISECONDS)
                 .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
 
         Intent intent = new Intent();
@@ -134,16 +134,14 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         onView(withText("mocked station name 1")).check(matches(isDisplayed()));
 
-        Log.e("log", "inside test, before running anonymous thread");
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
 
-        new Thread(){
+        Thread uiAutomatorThread = new Thread() {
             @Override
             public void run() {
                 try {
-                    Log.e("Log", "inside anonymous thread, before sleeping.");
-                    Thread.sleep(2000);
-                    Log.e("Log", "inside anonymous thread, after sleeping.");
+                    Thread.sleep(1000);
 
                     UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
                     assertThat(device, notNullValue());
@@ -151,28 +149,25 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
                     device.pressMenu();
                     UiObject2 menuRefreshButton = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.reload_data)));
                     assertTrue(menuRefreshButton.isEnabled());
+                    //menu buttons, except refresh button should be disabled - clicking them should do nothing
                     UiObject2 menuFindNearestStation = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.find_nearest_station)));
                     menuFindNearestStation.click();
                     UiObject2 menuSortByDistance = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.sort_stations_by_distance)));
                     menuSortByDistance.click();
                     UiObject2 menuSortByCityName = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.sort_stations_by_city_name)));
                     menuSortByCityName.click();
-
-
+                    device.pressBack();
                 } catch (InterruptedException e) {
                     Log.e("Log", "Anonymous thread interrupted");
                     e.printStackTrace();
                 }
-//                super.run();
             }
-        }.start();
+        };
+        uiAutomatorThread.start();
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        Log.e("log", "inside test, before clicking reload data");
         onView(withText(R.string.reload_data)).perform(click());
-
-        Log.e("log", "inside test, after clicking reload data");
-
+        uiAutomatorThread.join();
+        onView(withText("mocked station name 1 updated")).check(matches(isDisplayed()));
     }
 
     @Test
