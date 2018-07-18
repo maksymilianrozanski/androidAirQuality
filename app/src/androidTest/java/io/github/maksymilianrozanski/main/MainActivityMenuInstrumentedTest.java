@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.By;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject2;
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.StationList;
@@ -29,6 +34,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
@@ -109,6 +116,63 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
         onView(withText(R.string.reload_data)).perform(click());
 
         onView(withText("mocked station name 1 updated")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void menuClickDuringLoading() throws Exception {
+        String fileName = "stationsResponse.json";
+        String fileName2 = "stationsResponse2.json";
+
+        server.enqueue(new MockResponse().setResponseCode(200)
+        .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName)));
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBodyDelay(5000, TimeUnit.MILLISECONDS)
+                .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), fileName2)));
+
+        Intent intent = new Intent();
+        mainActivityRule.launchActivity(intent);
+
+        onView(withText("mocked station name 1")).check(matches(isDisplayed()));
+
+        Log.e("log", "inside test, before running anonymous thread");
+        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    Log.e("Log", "inside anonymous thread, before sleeping.");
+                    Thread.sleep(2000);
+                    Log.e("Log", "inside anonymous thread, after sleeping.");
+
+                    UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+                    assertThat(device, notNullValue());
+
+                    device.pressMenu();
+                    UiObject2 menuRefreshButton = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.reload_data)));
+                    assertTrue(menuRefreshButton.isEnabled());
+                    UiObject2 menuFindNearestStation = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.find_nearest_station)));
+                    menuFindNearestStation.click();
+                    UiObject2 menuSortByDistance = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.sort_stations_by_distance)));
+                    menuSortByDistance.click();
+                    UiObject2 menuSortByCityName = device.findObject(By.text(mainActivityRule.getActivity().getString(R.string.sort_stations_by_city_name)));
+                    menuSortByCityName.click();
+
+
+                } catch (InterruptedException e) {
+                    Log.e("Log", "Anonymous thread interrupted");
+                    e.printStackTrace();
+                }
+//                super.run();
+            }
+        }.start();
+
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        Log.e("log", "inside test, before clicking reload data");
+        onView(withText(R.string.reload_data)).perform(click());
+
+        Log.e("log", "inside test, after clicking reload data");
+
     }
 
     @Test
