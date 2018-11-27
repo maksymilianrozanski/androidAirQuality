@@ -2,13 +2,11 @@ package io.github.maksymilianrozanski.main;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Checks;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.ContextCompat;
-import android.test.InstrumentationTestCase;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -28,6 +26,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -35,7 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
-public class SingleStationActivityInstrumentedTest extends InstrumentationTestCase {
+public class SingleStationActivityInstrumentedTest  {
 
     private MockWebServer server;
 
@@ -45,11 +44,9 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         //station id 10139
         server = new MockWebServer();
         server.start();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
 
         StationList.STATIONS_BASE_URL = server.url("/").toString();
     }
@@ -126,7 +123,6 @@ public class SingleStationActivityInstrumentedTest extends InstrumentationTestCa
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         server.shutdown();
     }
 }

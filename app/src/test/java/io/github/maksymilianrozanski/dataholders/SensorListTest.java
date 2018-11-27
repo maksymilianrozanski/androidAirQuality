@@ -17,8 +17,8 @@ public class SensorListTest {
     @Before
     public void setup() {
         mockedGregorianCalendar = Mockito.mock(GregorianCalendar.class);
-        //time: 19:36   26.04.2018
-        Mockito.when(mockedGregorianCalendar.getTimeInMillis()).thenReturn(1524764176463L);
+        //time: 19:36   26.04.2018 GMT
+        Mockito.when(mockedGregorianCalendar.getTimeInMillis()).thenReturn( 1524771360000L);
 
         Sensor sensor1 = new Sensor(1, "PM10");
         sensor1.setLastDate("2018-04-26 18:00:00");

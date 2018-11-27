@@ -9,7 +9,6 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObject2;
 import android.support.test.uiautomator.UiSelector;
-import android.test.InstrumentationTestCase;
 import android.util.Log;
 
 import org.junit.Assert;
@@ -28,6 +27,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -36,7 +36,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class MultipleStationWidgetInstrumentedTest2 extends InstrumentationTestCase {
+public class MultipleStationWidgetInstrumentedTest2 {
 
     private UiDevice device;
     private MockWebServer server;
@@ -196,14 +196,13 @@ public class MultipleStationWidgetInstrumentedTest2 extends InstrumentationTestC
             }
         });
 
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         StationList.STATIONS_BASE_URL = server.url("/").toString();
         FetchWidgetItem.timeInHours = 14000;     //time in hours since 19/12/2017 17:30   //TODO: make value calculated automatically
     }
 
     @Before
     public void before() throws Exception {
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        device = UiDevice.getInstance(getInstrumentation());
 
         assertThat(device, notNullValue());
 
@@ -216,7 +215,7 @@ public class MultipleStationWidgetInstrumentedTest2 extends InstrumentationTestC
     @Test
     public void widgetTestResponseCode503() throws Exception {
         mainActivityRule.launchActivity(new Intent());
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
 

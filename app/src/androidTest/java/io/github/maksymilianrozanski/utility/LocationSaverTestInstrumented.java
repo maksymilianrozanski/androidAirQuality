@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +16,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.matches;
 
 @RunWith(AndroidJUnit4.class)
-public class LocationSaverTestInstrumented extends InstrumentationTestCase {
+public class LocationSaverTestInstrumented  {
 
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;

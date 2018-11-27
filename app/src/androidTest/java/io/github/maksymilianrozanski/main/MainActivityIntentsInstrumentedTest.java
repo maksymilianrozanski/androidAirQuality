@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +22,7 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -35,7 +36,7 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase {
+public class MainActivityIntentsInstrumentedTest {
 
     private MockWebServer server;
     private static final String EXPECTED_STATION_INDEX_0_NAME = "mocked station name 1";
@@ -60,10 +61,8 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         server = new MockWebServer();
         server.start();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         StationList.STATIONS_BASE_URL = server.url("/").toString();
     }
 
@@ -128,7 +127,6 @@ public class MainActivityIntentsInstrumentedTest extends InstrumentationTestCase
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         server.shutdown();
     }
 }

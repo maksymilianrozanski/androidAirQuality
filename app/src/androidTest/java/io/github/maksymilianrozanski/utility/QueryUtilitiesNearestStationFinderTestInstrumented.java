@@ -1,9 +1,6 @@
 package io.github.maksymilianrozanski.utility;
 
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
-
-
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +11,10 @@ import java.util.List;
 
 import io.github.maksymilianrozanski.dataholders.Station;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(AndroidJUnit4.class)
-public class QueryUtilitiesNearestStationFinderTestInstrumented extends InstrumentationTestCase {
+public class QueryUtilitiesNearestStationFinderTestInstrumented  {
     private double userLatitude;
     private double userLongitude;
     private List<Station> stations;

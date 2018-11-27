@@ -8,7 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
-import android.test.InstrumentationTestCase;
+
 import android.util.Log;
 
 import org.junit.After;
@@ -25,6 +25,7 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -36,9 +37,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
+public class MainActivityMenuInstrumentedTest {
 
     private MockWebServer server;
 
@@ -48,10 +50,10 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
+
         server = new MockWebServer();
         server.start();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+
         StationList.STATIONS_BASE_URL = server.url("/").toString();
     }
 
@@ -110,8 +112,6 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         onView(withText("mocked station name 1")).check(matches(isDisplayed()));
 
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
-
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
 
@@ -134,7 +134,7 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
         onView(withText("mocked station name 1")).check(matches(isDisplayed()));
 
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
 
         Thread uiAutomatorThread = new Thread() {
@@ -143,7 +143,7 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
                 try {
                     Thread.sleep(1000);
 
-                    UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+                    UiDevice device = UiDevice.getInstance(getInstrumentation());
                     assertThat(device, notNullValue());
 
                     device.pressMenu();
@@ -195,7 +195,6 @@ public class MainActivityMenuInstrumentedTest extends InstrumentationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         server.shutdown();
     }
 }

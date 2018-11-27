@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +20,7 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.not;
 
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityInstrumentedTest extends InstrumentationTestCase {
+public class MainActivityInstrumentedTest {
 
     private MockWebServer server;
     private final String expectedStation0Name = "mocked station name 1";
@@ -44,10 +45,8 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         server = new MockWebServer();
         server.start();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         StationList.STATIONS_BASE_URL = server.url("/").toString();
     }
 
@@ -94,9 +93,9 @@ public class MainActivityInstrumentedTest extends InstrumentationTestCase {
                 .getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
+    //TODO: fix tests not passing when run together
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         server.shutdown();
         mainActivityRule.finishActivity();
     }
