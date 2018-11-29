@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.layout;
+package io.github.maksymilianrozanski.widget;
 
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -15,7 +15,6 @@ import android.widget.RemoteViews;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.main.SingleStationActivity;
-import io.github.maksymilianrozanski.utility.MultipleStationWidgetUpdateService;
 
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
@@ -54,7 +53,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
                 context.getPackageName(), R.layout.multiple_station_listview);
 
         //RemoteViews Service needed to provide adapter for ListView
-        Intent svcIntent = new Intent(context, io.github.maksymilianrozanski.layout.ScrollableWidgetService.class);
+        Intent svcIntent = new Intent(context, ScrollableWidgetService.class);
         //passing app widget id to that RemoteViews Service
         svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         //setting a unique Uri to the intent

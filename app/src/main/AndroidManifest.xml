@@ -37,7 +37,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        <receiver android:name=".layout.MultipleStationWidgetProvider">
+        <receiver android:name=".widget.MultipleStationWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -50,7 +50,7 @@
                 android:resource="@xml/multiple_station_widget_info" />
         </receiver>
         <activity
-            android:name=".layout.MultipleStationWidgetConfigActivity"
+            android:name=".widget.MultipleStationWidgetConfigActivity"
             android:theme="@style/dialog_light">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -61,9 +61,9 @@
             android:name=".utility.SingleStationWidgetUpdateService"
             android:enabled="true" />
         <service
-            android:name=".layout.ScrollableWidgetService"
+            android:name=".widget.ScrollableWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <service android:name=".utility.MultipleStationWidgetUpdateService" />
+        <service android:name=".widget.MultipleStationWidgetUpdateService" />
     </application>
 
 </manifest>

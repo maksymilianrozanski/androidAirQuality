@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="io.github.maksymilianrozanski.layout.MultipleStationWidgetConfigActivity"
+    android:configure="io.github.maksymilianrozanski.widget.MultipleStationWidgetConfigActivity"
     android:initialLayout="@layout/multiple_station_listview"
     android:minHeight="40dp"
     android:minWidth="40dp"

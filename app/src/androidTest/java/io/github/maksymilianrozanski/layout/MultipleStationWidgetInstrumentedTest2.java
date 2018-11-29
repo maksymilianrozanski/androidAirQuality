@@ -21,7 +21,7 @@ import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.StationList;
 import io.github.maksymilianrozanski.main.MainActivity;
 import io.github.maksymilianrozanski.main.RestServiceTestHelper;
-import io.github.maksymilianrozanski.utility.FetchWidgetItem;
+import io.github.maksymilianrozanski.widget.FetchWidgetItem;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

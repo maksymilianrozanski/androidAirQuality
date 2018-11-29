@@ -1,11 +1,9 @@
-package io.github.maksymilianrozanski.layout;
+package io.github.maksymilianrozanski.widget;
 
 import android.content.Intent;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
-
-import io.github.maksymilianrozanski.utility.MultipleStationWidgetUpdateService;
 
 
 public class ScrollableWidgetService extends RemoteViewsService {

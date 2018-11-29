@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.layout;
+package io.github.maksymilianrozanski.widget;
 
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -19,7 +19,6 @@ import java.util.List;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
-import io.github.maksymilianrozanski.utility.MultipleStationWidgetUpdateService;
 import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
 
@@ -122,7 +121,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
     private void sendIntentRefreshButtonVisibility() {
         CheckBox checkBox = (CheckBox) findViewById(R.id.displayRefreshButtonCheckBox);
         Log.v("LOG", "state of checkbox: " + checkBox.isChecked());
-        Intent refreshButtonVisibility = new Intent(getApplicationContext(), io.github.maksymilianrozanski.layout.MultipleStationWidgetProvider.class);
+        Intent refreshButtonVisibility = new Intent(getApplicationContext(), MultipleStationWidgetProvider.class);
         refreshButtonVisibility.setAction(MultipleStationWidgetConfigActivity.SHOW_REFRESH_BUTTON);
         refreshButtonVisibility.putExtra(VISIBILITY_KEY, checkBox.isChecked());
         refreshButtonVisibility.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

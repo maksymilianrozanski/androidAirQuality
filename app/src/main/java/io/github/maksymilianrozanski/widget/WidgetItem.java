@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.layout;
+package io.github.maksymilianrozanski.widget;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

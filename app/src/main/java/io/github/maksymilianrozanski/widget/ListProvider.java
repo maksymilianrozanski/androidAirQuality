@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.layout;
+package io.github.maksymilianrozanski.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.widget.RemoteViewsService;
 import java.util.ArrayList;
 
 import io.github.maksymilianrozanski.R;
-import io.github.maksymilianrozanski.utility.MultipleStationWidgetUpdateService;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
 class ListProvider implements

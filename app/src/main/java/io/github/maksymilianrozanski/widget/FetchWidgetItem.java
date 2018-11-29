@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.utility;
+package io.github.maksymilianrozanski.widget;
 
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
@@ -13,7 +13,7 @@ import io.github.maksymilianrozanski.dataholders.Sensor;
 import io.github.maksymilianrozanski.dataholders.SensorList;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
-import io.github.maksymilianrozanski.layout.WidgetItem;
+import io.github.maksymilianrozanski.utility.QueryStationSensors;
 
 public class FetchWidgetItem extends Thread {
 
@@ -25,7 +25,7 @@ public class FetchWidgetItem extends Thread {
     @VisibleForTesting
     public static int timeInHours = 5;
 
-    FetchWidgetItem(int indexNumber, Context context, ArrayList<WidgetItem> widgetItems) {
+    public FetchWidgetItem(int indexNumber, Context context, ArrayList<WidgetItem> widgetItems) {
         this.indexNumber = indexNumber;
         this.context = context;
         this.widgetItems = widgetItems;

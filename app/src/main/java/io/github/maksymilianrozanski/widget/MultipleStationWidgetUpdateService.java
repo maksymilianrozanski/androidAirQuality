@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.utility;
+package io.github.maksymilianrozanski.widget;
 
 import android.Manifest;
 import android.app.Service;
@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
-import io.github.maksymilianrozanski.layout.WidgetItem;
 import io.github.maksymilianrozanski.main.MainActivity;
+import io.github.maksymilianrozanski.utility.LocationSaver;
 import xdroid.toaster.Toaster;
 
 public class MultipleStationWidgetUpdateService extends Service {
@@ -111,8 +111,6 @@ public class MultipleStationWidgetUpdateService extends Service {
                 Log.e(LOG_TAG, "Exception: " + e);
             }
         }
-
-
     }
 
     private ArrayList<WidgetItem> createWidgetItemListWithStationNamesAndIds(int numberOfStations) {
