@@ -24,7 +24,7 @@ public class WidgetItem {
         this.stationName = stationName;
     }
 
-    String getNameAndValueOfParam() {
+    public String getNameAndValueOfParam() {
         return nameAndValueOfParam;
     }
 
@@ -32,7 +32,7 @@ public class WidgetItem {
         this.nameAndValueOfParam = nameAndValueOfParam;
     }
 
-    String getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 

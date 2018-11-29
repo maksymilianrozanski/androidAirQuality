@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.location.Location
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.util.Log
-import io.github.maksymilianrozanski.any
+import com.nhaarman.mockitokotlin2.argThat
 import io.github.maksymilianrozanski.dataholders.StationList
 import io.github.maksymilianrozanski.main.RestServiceTestHelper
 import io.github.maksymilianrozanski.widget.ConnectionCheck
@@ -174,8 +174,33 @@ class MultipleStationWidgetModelImplTest {
         val modelImpl = MultipleStationWidgetModelImpl(contextMock, locationProviderMock, connectionCheckMock)
         modelImpl.fetchData(onFinishedListenerMock)
 
-//TODO: add argument verification
-        Mockito.verify(onFinishedListenerMock).onFinished(any())
+        Mockito.verify(onFinishedListenerMock).onFinished(argThat {
+            get(0).stationName == "Warszawa-Marszałkowska" &&
+                    get(0).nameAndValueOfParam == "PM2.5: 114%" &&
+                    get(0).updateDate == "2017-12-19 13:00" &&
+                    get(0).stationId == 544 &&
+                    get(0).isUpToDate &&
+                    get(1).stationName == "Warszawa-Komunikacyjna" &&
+                    get(1).nameAndValueOfParam == "PM2.5: 195%" &&
+                    get(1).updateDate == "2017-12-19 16:00" &&
+                    get(1).stationId == 530 &&
+                    get(1).isUpToDate &&
+                    get(2).stationName == "Warszawa-Podleśna" &&
+                    get(2).nameAndValueOfParam == "O3: 21%" &&
+                    get(2).updateDate == "2017-12-19 15:00" &&
+                    get(2).stationId == 531 &&
+                    get(2).isUpToDate &&
+                    get(3).stationName == "Warszawa-Targówek" &&
+                    get(3).nameAndValueOfParam == "PM10: 75%" &&
+                    get(3).updateDate == "2017-12-19 16:00" &&
+                    get(3).stationId == 552 &&
+                    !get(3).isUpToDate &&
+                    get(4).stationName == "Warszawa-Ursynów" &&
+                    get(4).nameAndValueOfParam == "PM2.5: 54%" &&
+                    get(4).updateDate == "2017-12-20 20:00" &&
+                    get(4).stationId == 550 &&
+                    get(4).isUpToDate
+        })
     }
 
     private class LocationProviderMock : MyLocationProvider {
