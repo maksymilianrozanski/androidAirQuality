@@ -213,7 +213,7 @@ class MultipleStationWidgetModelImplTest {
     }
 
     private class ConnectionCheckMock : ConnectionCheck {
-        override fun isConnected(context: Context): Boolean {
+        override fun isConnected(): Boolean {
             return true
         }
     }

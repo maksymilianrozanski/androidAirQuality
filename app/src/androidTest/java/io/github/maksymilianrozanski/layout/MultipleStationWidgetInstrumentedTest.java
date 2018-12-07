@@ -213,6 +213,7 @@ public class MultipleStationWidgetInstrumentedTest {
 
     //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927,
     //place multiple station widget on home screen,set refresh button  to visible
+    //TODO: isn't passing if stations are not sorted by distance before test
     @Test
     public void widgetTest() throws Exception {
         mainActivityRule.launchActivity(new Intent());

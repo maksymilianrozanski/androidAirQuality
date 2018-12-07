@@ -15,7 +15,7 @@ class MyLocationProviderImpl(var context: Context) : MyLocationProvider {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             val result = fusedLocationProviderClient.lastLocation
             val locationSaver = LocationSaver(context)
-
+//TODO: fix to wait until get lastLocation task finished
             return if (result.isSuccessful && result.result != null) {
                 locationSaver.saveLocation(result.result)
                 result.result ?: locationSaver.location

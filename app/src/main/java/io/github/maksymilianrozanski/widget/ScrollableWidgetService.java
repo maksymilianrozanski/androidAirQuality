@@ -4,15 +4,16 @@ import android.content.Intent;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ScrollableWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        ArrayList<WidgetItem> widgetItems = MultipleStationWidgetUpdateService
+        List<WidgetItem> widgetItems = MultipleStationWidgetUpdateService
                 .getWidgetItemListFromSharedPreferences(getApplicationContext());
-        return (new ListProvider(this.getApplicationContext(), widgetItems));
+        return (new ListProvider(this.getApplicationContext(), (ArrayList<WidgetItem>) widgetItems));
     }
 }
 

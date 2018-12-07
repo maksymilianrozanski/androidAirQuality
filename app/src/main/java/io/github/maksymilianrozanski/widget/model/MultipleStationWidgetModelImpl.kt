@@ -23,7 +23,7 @@ class MultipleStationWidgetModelImpl(var context: Context,
     }
 
     private fun fetchDataFromWeb(onFinishedListener: MultipleStationWidgetContract.Model.OnFinishedListener) {
-        if (connectionCheck.isConnected(context)) {
+        if (connectionCheck.isConnected()) {
             val widgetItemList = createWidgetItemListWithStationNamesAndIds(5)
             fetchSensorDataForWidgetItems(onFinishedListener, widgetItemList)
 

@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
@@ -14,7 +15,7 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 class ListProvider implements
         RemoteViewsService.RemoteViewsFactory {
 
-    private ArrayList<WidgetItem> listItemList = new ArrayList<>();
+    private List<WidgetItem> listItemList = new ArrayList<>();
     private Context context;
 
     @SuppressWarnings("unchecked")
