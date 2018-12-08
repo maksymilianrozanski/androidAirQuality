@@ -67,8 +67,8 @@ public class MultipleStationWidgetUpdateService extends Service
     }
 
     @Override
-    public void onFinished(@NotNull List<? extends WidgetItem> stations) {
-        widgetItemList = (List<WidgetItem>) stations;
+    public void onFinished(@NotNull List<WidgetItem> stations) {
+        widgetItemList = stations;
 
         saveWidgetItemList();
         Intent widgetUpdateIntent = new Intent();
