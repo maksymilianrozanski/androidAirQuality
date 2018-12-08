@@ -10,16 +10,21 @@ import java.util.*
 class MultipleStationWidgetModelImpl(var context: Context,
                                      var myLocationProvider: MyLocationProvider,
                                      var connectionCheck: ConnectionCheck
-) : MultipleStationWidgetContract.Model {
-
+) : MultipleStationWidgetContract.Model,
+        MyLocationProvider.OnFinishedListener {
 
     override fun fetchData(onFinishedListener: MultipleStationWidgetContract.Model.OnFinishedListener) {
-        val location: Location = myLocationProvider.getLocation()
+        myLocationProvider.getLocation(this, onFinishedListener)
+    }
 
+    override fun onLocationReceived(location: Location, onFinishedToPass: MultipleStationWidgetContract.Model.OnFinishedListener) {
         val stationListInstance = StationList.getStationListInstance(context)
         stationListInstance.sortStationsByDistance(context, location)
+        fetchDataFromWeb(onFinishedToPass)
+    }
 
-        fetchDataFromWeb(onFinishedListener)
+    override fun onLocationFailure(throwable: Throwable, onFinishedToPass: MultipleStationWidgetContract.Model.OnFinishedListener) {
+        onFinishedToPass.onFailure(throwable)
     }
 
     private fun fetchDataFromWeb(onFinishedListener: MultipleStationWidgetContract.Model.OnFinishedListener) {

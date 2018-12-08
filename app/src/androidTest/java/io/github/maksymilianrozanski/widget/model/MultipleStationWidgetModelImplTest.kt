@@ -204,17 +204,18 @@ class MultipleStationWidgetModelImplTest {
     }
 
     private class LocationProviderMock : MyLocationProvider {
-        override fun getLocation(): Location {
+        override fun getLocation(onFinishedListener: MyLocationProvider.OnFinishedListener, onFinishedToPass: MultipleStationWidgetContract.Model.OnFinishedListener) {
             val location = Location("")
             location.latitude = 52.231964
             location.longitude = 21.005927
-            return location
+
+            onFinishedListener.onLocationReceived(location, onFinishedToPass)
         }
     }
+}
 
-    private class ConnectionCheckMock : ConnectionCheck {
-        override fun isConnected(): Boolean {
-            return true
-        }
+private class ConnectionCheckMock : ConnectionCheck {
+    override fun isConnected(): Boolean {
+        return true
     }
 }
