@@ -35,7 +35,7 @@ class ListProvider implements
             intentListener = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    listItemList = intent.getParcelableArrayListExtra(MultipleStationWidgetProvider.INTENT_KEY_ITEM_LIST_FOR_LIST_PROVIDER);
+                    listItemList = intent.getParcelableArrayListExtra(MultipleStationWidgetProvider.INTENT_KEY_PARCELABLE_ARRAY_LIST_EXTRA);
                 }
             };
             IntentFilter filter = new IntentFilter();
