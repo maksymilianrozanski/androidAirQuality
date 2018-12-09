@@ -22,9 +22,9 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
 
     public static final String SHARED_PREFERENCES_VISIBILITY_KEY = "io.github.maksymilianrozanski.refreshButtonVisibilities";
-    public static final String INTENT_KEY_ITEM_LIST_FOR_LIST_PROVIDER = "stringKeyUpdatingWidgetItemList";
-    public static final String INTENT_ACTION_FOR_LIST_PROVIDER = "this.is.action.updating.widget";
-    public static final String INTENT_KEY_PARCELABLE_ARRAY_LIST_EXTRA = "ArrayListOf5WidgetItems";
+    public static final String INTENT_KEY_ITEM_LIST_FOR_LIST_PROVIDER = "KeyForIntentExtraSendingWidgetItemsListFromWidgetProviderIntoListProvider";
+    public static final String INTENT_ACTION_FOR_LIST_PROVIDER = "ActionSendingWidgetItemsListFromWidgetProviderToListProvider";
+    public static final String INTENT_KEY_PARCELABLE_ARRAY_LIST_EXTRA = "ArrayListOfWidgetItemsSentFromWidgetUpdateServiceToWidgetProvider";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
