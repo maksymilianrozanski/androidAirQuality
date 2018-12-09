@@ -60,7 +60,7 @@ public class MultipleStationWidgetUpdateService extends Service
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 appWidgetId);
         Log.d("Log", "Putting widget items into widgetUpdateIntent, size: " + widgetItemList.size());
-        widgetUpdateIntent.putParcelableArrayListExtra("ArrayListOf5WidgetItems", (ArrayList<? extends Parcelable>) widgetItemList);
+        widgetUpdateIntent.putParcelableArrayListExtra(MultipleStationWidgetProvider.INTENT_KEY_PARCELABLE_ARRAY_LIST_EXTRA, (ArrayList<? extends Parcelable>) widgetItemList);
         sendBroadcast(widgetUpdateIntent);
 
         this.stopSelf();

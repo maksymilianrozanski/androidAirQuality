@@ -35,11 +35,11 @@ class ListProvider implements
             intentListener = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    listItemList = intent.getParcelableArrayListExtra("stringKeyUpdatingWidgetItemList");
+                    listItemList = intent.getParcelableArrayListExtra(MultipleStationWidgetProvider.INTENT_KEY_ITEM_LIST_FOR_LIST_PROVIDER);
                 }
             };
             IntentFilter filter = new IntentFilter();
-            filter.addAction("this.is.action.updating.widget");
+            filter.addAction(MultipleStationWidgetProvider.INTENT_ACTION_FOR_LIST_PROVIDER);
             Log.d("LOG", "Registering broadcast receiver inside ListProvider");
             context.registerReceiver(intentListener, filter);
         }

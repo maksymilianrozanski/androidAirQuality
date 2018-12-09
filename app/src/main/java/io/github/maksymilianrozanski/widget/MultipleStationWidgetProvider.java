@@ -22,6 +22,9 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
 
     public static final String SHARED_PREFERENCES_VISIBILITY_KEY = "io.github.maksymilianrozanski.refreshButtonVisibilities";
+    public static final String INTENT_KEY_ITEM_LIST_FOR_LIST_PROVIDER = "stringKeyUpdatingWidgetItemList";
+    public static final String INTENT_ACTION_FOR_LIST_PROVIDER = "this.is.action.updating.widget";
+    public static final String INTENT_KEY_PARCELABLE_ARRAY_LIST_EXTRA = "ArrayListOf5WidgetItems";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -92,12 +95,12 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             AppWidgetManager appWidgetManager = AppWidgetManager
                     .getInstance(context);
-            ArrayList<WidgetItem> widgetItems = intent.getParcelableArrayListExtra("ArrayListOf5WidgetItems");
+            ArrayList<WidgetItem> widgetItems = intent.getParcelableArrayListExtra(INTENT_KEY_PARCELABLE_ARRAY_LIST_EXTRA);
             if (widgetItems != null) {
                 Log.d("Log", "inside onReceiveUpdateIntent. widgetItems size: " + widgetItems.size());
 
-                Intent broadcastIntent = new Intent("this.is.action.updating.widget");
-                broadcastIntent.putParcelableArrayListExtra("stringKeyUpdatingWidgetItemList", widgetItems);
+                Intent broadcastIntent = new Intent(INTENT_ACTION_FOR_LIST_PROVIDER);
+                broadcastIntent.putParcelableArrayListExtra(INTENT_KEY_ITEM_LIST_FOR_LIST_PROVIDER, widgetItems);
                 context.sendBroadcast(broadcastIntent);
 
                 notifyAdapter(context, appWidgetManager);   // TODO: check should this line be called later
