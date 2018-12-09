@@ -212,10 +212,10 @@ class MultipleStationWidgetModelImplTest {
             onFinishedListener.onLocationReceived(location, onFinishedToPass)
         }
     }
-}
 
-private class ConnectionCheckMock : ConnectionCheck {
-    override fun isConnected(): Boolean {
-        return true
+    private class ConnectionCheckMock : ConnectionCheck {
+        override fun isConnected(): Boolean {
+            return true
+        }
     }
 }
