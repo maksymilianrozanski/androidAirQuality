@@ -1,12 +1,14 @@
 package io.github.maksymilianrozanski.widget;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.github.maksymilianrozanski.R;
@@ -15,15 +17,29 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 class ListProvider implements
         RemoteViewsService.RemoteViewsFactory {
 
-    private List<WidgetItem> listItemList = new ArrayList<>();
+    private List<WidgetItem> listItemList;
     private Context context;
+    private BroadcastReceiver intentListener;
 
     @SuppressWarnings("unchecked")
-    ListProvider(Context context, ArrayList<WidgetItem> listItems) {
+    ListProvider(Context context) {
+        Log.d("LOG", "inside constructor of ListProvider.");
         this.context = context;
-        if (listItems != null) {
+        setupIntentListener();
+    }
 
-            this.listItemList = (ArrayList<WidgetItem>) listItems.clone();
+    private void setupIntentListener() {
+        if (intentListener == null) {
+            intentListener = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    listItemList = intent.getParcelableArrayListExtra("stringKeyUpdatingWidgetItemList");
+                }
+            };
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("this.is.action.updating.widget");
+            Log.d("LOG","Registering broadcast receiver inside ListProvider");
+            context.registerReceiver(intentListener, filter);
         }
     }
 
@@ -80,18 +96,31 @@ class ListProvider implements
 
     @Override
     public void onCreate() {
-
+        Log.d("LOG", "onCreate of ListProvider called");
+        if (listItemList == null) {
+            Log.d("LOG", "listItemList is null");
+            //TODO: request widget data here
+        }
     }
 
     @Override
     public void onDataSetChanged() {
-        listItemList = MultipleStationWidgetUpdateService
-                .getWidgetItemListFromSharedPreferences(context);
+        if (listItemList != null) {
+            Log.d("LOG", "Inside onDataSetChanged, listItemList size: " + listItemList.size());
+        } else Log.d("LOG", "Inside onDataSetChanged, listItemList is null ");
     }
 
     @Override
     public void onDestroy() {
+        Log.d("LOG", "Inside onDestroy, tearing down Intent Listener");
+        teardownIntentListener();
+    }
 
+    private void teardownIntentListener() {
+        if (intentListener != null) {
+            context.unregisterReceiver(intentListener);
+            intentListener = null;
+        }
     }
 
     @Override
@@ -108,5 +137,4 @@ class ListProvider implements
     public boolean hasStableIds() {
         return true;
     }
-
 }

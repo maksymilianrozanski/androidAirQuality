@@ -9,14 +9,14 @@ class WidgetItem() : Parcelable {
     var nameAndValueOfParam: String? = null
     var updateDate: String? = null
     var stationId: Int = 0
-    var isUpToDate = false
-        private set
+    var isUpToDate: Boolean = false
 
     constructor(parcel: Parcel) : this() {
         stationName = parcel.readString()
         nameAndValueOfParam = parcel.readString()
         updateDate = parcel.readString()
         stationId = parcel.readInt()
+        isUpToDate = parcel.readInt() == 1
     }
 
     fun setUpToDate(upToDate: AtomicBoolean) {
@@ -28,6 +28,7 @@ class WidgetItem() : Parcelable {
         parcel.writeString(nameAndValueOfParam)
         parcel.writeString(updateDate)
         parcel.writeInt(stationId)
+        parcel.writeInt((if (isUpToDate) 1 else 0))
     }
 
     override fun describeContents(): Int {

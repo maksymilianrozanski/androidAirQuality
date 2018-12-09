@@ -2,19 +2,14 @@ package io.github.maksymilianrozanski.widget;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,20 +21,10 @@ public class MultipleStationWidgetUpdateService extends Service
         implements
         MultipleStationWidgetContract.Model.OnFinishedListener {
 
-    public static final String LIST_TAG = "io.github.maksymilianrozanski.widgetItemList";
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     private static final String LOG_TAG = MultipleStationWidgetUpdateService.class.getName();
     private static List<WidgetItem> widgetItemList = new ArrayList<>();
-
-    public static List<WidgetItem> getWidgetItemListFromSharedPreferences(Context context) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString(LIST_TAG, null);
-        Type listType = new TypeToken<ArrayList<WidgetItem>>() {
-        }.getType();
-        return widgetItemList = gson.fromJson(json, listType);
-    }
 
     @Nullable
     @Override
@@ -70,11 +55,12 @@ public class MultipleStationWidgetUpdateService extends Service
     public void onFinished(@NotNull List<WidgetItem> stations) {
         widgetItemList = stations;
 
-        saveWidgetItemList();
         Intent widgetUpdateIntent = new Intent();
         widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 appWidgetId);
+        Log.d("Log", "Putting widget items into widgetUpdateIntent, size: " + widgetItemList.size());
+        widgetUpdateIntent.putParcelableArrayListExtra("ArrayListOf5WidgetItems", (ArrayList<? extends Parcelable>) widgetItemList);
         sendBroadcast(widgetUpdateIntent);
 
         this.stopSelf();
@@ -84,16 +70,5 @@ public class MultipleStationWidgetUpdateService extends Service
     public void onFailure(@NotNull Throwable throwable) {
         Toaster.toast(R.string.no_internet_connection);
         this.stopSelf();
-    }
-
-    private void saveWidgetItemList() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String widgetItemsAsJsonString = gson.toJson(widgetItemList);
-        editor.remove(LIST_TAG);
-        editor.apply();
-        editor.putString(LIST_TAG, widgetItemsAsJsonString);
-        editor.apply();
     }
 }
