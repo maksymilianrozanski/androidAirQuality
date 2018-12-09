@@ -4,12 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.List;
+import java.util.Map;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
@@ -38,7 +40,7 @@ class ListProvider implements
             };
             IntentFilter filter = new IntentFilter();
             filter.addAction("this.is.action.updating.widget");
-            Log.d("LOG","Registering broadcast receiver inside ListProvider");
+            Log.d("LOG", "Registering broadcast receiver inside ListProvider");
             context.registerReceiver(intentListener, filter);
         }
     }
@@ -107,7 +109,24 @@ class ListProvider implements
     public void onDataSetChanged() {
         if (listItemList != null) {
             Log.d("LOG", "Inside onDataSetChanged, listItemList size: " + listItemList.size());
-        } else Log.d("LOG", "Inside onDataSetChanged, listItemList is null ");
+        } else {
+            Log.d("LOG", "Inside onDataSetChanged, listItemList is null. Requesting update. ");
+            requestUpdate();
+        }
+    }
+
+    private void requestUpdate() {
+        SharedPreferences preferences = context.getSharedPreferences(MultipleStationWidgetProvider.SHARED_PREFERENCES_VISIBILITY_KEY, Context.MODE_PRIVATE);
+        Map<String, ?> allWidgetIds = preferences.getAll();
+
+        for (Map.Entry<String, ?> entry : allWidgetIds.entrySet()) {
+            Log.d("Log", "inside requestUpdate of ListProvider. Id from preferences: " + entry.getKey());
+            try {
+                MultipleStationWidgetProvider.sendIntentToUpdatingService(context, Integer.parseInt(entry.getKey()));
+            } catch (NumberFormatException e) {
+                Log.e("Log", "NumberFormatException " + e.getMessage());
+            }
+        }
     }
 
     @Override

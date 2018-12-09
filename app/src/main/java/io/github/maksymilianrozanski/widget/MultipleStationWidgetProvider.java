@@ -21,7 +21,7 @@ import io.github.maksymilianrozanski.main.SingleStationActivity;
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
 
-    private static final String SHARED_PREFERENCES_VISIBILITY_KEY = "io.github.maksymilianrozanski.refreshButtonVisibilities";
+    public static final String SHARED_PREFERENCES_VISIBILITY_KEY = "io.github.maksymilianrozanski.refreshButtonVisibilities";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -33,7 +33,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private void sendIntentToUpdatingService(Context context, int appWidgetId) {
+    public static void sendIntentToUpdatingService(Context context, int appWidgetId) {
         Intent refreshIntent = new Intent(context, MultipleStationWidgetUpdateService.class);
         refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, refreshIntent, 0);
