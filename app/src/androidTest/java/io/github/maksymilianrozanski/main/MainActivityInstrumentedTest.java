@@ -93,7 +93,6 @@ public class MainActivityInstrumentedTest {
                 .getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
-    //TODO: fix tests not passing when run together
     @After
     public void tearDown() throws Exception {
         server.shutdown();
