@@ -101,7 +101,7 @@ class ListProvider implements
         Log.d("LOG", "onCreate of ListProvider called");
         if (listItemList == null) {
             Log.d("LOG", "listItemList is null");
-            //TODO: request widget data here
+            requestUpdate();
         }
     }
 

@@ -30,6 +30,12 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int i = 0; i < appWidgetIds.length; ++i) {
             Log.v("LOG", "inside onUpdate");
+            RemoteViews remoteViews = updateWidgetListView(context,
+                    appWidgetIds[i]);
+
+            appWidgetManager.updateAppWidget(appWidgetIds[i],
+                    remoteViews);
+
             sendIntentToUpdatingService(context, appWidgetIds[i]);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
