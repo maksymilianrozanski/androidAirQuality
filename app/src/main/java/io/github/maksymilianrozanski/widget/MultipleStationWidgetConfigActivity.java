@@ -109,7 +109,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
 
         // start your service
         // to fetch data from web
-        Intent serviceIntent = new Intent(this, MultipleStationWidgetUpdateService.class);
+        Intent serviceIntent = new Intent(this, MultipleStationWidgetUpdateIntentService.class);
         serviceIntent
                 .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         startService(serviceIntent);

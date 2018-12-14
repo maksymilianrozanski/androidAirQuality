@@ -1,10 +1,9 @@
 package io.github.maksymilianrozanski.widget;
 
+import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v4.app.JobIntentService;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,21 +15,17 @@ import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.widget.model.MultipleStationWidgetModelImpl;
 import xdroid.toaster.Toaster;
 
-public class MultipleStationWidgetUpdateService extends JobIntentService
-        implements
-        MultipleStationWidgetContract.Model.OnFinishedListener {
+public class MultipleStationWidgetUpdateIntentService extends IntentService
+        implements MultipleStationWidgetContract.Model.OnFinishedListener {
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-    public static final int JOB_ID = 1;
-
-    public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, MultipleStationWidgetUpdateService.class, JOB_ID, work);
-        Log.d("Log", "Inside enqueueWork");
+    public MultipleStationWidgetUpdateIntentService() {
+        super("MultipleStationWidgetUpdateIntentService");
     }
 
     @Override
-    protected void onHandleWork(@NotNull Intent intent) {
+    protected void onHandleIntent(Intent intent) {
         MyLocationProvider locationProvider = new MyLocationProviderImpl(this);
         ConnectionCheck connectionCheck = new ConnectionCheckImpl(this);
         MultipleStationWidgetContract.Model model = new MultipleStationWidgetModelImpl(this, locationProvider, connectionCheck);
@@ -49,7 +44,6 @@ public class MultipleStationWidgetUpdateService extends JobIntentService
 
     @Override
     public void onFinished(@NotNull List<WidgetItem> stations) {
-
         Intent widgetUpdateIntent = new Intent();
         widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
