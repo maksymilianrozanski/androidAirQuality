@@ -15,7 +15,6 @@ class ConnectionCheckImpl(var context: Context) : ConnectionCheck {
             return false
         }
 
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-        //TODO: check why is deprecated
+        return activeNetwork != null && activeNetwork.isConnected
     }
 }
