@@ -35,15 +35,12 @@ public class MultipleStationWidgetUpdateService extends JobIntentService
         ConnectionCheck connectionCheck = new ConnectionCheckImpl(this);
         MultipleStationWidgetContract.Model model = new MultipleStationWidgetModelImpl(this, locationProvider, connectionCheck);
         Log.d("Log", "Inside onHandleIntent of intent service");
-        if (intent != null) {
-            if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-                appWidgetId = intent.getIntExtra(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID);
-                Log.d("Log", "set appWidgetId: " + appWidgetId);
-            }
+        if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
+            appWidgetId = intent.getIntExtra(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            Log.d("Log", "set appWidgetId: " + appWidgetId);
         }
-
         model.fetchData(this);
     }
 
