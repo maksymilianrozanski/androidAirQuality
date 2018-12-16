@@ -17,6 +17,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito
 
@@ -43,8 +44,8 @@ class MultipleStationWidgetModelImplTest {
         Mockito.`when`(sharedPreferencesMock.edit()).thenReturn(sharedPreferencesEditorMock)
     }
 
-    @Before
-    fun serverSetup() {
+    @Ignore
+    fun correctServerSetup() {
         val fileName = "stationsResponse.json"
         val station544FileName = "station544sensors.json"
         val station530FileName = "station530sensors.json"
@@ -169,6 +170,8 @@ class MultipleStationWidgetModelImplTest {
 
     @Test
     fun fetchDataTest() {
+        correctServerSetup()
+
         val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
 
         val modelImpl = MultipleStationWidgetModelImpl(contextMock, locationProviderMock, connectionCheckMock)
