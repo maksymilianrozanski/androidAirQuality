@@ -8,10 +8,7 @@ import android.util.Log
 import com.nhaarman.mockitokotlin2.argThat
 import io.github.maksymilianrozanski.dataholders.StationList
 import io.github.maksymilianrozanski.main.RestServiceTestHelper
-import io.github.maksymilianrozanski.widget.ConnectionCheck
-import io.github.maksymilianrozanski.widget.FetchWidgetItem
-import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract
-import io.github.maksymilianrozanski.widget.MyLocationProvider
+import io.github.maksymilianrozanski.widget.*
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -34,7 +31,7 @@ class MultipleStationWidgetModelImplTest {
     fun setup() {
         locationProviderMock = LocationProviderMock()
         contextMock = Mockito.mock(Context::class.java)
-        connectionCheckMock = ConnectionCheckMock()
+        connectionCheckMock = Mockito.mock(ConnectionCheck::class.java)
         sharedPreferencesMock = Mockito.mock(SharedPreferences::class.java)
         sharedPreferencesEditorMock = Mockito.mock(SharedPreferences.Editor::class.java)
 
@@ -165,12 +162,13 @@ class MultipleStationWidgetModelImplTest {
         })
 
         StationList.STATIONS_BASE_URL = mockWebServer.url("/").toString()
-        FetchWidgetItem.timeInHours = 14000;     //time in hours since 19/12/2017 17:30 
+        FetchWidgetItem.timeInHours = 14000     //time in hours since 19/12/2017 17:30
     }
 
     @Test
     fun fetchDataTest() {
         correctServerSetup()
+        Mockito.`when`(connectionCheckMock.isConnected()).thenReturn(true)
 
         val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
 
@@ -206,6 +204,20 @@ class MultipleStationWidgetModelImplTest {
         })
     }
 
+    @Test
+    fun noInternetConnectionTest(){
+        Mockito.`when`(connectionCheckMock.isConnected()).thenReturn(false)
+
+        val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
+
+        val modelImpl = MultipleStationWidgetModelImpl(contextMock, locationProviderMock, connectionCheckMock)
+        modelImpl.fetchData(onFinishedListenerMock)
+
+        Mockito.verify(onFinishedListenerMock).onFailure(argThat {
+            message == no_internet_connection_exception
+        })
+    }
+
     private class LocationProviderMock : MyLocationProvider {
         override fun getLocation(onFinishedListener: MyLocationProvider.OnFinishedListener, onFinishedToPass: MultipleStationWidgetContract.Model.OnFinishedListener) {
             val location = Location("")
@@ -213,12 +225,6 @@ class MultipleStationWidgetModelImplTest {
             location.longitude = 21.005927
 
             onFinishedListener.onLocationReceived(location, onFinishedToPass)
-        }
-    }
-
-    private class ConnectionCheckMock : ConnectionCheck {
-        override fun isConnected(): Boolean {
-            return true
         }
     }
 }

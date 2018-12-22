@@ -34,7 +34,7 @@ class MultipleStationWidgetModelImpl(var context: Context,
 
             onFinishedListener.onFinished(widgetItemList)
         } else {
-            onFinishedListener.onFailure(Exception("No Internet connection"))
+            onFinishedListener.onFailure(Exception(no_internet_connection_exception))
         }
     }
 
