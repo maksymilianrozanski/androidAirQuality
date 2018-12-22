@@ -55,6 +55,10 @@ public class MultipleStationWidgetUpdateIntentService extends IntentService
 
     @Override
     public void onFailure(@NotNull Throwable throwable) {
-        Toaster.toast(R.string.no_internet_connection);
+        if (throwable.getMessage().equals(ThrowableMessagesKt.no_internet_connection_exception)) {
+            Toaster.toast(R.string.no_internet_connection);
+        } else if (throwable.getMessage().equals(ThrowableMessagesKt.access_to_location_not_granted)) {
+            Toaster.toast(R.string.no_location_access);
+        }
     }
 }

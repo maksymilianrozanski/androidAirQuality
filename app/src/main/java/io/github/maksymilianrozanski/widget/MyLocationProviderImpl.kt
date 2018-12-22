@@ -24,7 +24,7 @@ class MyLocationProviderImpl(var context: Context) : MyLocationProvider {
                 }
             }
         } else {
-            onFinishedListener.onLocationFailure(Throwable("Access to location not granted."), onFinishedToPass)
+            onFinishedListener.onLocationFailure(Throwable(access_to_location_not_granted), onFinishedToPass)
         }
     }
 }

@@ -29,7 +29,6 @@ class MultipleStationWidgetModelImplTest {
 
     @Before
     fun setup() {
-        locationProviderMock = LocationProviderMock()
         contextMock = Mockito.mock(Context::class.java)
         connectionCheckMock = Mockito.mock(ConnectionCheck::class.java)
         sharedPreferencesMock = Mockito.mock(SharedPreferences::class.java)
@@ -168,6 +167,7 @@ class MultipleStationWidgetModelImplTest {
     @Test
     fun fetchDataTest() {
         correctServerSetup()
+        locationProviderMock = LocationProviderMock()
         Mockito.`when`(connectionCheckMock.isConnected()).thenReturn(true)
 
         val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
@@ -205,7 +205,8 @@ class MultipleStationWidgetModelImplTest {
     }
 
     @Test
-    fun noInternetConnectionTest(){
+    fun noInternetConnectionTest() {
+        locationProviderMock = LocationProviderMock()
         Mockito.`when`(connectionCheckMock.isConnected()).thenReturn(false)
 
         val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
@@ -218,6 +219,36 @@ class MultipleStationWidgetModelImplTest {
         })
     }
 
+    @Test
+    fun noLocationAccessTest() {
+        locationProviderMock = LocationProviderMockNoAccess()
+        Mockito.`when`(connectionCheckMock.isConnected()).thenReturn(true)
+
+        val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
+
+        val modelImpl = MultipleStationWidgetModelImpl(contextMock, locationProviderMock, connectionCheckMock)
+        modelImpl.fetchData(onFinishedListenerMock)
+
+        Mockito.verify(onFinishedListenerMock).onFailure(argThat {
+            message == access_to_location_not_granted
+        })
+    }
+
+    @Test
+    fun noLocationAndNoInternetTest() {
+        locationProviderMock = LocationProviderMockNoAccess()
+        Mockito.`when`(connectionCheckMock.isConnected()).thenReturn(false)
+
+        val onFinishedListenerMock = Mockito.mock(MultipleStationWidgetContract.Model.OnFinishedListener::class.java)
+
+        val modelImpl = MultipleStationWidgetModelImpl(contextMock, locationProviderMock, connectionCheckMock)
+        modelImpl.fetchData(onFinishedListenerMock)
+
+        Mockito.verify(onFinishedListenerMock).onFailure(argThat {
+            message == access_to_location_not_granted
+        })
+    }
+
     private class LocationProviderMock : MyLocationProvider {
         override fun getLocation(onFinishedListener: MyLocationProvider.OnFinishedListener, onFinishedToPass: MultipleStationWidgetContract.Model.OnFinishedListener) {
             val location = Location("")
@@ -225,6 +256,12 @@ class MultipleStationWidgetModelImplTest {
             location.longitude = 21.005927
 
             onFinishedListener.onLocationReceived(location, onFinishedToPass)
+        }
+    }
+
+    private class LocationProviderMockNoAccess : MyLocationProvider {
+        override fun getLocation(onFinishedListener: MyLocationProvider.OnFinishedListener, onFinishedToPass: MultipleStationWidgetContract.Model.OnFinishedListener) {
+            onFinishedListener.onLocationFailure(Throwable(access_to_location_not_granted), onFinishedToPass)
         }
     }
 }
