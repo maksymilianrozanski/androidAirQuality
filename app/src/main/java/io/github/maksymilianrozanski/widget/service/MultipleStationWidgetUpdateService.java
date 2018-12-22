@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.widget;
+package io.github.maksymilianrozanski.widget.service;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.support.v4.app.JobIntentService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract;
+import io.github.maksymilianrozanski.widget.WidgetItem;
 
 public class MultipleStationWidgetUpdateService extends JobIntentService
         implements

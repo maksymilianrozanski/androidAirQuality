@@ -21,6 +21,7 @@ import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
+import io.github.maksymilianrozanski.widget.service.MultipleStationWidgetUpdateIntentService;
 
 public class MultipleStationWidgetConfigActivity extends Activity implements OnClickListener, LoaderManager.LoaderCallbacks<List<Station>> {
 

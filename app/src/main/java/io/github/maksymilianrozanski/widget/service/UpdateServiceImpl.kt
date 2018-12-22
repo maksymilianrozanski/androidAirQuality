@@ -1,10 +1,11 @@
-package io.github.maksymilianrozanski.widget
+package io.github.maksymilianrozanski.widget.service
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import io.github.maksymilianrozanski.R
+import io.github.maksymilianrozanski.widget.*
 import io.github.maksymilianrozanski.widget.model.MultipleStationWidgetModelImpl
 import xdroid.toaster.Toaster
 import java.util.*

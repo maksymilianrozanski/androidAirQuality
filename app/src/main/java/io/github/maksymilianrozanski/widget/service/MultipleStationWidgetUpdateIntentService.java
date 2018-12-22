@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.widget;
+package io.github.maksymilianrozanski.widget.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -6,6 +6,9 @@ import android.content.Intent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract;
+import io.github.maksymilianrozanski.widget.WidgetItem;
 
 public class MultipleStationWidgetUpdateIntentService extends IntentService
         implements MultipleStationWidgetContract.Model.OnFinishedListener {

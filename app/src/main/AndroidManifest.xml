@@ -69,9 +69,9 @@
             android:name=".widget.ScrollableWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
-            android:name=".widget.MultipleStationWidgetUpdateService"
+            android:name=".widget.service.MultipleStationWidgetUpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service android:name=".widget.MultipleStationWidgetUpdateIntentService" />
+        <service android:name=".widget.service.MultipleStationWidgetUpdateIntentService" />
     </application>
 
 </manifest>

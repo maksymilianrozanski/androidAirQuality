@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.main.SingleStationActivity;
+import io.github.maksymilianrozanski.widget.service.MultipleStationWidgetUpdateIntentService;
+import io.github.maksymilianrozanski.widget.service.MultipleStationWidgetUpdateService;
 
 public class MultipleStationWidgetProvider extends AppWidgetProvider {
 
