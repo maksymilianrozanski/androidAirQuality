@@ -1,11 +1,12 @@
 package io.github.maksymilianrozanski
 
+//import io.github.maksymilianrozanski.component.DaggerAppComponent
 import android.app.Application
 import android.content.Context
 import io.github.maksymilianrozanski.component.AppComponent
 import io.github.maksymilianrozanski.component.DaggerAppComponent
-//import io.github.maksymilianrozanski.component.DaggerAppComponent
 import io.github.maksymilianrozanski.module.AppModule
+import io.github.maksymilianrozanski.widget.model.WidgetModelModule
 
 class MyApp : Application() {
 
@@ -16,6 +17,7 @@ class MyApp : Application() {
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
+                .widgetModelModule(WidgetModelModule())
                 .build()
     }
 
