@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.layout
 
 import android.content.Context
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -11,17 +10,16 @@ import android.support.test.uiautomator.UiDevice
 import android.support.test.uiautomator.UiSelector
 import dagger.Module
 import dagger.Provides
-import io.github.maksymilianrozanski.MyApp
 import io.github.maksymilianrozanski.R
-import io.github.maksymilianrozanski.component.DaggerTestAppComponent
-import io.github.maksymilianrozanski.component.TestAppComponent
+import io.github.maksymilianrozanski.component.DaggerTestWidgetModelComponent
+import io.github.maksymilianrozanski.component.TestWidgetModelComponent
 import io.github.maksymilianrozanski.main.MainActivity
-import io.github.maksymilianrozanski.module.AppModule
 import io.github.maksymilianrozanski.widget.ConnectionCheck
 import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract
 import io.github.maksymilianrozanski.widget.MyLocationProvider
 import io.github.maksymilianrozanski.widget.WidgetItem
 import io.github.maksymilianrozanski.widget.model.ModelProvider
+import io.github.maksymilianrozanski.widget.service.UpdateServiceImpl
 import org.hamcrest.core.IsNull.notNullValue
 import org.junit.*
 import org.junit.Assert.assertThat
@@ -32,8 +30,8 @@ import java.util.*
 class WidgetUITest {
 
     private var device: UiDevice? = null
-    private lateinit var app: MyApp
-    lateinit var testAppComponent: TestAppComponent
+
+    private lateinit var testComponent:TestWidgetModelComponent
 
     @JvmField
     @Rule
@@ -41,13 +39,10 @@ class WidgetUITest {
 
     @Before
     fun before() {
-        app = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MyApp
-        testAppComponent = DaggerTestAppComponent.builder()
-                .appModule(AppModule(app))
-                .testWidgetModelModule(TestWidgetModelModule())
-                .build()
-        app.appComponent = testAppComponent
+        testComponent = DaggerTestWidgetModelComponent.builder()
+                .testWidgetModelModule(TestWidgetModelModule()).build()
 
+        UpdateServiceImpl.widgetModelComponent = testComponent
 
         device = UiDevice.getInstance(getInstrumentation())
 

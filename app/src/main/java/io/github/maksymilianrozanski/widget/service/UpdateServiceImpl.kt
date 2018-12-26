@@ -4,9 +4,9 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-import io.github.maksymilianrozanski.MyApp
 import io.github.maksymilianrozanski.R
 import io.github.maksymilianrozanski.widget.*
+import io.github.maksymilianrozanski.widget.model.WidgetModelModule
 import xdroid.toaster.Toaster
 import java.util.*
 
@@ -20,8 +20,7 @@ class UpdateServiceImpl(var context: Context,
     override fun onHandleWork(intent: Intent?) {
         val locationProvider = MyLocationProviderImpl(context)
         val connectionCheck = ConnectionCheckImpl(context)
-//       val model = MultipleStationWidgetUpdateIntentService.modelProvider.getModelComponent(context, locationProvider, connectionCheck)
-        val model = (context.applicationContext as MyApp).appComponent.getWidgetModel().getModelComponent(context, locationProvider, connectionCheck)
+        val model = widgetModelComponent.getWidgetModel().getModelComponent(context, locationProvider, connectionCheck)
         if (intent != null) {
             if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
                 appWidgetId = intent.getIntExtra(
@@ -46,5 +45,10 @@ class UpdateServiceImpl(var context: Context,
         } else if (throwable.message == access_to_location_not_granted) {
             Toaster.toast(R.string.no_location_access)
         }
+    }
+
+    companion object {
+        var widgetModelComponent:WidgetModelComponent = DaggerWidgetModelComponent.builder()
+                .widgetModelModule(WidgetModelModule()).build()
     }
 }
