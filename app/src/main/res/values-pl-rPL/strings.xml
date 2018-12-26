@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Smog Widget</string>
     <string name="no_internet_connection">Brak połączenia z Internetem</string>
-    <string name="fetching_data">Pobieranie danych...</string>
+    <string name="fetching_data">Pobieranie danych…</string>
     <string name="error_occurred">Wystąpił błąd.</string>
     <string name="no_location_access">Brak dostępu do danych lokalizacji</string>
     <string name="multiple_station_widget_config">Aby używać tego widgetu zezwól na dostęp do lokalizacji urządzenia.</string>

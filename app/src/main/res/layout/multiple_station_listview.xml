@@ -24,9 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/empty_view_text"
+        android:text="@string/fetching_data"
         android:textColor="#ffffff"
-        android:textSize="20sp"
+        android:textSize="12sp"
         android:textStyle="bold" />
 
     <Button
