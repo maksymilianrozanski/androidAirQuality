@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.component
+package io.github.maksymilianrozanski.widget.service
 
 import dagger.Component
 import io.github.maksymilianrozanski.layout.WidgetUITest

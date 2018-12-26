@@ -12,7 +12,7 @@ import dagger.Module
 import dagger.Provides
 import io.github.maksymilianrozanski.R
 import io.github.maksymilianrozanski.component.DaggerTestWidgetModelComponent
-import io.github.maksymilianrozanski.component.TestWidgetModelComponent
+import io.github.maksymilianrozanski.widget.service.TestWidgetModelComponent
 import io.github.maksymilianrozanski.main.MainActivity
 import io.github.maksymilianrozanski.widget.ConnectionCheck
 import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract
@@ -31,7 +31,7 @@ class WidgetUITest {
 
     private var device: UiDevice? = null
 
-    private lateinit var testComponent:TestWidgetModelComponent
+    private lateinit var testComponent: TestWidgetModelComponent
 
     @JvmField
     @Rule
