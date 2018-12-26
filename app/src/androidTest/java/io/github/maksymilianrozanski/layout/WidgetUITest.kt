@@ -11,14 +11,14 @@ import android.support.test.uiautomator.UiSelector
 import dagger.Module
 import dagger.Provides
 import io.github.maksymilianrozanski.R
-import io.github.maksymilianrozanski.component.DaggerTestWidgetModelComponent
-import io.github.maksymilianrozanski.widget.service.TestWidgetModelComponent
 import io.github.maksymilianrozanski.main.MainActivity
 import io.github.maksymilianrozanski.widget.ConnectionCheck
 import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract
 import io.github.maksymilianrozanski.widget.MyLocationProvider
 import io.github.maksymilianrozanski.widget.WidgetItem
 import io.github.maksymilianrozanski.widget.model.ModelProvider
+import io.github.maksymilianrozanski.widget.service.DaggerTestWidgetModelComponent
+import io.github.maksymilianrozanski.widget.service.TestWidgetModelComponent
 import io.github.maksymilianrozanski.widget.service.UpdateServiceImpl
 import org.hamcrest.core.IsNull.notNullValue
 import org.junit.*
@@ -95,7 +95,7 @@ class WidgetUITest {
     private class ModelProviderMock : ModelProvider {
 
         @Ignore
-        override fun getModelComponent(context: Context, locationProvider: MyLocationProvider, connectionCheck: ConnectionCheck): MultipleStationWidgetContract.Model {
+        override fun getModel(context: Context, locationProvider: MyLocationProvider, connectionCheck: ConnectionCheck): MultipleStationWidgetContract.Model {
             return ModelMock()
         }
     }

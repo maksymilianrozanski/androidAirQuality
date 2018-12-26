@@ -20,7 +20,7 @@ class UpdateServiceImpl(var context: Context,
     override fun onHandleWork(intent: Intent?) {
         val locationProvider = MyLocationProviderImpl(context)
         val connectionCheck = ConnectionCheckImpl(context)
-        val model = widgetModelComponent.getWidgetModel().getModelComponent(context, locationProvider, connectionCheck)
+        val model = widgetModelComponent.getWidgetModelProvider().getModel(context, locationProvider, connectionCheck)
         if (intent != null) {
             if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
                 appWidgetId = intent.getIntExtra(

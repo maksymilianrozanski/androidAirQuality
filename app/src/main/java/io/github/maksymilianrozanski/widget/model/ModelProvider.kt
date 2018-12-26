@@ -7,8 +7,8 @@ import io.github.maksymilianrozanski.widget.MyLocationProvider
 
 interface ModelProvider {
 
-    fun getModelComponent(context: Context,
-                          locationProvider: MyLocationProvider,
-                          connectionCheck: ConnectionCheck)
+    fun getModel(context: Context,
+                 locationProvider: MyLocationProvider,
+                 connectionCheck: ConnectionCheck)
             : MultipleStationWidgetContract.Model
 }

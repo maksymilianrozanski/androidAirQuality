@@ -7,9 +7,9 @@ import io.github.maksymilianrozanski.widget.MyLocationProvider
 
 class ModelProviderImpl : ModelProvider {
 
-    override fun getModelComponent(context: Context,
-                                   locationProvider: MyLocationProvider,
-                                   connectionCheck: ConnectionCheck)
+    override fun getModel(context: Context,
+                          locationProvider: MyLocationProvider,
+                          connectionCheck: ConnectionCheck)
             : MultipleStationWidgetContract.Model {
         return MultipleStationWidgetModelImpl(context, locationProvider, connectionCheck)
     }
