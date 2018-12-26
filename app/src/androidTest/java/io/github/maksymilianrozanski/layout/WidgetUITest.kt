@@ -41,7 +41,6 @@ class WidgetUITest {
 
     @Before
     fun before() {
-//        MultipleStationWidgetUpdateIntentService.modelProvider = ModelProviderMock()
         app = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MyApp
         testAppComponent = DaggerTestAppComponent.builder()
                 .appModule(AppModule(app))
