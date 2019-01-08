@@ -16,6 +16,8 @@ import java.util.Map;
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
+import static io.github.maksymilianrozanski.widget.service.UpdateServiceImplKt.getWidgetItemListFromSharedPreferences;
+
 class ListProvider implements
         RemoteViewsService.RemoteViewsFactory {
 
@@ -27,6 +29,17 @@ class ListProvider implements
     ListProvider(Context context) {
         Log.d("LOG", "inside constructor of ListProvider.");
         this.context = context;
+        if (listItemList == null) {
+            try {
+                listItemList = getWidgetItemListFromSharedPreferences(context);
+            } catch (Exception e) {
+                if (e.getMessage().equals("no value saved")) {
+                    Log.d("Log", "No widgetList saved");
+                } else {
+                    throw e;
+                }
+            }
+        }
         setupIntentListener();
     }
 
@@ -98,11 +111,7 @@ class ListProvider implements
 
     @Override
     public void onCreate() {
-        Log.d("LOG", "onCreate of ListProvider called");
-        if (listItemList == null) {
-            Log.d("LOG", "listItemList is null");
-            requestUpdate();
-        }
+        requestUpdate();
     }
 
     @Override

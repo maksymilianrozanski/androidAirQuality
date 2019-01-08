@@ -44,4 +44,17 @@ class WidgetItem() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is WidgetItem && other.stationName == this.stationName
+                && other.nameAndValueOfParam == this.nameAndValueOfParam
+                && other.updateDate == this.updateDate
+                && other.stationId == this.stationId
+                && other.isUpToDate == this.isUpToDate
+
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
 }
