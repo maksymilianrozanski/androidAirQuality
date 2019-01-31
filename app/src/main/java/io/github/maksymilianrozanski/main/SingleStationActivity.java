@@ -18,7 +18,7 @@ import io.github.maksymilianrozanski.dataholders.Sensor;
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 import io.github.maksymilianrozanski.vieweditors.SensorLoader;
 
-public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>>{
+public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>> {
 
     private static final int SENSOR_LOADER_ID = 2;
     private static final String LOG_TAG = MainActivity.class.getName();
@@ -32,7 +32,9 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_station);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         stationId = intent.getIntExtra("StationId", 0);
