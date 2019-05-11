@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.android.support:mediarouter-v7:28.0.0'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
     //https://github.com/square/retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.3.0'
