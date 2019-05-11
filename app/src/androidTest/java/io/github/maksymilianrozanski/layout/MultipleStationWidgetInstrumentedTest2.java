@@ -1,15 +1,17 @@
 package io.github.maksymilianrozanski.layout;
 
+import android.Manifest;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.By;
-import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject;
-import android.support.test.uiautomator.UiObject2;
-import android.support.test.uiautomator.UiSelector;
 import android.util.Log;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObject2;
+import androidx.test.uiautomator.UiSelector;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,11 +29,11 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -44,6 +46,9 @@ public class MultipleStationWidgetInstrumentedTest2 {
     @Rule
     public ActivityTestRule<MainActivity> mainActivityRule
             = new ActivityTestRule<>(MainActivity.class, true, false);
+
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Before
     public void serverSetup() throws Exception {
@@ -216,7 +221,7 @@ public class MultipleStationWidgetInstrumentedTest2 {
     public void widgetTestResponseCode503() throws Exception {
         mainActivityRule.launchActivity(new Intent());
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
 
         device.pressHome();

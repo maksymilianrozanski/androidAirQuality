@@ -2,7 +2,7 @@ package io.github.maksymilianrozanski.dataholders;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import io.github.maksymilianrozanski.utility.NearestStationFinder;

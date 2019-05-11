@@ -1,6 +1,6 @@
 package io.github.maksymilianrozanski.utility;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 

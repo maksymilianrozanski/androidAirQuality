@@ -1,12 +1,10 @@
 package io.github.maksymilianrozanski.utility;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import io.github.maksymilianrozanski.utility.QueryUtilities;
 
 import static org.junit.Assert.assertTrue;
 

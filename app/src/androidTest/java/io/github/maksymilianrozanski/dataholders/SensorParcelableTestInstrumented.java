@@ -1,7 +1,8 @@
 package io.github.maksymilianrozanski.dataholders;
 
 import android.os.Parcel;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +52,7 @@ public class SensorParcelableTestInstrumented {
     }
 
     @Test(expected = ParseException.class)
-    public void getTimeInMillisTest2() throws Exception{
+    public void getTimeInMillisTest2() throws Exception {
         Sensor sensor = new Sensor();
         sensor.setId(100);
         sensor.setParam("PM10");
@@ -73,7 +74,7 @@ public class SensorParcelableTestInstrumented {
     }
 
     @Test
-    public void getTimeInMillisTest4() throws Exception{
+    public void getTimeInMillisTest4() throws Exception {
         Sensor sensor = new Sensor();
         sensor.setId(100);
         sensor.setParam("PM10");

@@ -3,8 +3,8 @@ package io.github.maksymilianrozanski.widget.model
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location
-import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.util.Log
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.nhaarman.mockitokotlin2.argThat
 import io.github.maksymilianrozanski.dataholders.StationList
 import io.github.maksymilianrozanski.main.RestServiceTestHelper

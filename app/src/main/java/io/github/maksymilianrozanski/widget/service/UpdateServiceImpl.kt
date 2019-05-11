@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Parcelable
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.github.maksymilianrozanski.R

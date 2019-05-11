@@ -1,6 +1,6 @@
 package io.github.maksymilianrozanski.dataholders;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import java.io.IOException;
 import java.text.ParseException;

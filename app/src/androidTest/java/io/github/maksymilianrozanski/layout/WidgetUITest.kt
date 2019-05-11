@@ -2,12 +2,12 @@ package io.github.maksymilianrozanski.layout
 
 import android.content.Context
 import android.content.Intent
-import android.support.test.InstrumentationRegistry.getInstrumentation
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.test.uiautomator.By
-import android.support.test.uiautomator.UiDevice
-import android.support.test.uiautomator.UiSelector
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.rule.ActivityTestRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import dagger.Module
 import dagger.Provides
 import io.github.maksymilianrozanski.R

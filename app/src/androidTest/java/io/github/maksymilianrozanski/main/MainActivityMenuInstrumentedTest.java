@@ -1,15 +1,15 @@
 package io.github.maksymilianrozanski.main;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.By;
-import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject2;
-
 import android.util.Log;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import io.github.maksymilianrozanski.R;
@@ -25,15 +24,15 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -48,6 +47,9 @@ public class MainActivityMenuInstrumentedTest {
     public ActivityTestRule<MainActivity> mainActivityRule
             = new ActivityTestRule<>(MainActivity.class, true, false);
 
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+
     @Before
     public void setUp() throws Exception {
 
@@ -55,15 +57,6 @@ public class MainActivityMenuInstrumentedTest {
         server.start();
 
         StationList.STATIONS_BASE_URL = server.url("/").toString();
-    }
-
-    @Before
-    public void clearSharedPreferences() {
-        File root = InstrumentationRegistry.getTargetContext().getFilesDir().getParentFile();
-        String[] sharedPreferencesFileNames = new File(root, "shared_prefs").list();
-        for (String fileName : sharedPreferencesFileNames) {
-            InstrumentationRegistry.getTargetContext().getSharedPreferences(fileName.replace(".xml", ""), Context.MODE_PRIVATE).edit().clear().commit();
-        }
     }
 
     @Test
@@ -76,7 +69,7 @@ public class MainActivityMenuInstrumentedTest {
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.reload_data)).check(matches(isDisplayed()));
         onView(withText(R.string.find_nearest_station)).check(matches(isDisplayed()));
         onView(withText(R.string.sort_stations_by_distance)).check(matches(isDisplayed()));
@@ -92,7 +85,7 @@ public class MainActivityMenuInstrumentedTest {
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.find_nearest_station)).perform(click());
         onView(withId(R.id.sensorsViewStationName)).check(matches(withText("Warszawa-Marszałkowska")));
     }
@@ -112,7 +105,7 @@ public class MainActivityMenuInstrumentedTest {
 
         onView(withText("mocked station name 1")).check(matches(isDisplayed()));
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.reload_data)).perform(click());
 
         onView(withText("mocked station name 1 updated")).check(matches(isDisplayed()));
@@ -135,7 +128,7 @@ public class MainActivityMenuInstrumentedTest {
         onView(withText("mocked station name 1")).check(matches(isDisplayed()));
 
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
         Thread uiAutomatorThread = new Thread() {
             @Override
@@ -180,7 +173,7 @@ public class MainActivityMenuInstrumentedTest {
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.sort_stations_by_city_name)).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.stationname)).check(matches(withText("Augustów - mobilne ")));

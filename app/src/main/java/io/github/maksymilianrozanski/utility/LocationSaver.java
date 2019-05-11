@@ -3,7 +3,7 @@ package io.github.maksymilianrozanski.utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 public class LocationSaver {
 

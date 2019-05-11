@@ -1,7 +1,7 @@
 package io.github.maksymilianrozanski.utility;
 
-import android.support.test.filters.LargeTest;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.mockwebserver.MockResponse;
 import com.google.mockwebserver.MockWebServer;
@@ -15,8 +15,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.URL;
-
-import io.github.maksymilianrozanski.utility.QueryUtilities;
 
 import static junit.framework.Assert.assertTrue;
 

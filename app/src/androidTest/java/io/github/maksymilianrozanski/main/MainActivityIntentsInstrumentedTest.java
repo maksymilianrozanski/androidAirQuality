@@ -1,13 +1,13 @@
 package io.github.maksymilianrozanski.main;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,22 +15,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
-
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
@@ -50,14 +48,8 @@ public class MainActivityIntentsInstrumentedTest {
     public IntentsTestRule<MainActivity> activityRule
             = new IntentsTestRule<>(MainActivity.class, true, false);
 
-    @Before
-    public void clearSharedPreferences() {
-        File root = InstrumentationRegistry.getTargetContext().getFilesDir().getParentFile();
-        String[] sharedPreferencesFileNames = new File(root, "shared_prefs").list();
-        for (String fileName : sharedPreferencesFileNames) {
-            InstrumentationRegistry.getTargetContext().getSharedPreferences(fileName.replace(".xml", ""), Context.MODE_PRIVATE).edit().clear().commit();
-        }
-    }
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Before
     public void setUp() throws Exception {

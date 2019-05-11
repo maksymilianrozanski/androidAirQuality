@@ -2,7 +2,7 @@ package io.github.maksymilianrozanski.widget.service
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import io.github.maksymilianrozanski.widget.MultipleStationWidgetContract
