@@ -1,7 +1,7 @@
 package io.github.maksymilianrozanski.dataholders;
 
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,8 @@ import java.util.Map;
 
 import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -48,7 +49,7 @@ public class SensorTest {
         String percentOfMaxValueString = String.format("%.0f", percentOfMaxValue);
         String expectedValue = "100";
 
-        assertTrue(expectedValue.equals(percentOfMaxValueString));
+        assertEquals(expectedValue, percentOfMaxValueString);
     }
 
     @Test
@@ -61,7 +62,7 @@ public class SensorTest {
         String percentOfMaxValueString = String.format("%.0f", percentOfMaxValue);
         String expectedValue = "150";
 
-        assertTrue(expectedValue.equals(percentOfMaxValueString));
+        assertEquals(expectedValue, percentOfMaxValueString);
     }
 
     @Test
@@ -70,15 +71,15 @@ public class SensorTest {
         sensor.setId(10);
         sensor.setValue(25);
         sensor.setParam("KeyNotInMap");
-        Double value = sensor.percentOfMaxValue();
-        assertTrue(value == -1);
+        double value = sensor.percentOfMaxValue();
+        Assert.assertEquals(value, -1, 0.0);
     }
 
     @Test
     public void isDateDefaultTest() {
         Sensor sensor = new Sensor();
         sensor.setLastDate("2018-01-01 00:00:00");
-        Assert.assertTrue(sensor.isDateDefault());
+        assertTrue(sensor.isDateDefault());
 
         sensor = new Sensor();
         sensor.setLastDate("2018-03-03 01:01:01");
