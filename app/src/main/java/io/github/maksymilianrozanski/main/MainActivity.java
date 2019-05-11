@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -43,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //id of loader, only matter when multiple loaders
     private static final int STATION_LOADER_ID = 1;
-    private static final int MY_PERMISSION_REQUEST = 0;
+    private static final int LOCATION_PERMISSION_CALLED_BY_FIND_NEAREST_STATION = 0;
+    private static final int LOCATION_PERMISSION_CALLED_BY_SORT_STATIONS = 1;
 
     private StationAdapter stationAdapter;
     private AtomicBoolean isStationListLoaded = new AtomicBoolean(false);
@@ -184,12 +187,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    private void goToNearestStation() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions
+            , @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_CALLED_BY_FIND_NEAREST_STATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    goToNearestStation();
+                } else {
+                    Toaster.toast(R.string.no_location_access);
+                }
 
-        NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
+            case LOCATION_PERMISSION_CALLED_BY_SORT_STATIONS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sortStationsByDistance();
+                } else {
+                    Toaster.toast(R.string.no_location_access);
+                }
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
+    @VisibleForTesting
+    public void goToNearestStation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
             fusedLocationProviderClient.getLastLocation()
                     .addOnCompleteListener(task -> {
                         StationList stations = StationList.getStationListInstance(getApplicationContext());
@@ -216,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         startActivity(intent);
                     });
         } else {
-            Toaster.toast(R.string.no_location_access);
+            NearestStationFinder.askForLocationPermissionIfNoPermission(this, LOCATION_PERMISSION_CALLED_BY_FIND_NEAREST_STATION);
         }
     }
 
@@ -224,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
                 stationAdapter,
                 this,
-                MY_PERMISSION_REQUEST);
+                LOCATION_PERMISSION_CALLED_BY_SORT_STATIONS);
     }
 
     private void sortStationsByCityName() {

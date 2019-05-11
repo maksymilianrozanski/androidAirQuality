@@ -1,8 +1,6 @@
 package io.github.maksymilianrozanski.main;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 
 import androidx.test.espresso.intent.rule.IntentsTestRule;
@@ -23,15 +21,13 @@ import okhttp3.mockwebserver.MockWebServer;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static io.github.maksymilianrozanski.TestHelperKt.stubAllIntents;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityIntentsInstrumentedTest {
@@ -110,11 +106,6 @@ public class MainActivityIntentsInstrumentedTest {
 
         intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_25_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_25_NAME),
                 toPackage("io.github.maksymilianrozanski")));
-    }
-
-    private void stubAllIntents() {
-        intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
-        intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
     }
 
     @After
