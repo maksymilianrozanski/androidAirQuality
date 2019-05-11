@@ -8,12 +8,13 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,7 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     private void saveWidgetIdAndStationId(int appWidgetId, int stationId) {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF_KEY_WIDGET, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(SingleStationWidgetUpdateService.APP_WIDGET_ID_KEY + String.valueOf(appWidgetId), stationId);
+        editor.putInt(SingleStationWidgetUpdateService.APP_WIDGET_ID_KEY + appWidgetId, stationId);
         editor.apply();
     }
 

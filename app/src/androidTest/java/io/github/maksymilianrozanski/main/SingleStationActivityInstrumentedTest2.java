@@ -53,13 +53,13 @@ public class SingleStationActivityInstrumentedTest2 {
     }
 
     @Test
-    public void checkDisplayingDataTest() throws Exception {
+    public void checkDisplayingDataTest() {
         String sensorsFileName = "sensorsPiastow10139.json";
         String sensorValuesFileName = "sensor16784values_obsolete.json";
 
         server.setDispatcher(new Dispatcher() {
             @Override
-            public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
+            public MockResponse dispatch(RecordedRequest request) {
                 Log.v("Log", "request to mocked server: " + request.getPath());
                 if (request.getPath().equals("/pjp-api/rest/station/sensors/10139/")) {
                     try {

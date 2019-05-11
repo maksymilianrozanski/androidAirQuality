@@ -94,7 +94,7 @@ public class MultipleStationWidgetInstrumentedTest {
         server.start();
         server.setDispatcher(new Dispatcher() {
             @Override
-            public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
+            public MockResponse dispatch(RecordedRequest request) {
                 try {
                     switch (request.getPath()) {
                         case "/pjp-api/rest/station/findAll/":
@@ -207,7 +207,7 @@ public class MultipleStationWidgetInstrumentedTest {
     }
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         device = UiDevice.getInstance(getInstrumentation());
 
         assertThat(device, notNullValue());
@@ -234,27 +234,27 @@ public class MultipleStationWidgetInstrumentedTest {
 
         String expectedZeroStationName = "Warszawa-Marszałkowska";
         UiObject stationIndexZeroNameObject = device.findObject(new UiSelector().text(expectedZeroStationName));
-        Assert.assertTrue(stationIndexZeroNameObject.getText().equals(expectedZeroStationName));
+        Assert.assertEquals(stationIndexZeroNameObject.getText(), expectedZeroStationName);
 
         String expectedZeroStationValue = "PM2.5: 114%";
         UiObject stationIndexZeroObjectValue = device.findObject(new UiSelector().text(expectedZeroStationValue));
-        Assert.assertTrue(stationIndexZeroObjectValue.getText().equals(expectedZeroStationValue));
+        Assert.assertEquals(stationIndexZeroObjectValue.getText(), expectedZeroStationValue);
 
         String expectedZeroStationDate = "2017-12-19 13:00";
         UiObject stationIndexZeroDate = device.findObject(new UiSelector().text(expectedZeroStationDate));
-        Assert.assertTrue(stationIndexZeroDate.getText().equals(expectedZeroStationDate));
+        Assert.assertEquals(stationIndexZeroDate.getText(), expectedZeroStationDate);
 
         String expectedOneStationName = "Warszawa-Komunikacyjna";
         UiObject stationIndexOneNameObject = device.findObject(new UiSelector().text(expectedOneStationName));
-        Assert.assertTrue(stationIndexOneNameObject.getText().equals(expectedOneStationName));
+        Assert.assertEquals(stationIndexOneNameObject.getText(), expectedOneStationName);
 
         String expectedOneStationValue = "PM2.5: 195%";
         UiObject stationIndexOneObjectValue = device.findObject(new UiSelector().text(expectedOneStationValue));
-        Assert.assertTrue(stationIndexOneObjectValue.getText().equals(expectedOneStationValue));
+        Assert.assertEquals(stationIndexOneObjectValue.getText(), expectedOneStationValue);
 
         String expectedOneStationDate = "2017-12-19 16:00";
         UiObject stationIndexOneDate = device.findObject(new UiSelector().text(expectedOneStationDate));
-        Assert.assertTrue(stationIndexOneDate.getText().equals(expectedOneStationDate));
+        Assert.assertEquals(stationIndexOneDate.getText(), expectedOneStationDate);
         //TODO: add assertion, check: is background of 4th list item - station name grey: color NoData
     }
 }

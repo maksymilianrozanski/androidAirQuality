@@ -6,11 +6,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import androidx.annotation.VisibleForTesting;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -75,13 +76,7 @@ public class StationList {
         List<Station> stationsSortedByCityName = new ArrayList<>(getStations());
         Collator collator = Collator.getInstance(new Locale("pl", "PL"));
 
-        Collections.sort(stationsSortedByCityName, (Station station0, Station station1) -> {
-            if (collator.compare(station0.getCityName(), station1.getCityName()) > 0) {
-                return 1;
-            } else if (collator.compare(station0.getCityName(), station1.getCityName()) < 0) {
-                return -1;
-            } else return 0;
-        });
+        Collections.sort(stationsSortedByCityName, (Station station0, Station station1) -> Integer.compare(collator.compare(station0.getCityName(), station1.getCityName()), 0));
         return stationsSortedByCityName;
     }
 

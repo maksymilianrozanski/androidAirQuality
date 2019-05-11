@@ -45,7 +45,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
     private Intent createRefreshIntent(Context context, int appWidgetId) {
         Intent refreshIntent = new Intent(context, SingleStationWidgetUpdateService.class);
         refreshIntent.putExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, appWidgetId);
-        refreshIntent.setData(Uri.parse("http://" + String.valueOf(appWidgetId)));  //setData is used to compare intents
+        refreshIntent.setData(Uri.parse("http://" + appWidgetId));  //setData is used to compare intents
         return refreshIntent;
     }
 

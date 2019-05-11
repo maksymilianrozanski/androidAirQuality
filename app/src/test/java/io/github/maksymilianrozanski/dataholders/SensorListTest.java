@@ -36,30 +36,30 @@ public class SensorListTest {
     public void removeSensorsWhereValueOlderThanTest() {
         SensorList sensorList = new SensorList(sensors);
         sensorList.calendar = mockedGregorianCalendar;
-        Assert.assertTrue(sensorList.getList().size() == 2);
+        Assert.assertEquals(2, sensorList.getList().size());
 
         sensorList.removeSensorsWhereValueOlderThan(5L);
-        Assert.assertTrue(sensorList.getList().size() == 2);
+        Assert.assertEquals(2, sensorList.getList().size());
     }
 
     @Test
     public void removeSensorsWhereValueOlderThanTest2() {
         SensorList sensorList = new SensorList(sensors);
         sensorList.calendar = mockedGregorianCalendar;
-        Assert.assertTrue(sensorList.getList().size() == 2);
+        Assert.assertEquals(2, sensorList.getList().size());
 
         sensorList.removeSensorsWhereValueOlderThan(1L);
-        Assert.assertTrue(sensorList.getList().size() == 0);
+        Assert.assertEquals(0, sensorList.getList().size());
     }
 
     @Test
     public void removeSensorsWhereValueOlderThanTest3() {
         SensorList sensorList = new SensorList(sensors);
         sensorList.calendar = mockedGregorianCalendar;
-        Assert.assertTrue(sensorList.getList().size() == 2);
+        Assert.assertEquals(2, sensorList.getList().size());
 
         sensorList.removeSensorsWhereValueOlderThan(2L);
-        Assert.assertTrue(sensorList.getList().size() == 1);
+        Assert.assertEquals(1, sensorList.getList().size());
     }
 
     @Test
@@ -77,10 +77,10 @@ public class SensorListTest {
         SensorList sensorList2 = new SensorList(sensors2);
         sensorList2.calendar = mockedGregorianCalendar;
 
-        Assert.assertTrue(sensorList2.getList().size() == 2);
+        Assert.assertEquals(2, sensorList2.getList().size());
 
         sensorList2.removeSensorsWhereValueOlderThan(5L);
 
-        Assert.assertTrue(sensorList2.getList().size() == 1);
+        Assert.assertEquals(1, sensorList2.getList().size());
     }
 }

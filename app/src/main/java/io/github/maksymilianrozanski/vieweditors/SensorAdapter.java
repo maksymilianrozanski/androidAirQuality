@@ -2,15 +2,16 @@ package io.github.maksymilianrozanski.vieweditors;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -169,7 +170,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
     //set maximum acceptable values
     //http://powietrze.gios.gov.pl/pjp/content/annual_assessment_air_acceptable_level
     static {
-        Map<String, Integer> maxConcentrationsMap = new HashMap<String, Integer>();
+        Map<String, Integer> maxConcentrationsMap = new HashMap<>();
         maxConcentrationsMap.put("C6H6", 5);
         maxConcentrationsMap.put("NO2", 200);
         maxConcentrationsMap.put("SO2", 125);

@@ -55,6 +55,11 @@ class WidgetItem() : Parcelable {
     }
 
     override fun hashCode(): Int {
-        return super.hashCode()
+        var result = stationName?.hashCode() ?: 0
+        result = 31 * result + (nameAndValueOfParam?.hashCode() ?: 0)
+        result = 31 * result + (updateDate?.hashCode() ?: 0)
+        result = 31 * result + stationId
+        result = 31 * result + isUpToDate.hashCode()
+        return result
     }
 }

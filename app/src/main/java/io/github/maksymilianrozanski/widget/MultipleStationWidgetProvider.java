@@ -30,15 +30,15 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        for (int i = 0; i < appWidgetIds.length; ++i) {
+        for (int appWidgetId : appWidgetIds) {
             Log.v("LOG", "inside onUpdate" + System.currentTimeMillis());
             RemoteViews remoteViews = updateWidgetListView(context,
-                    appWidgetIds[i]);
+                    appWidgetId);
 
-            appWidgetManager.updateAppWidget(appWidgetIds[i],
+            appWidgetManager.updateAppWidget(appWidgetId,
                     remoteViews);
 
-            sendIntentToUpdatingService(context, appWidgetIds[i]);
+            sendIntentToUpdatingService(context, appWidgetId);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -116,7 +116,7 @@ public class MultipleStationWidgetProvider extends AppWidgetProvider {
     private void notifyAdapter(Context context, AppWidgetManager appWidgetManager) {
         ComponentName thisAppWidget = new ComponentName
                 (context.getPackageName(), MultipleStationWidgetProvider.class.getName());
-        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(thisAppWidget);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetStationList);
     }
 

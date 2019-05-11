@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.net.URL;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -42,7 +43,7 @@ public class QueryUtilitiesTestInstrumented {
         URL url = mServer.getUrl("/");
 
         String response = QueryUtilities.retryMakingHttpRequestIfException(url);
-        assertTrue(response.equals(mockedResponse));
+        assertEquals(response, mockedResponse);
     }
 
     @LargeTest
@@ -65,8 +66,8 @@ public class QueryUtilitiesTestInstrumented {
         String obtainedValue1 = QueryUtilities.getStringFromJSONObject(jsonObject, "key1");
         String obtainedValue2 = QueryUtilities.getStringFromJSONObject(jsonObject, "key2");
 
-        Assert.assertTrue(obtainedValue1.equals("value1"));
-        Assert.assertTrue(obtainedValue2.equals("value2"));
+        Assert.assertEquals("value1", obtainedValue1);
+        Assert.assertEquals("value2", obtainedValue2);
     }
 
     @Test
@@ -76,6 +77,6 @@ public class QueryUtilitiesTestInstrumented {
         jsonObject.put("key2", "value2");
 
         String obtainedValue = QueryUtilities.getStringFromJSONObject(jsonObject, "notExistingKey");
-        Assert.assertTrue(obtainedValue.equals("not specified"));
+        Assert.assertEquals("not specified", obtainedValue);
     }
 }

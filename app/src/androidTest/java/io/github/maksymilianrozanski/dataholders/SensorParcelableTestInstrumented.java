@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -33,10 +32,10 @@ public class SensorParcelableTestInstrumented {
 
         Sensor sensorCreatedFromParcel = (Sensor) Sensor.CREATOR.createFromParcel(parcel);
 
-        assertTrue(sensor.getId() == sensorCreatedFromParcel.getId());
-        assertTrue(sensor.getParam().equals(sensorCreatedFromParcel.getParam()));
-        assertTrue(sensor.getValue() == sensorCreatedFromParcel.getValue());
-        assertTrue(sensor.getLastDate().equals(sensorCreatedFromParcel.getLastDate()));
+        assertEquals(sensor.getId(), sensorCreatedFromParcel.getId());
+        assertEquals(sensor.getParam(), sensorCreatedFromParcel.getParam());
+        assertEquals(sensor.getValue(), sensorCreatedFromParcel.getValue(), 0.0);
+        assertEquals(sensor.getLastDate(), sensorCreatedFromParcel.getLastDate());
     }
 
     @Test
@@ -48,7 +47,7 @@ public class SensorParcelableTestInstrumented {
         sensor.setLastDate("1970-01-01 00:00:30");
         long calculatedTime = sensor.getTimeInMillis();
         long expectedTime = 30000L;
-        assertTrue(calculatedTime == expectedTime);
+        assertEquals(calculatedTime, expectedTime);
     }
 
     @Test(expected = ParseException.class)

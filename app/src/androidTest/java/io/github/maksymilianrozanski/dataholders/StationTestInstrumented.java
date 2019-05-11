@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.dataholders;
 import android.os.Parcel;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,13 +28,13 @@ public class StationTestInstrumented {
 
         Station stationCreatedFromParcel = (Station) Station.CREATOR.createFromParcel(parcel);
 
-        assertTrue(station.getId().equals(stationCreatedFromParcel.getId()));
-        assertTrue(station.getName().equals(stationCreatedFromParcel.getName()));
-        assertTrue(station.getGegrLat().equals(stationCreatedFromParcel.getGegrLat()));
-        assertTrue(station.getGegrLon().equals(stationCreatedFromParcel.getGegrLon()));
-        assertTrue(station.getCityId().equals(stationCreatedFromParcel.getCityId()));
-        assertTrue(station.getCityName().equals(stationCreatedFromParcel.getCityName()));
-        assertTrue(station.getDistanceFromUser() == stationCreatedFromParcel.getDistanceFromUser());
+        Assert.assertEquals(station.getId(), stationCreatedFromParcel.getId());
+        Assert.assertEquals(station.getName(), stationCreatedFromParcel.getName());
+        Assert.assertEquals(station.getGegrLat(), stationCreatedFromParcel.getGegrLat());
+        Assert.assertEquals(station.getGegrLon(), stationCreatedFromParcel.getGegrLon());
+        Assert.assertEquals(station.getCityId(), stationCreatedFromParcel.getCityId());
+        Assert.assertEquals(station.getCityName(), stationCreatedFromParcel.getCityName());
+        Assert.assertEquals(station.getDistanceFromUser(), stationCreatedFromParcel.getDistanceFromUser(), 0.0);
     }
 
     @Test

@@ -56,7 +56,7 @@ public class StationListTestInstrumented {
         String nearestStationCityName = nearestStation.getCityName();
         String expectedCityName = "Kraków";
 
-        Assert.assertTrue(nearestStationCityName.equals(expectedCityName));
+        Assert.assertEquals(nearestStationCityName, expectedCityName);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class StationListTestInstrumented {
         String nearestStationCityName = nearestStation.getCityName();
         String expectedCityName = "Warszawa";
 
-        Assert.assertTrue(nearestStationCityName.equals(expectedCityName));
+        Assert.assertEquals(nearestStationCityName, expectedCityName);
     }
 
     @Test
@@ -82,11 +82,11 @@ public class StationListTestInstrumented {
         StationList stationList = StationList.getStationListInstance(context);
         stationList.sortStationsByDistance(context, location);
         int numberOfElements = stationList.getStations().size();
-        Assert.assertTrue(numberOfElements == 160);
+        Assert.assertEquals(160, numberOfElements);
     }
 
     @Test(expected = NullPointerException.class)
-    public void noLocationDataTest() throws Exception {
+    public void noLocationDataTest() {
         Location location = null;
         StationList stationList = StationList.getStationListInstance(context);
         stationList.sortStationsByDistance(context, location);
@@ -112,11 +112,11 @@ public class StationListTestInstrumented {
         StationList stationList = StationList.getStationListInstance(context);
         String returnedStationName = stationList.findStationName(idOfStation);
 
-        Assert.assertTrue(returnedStationName.equals(expectedName));
+        Assert.assertEquals(returnedStationName, expectedName);
     }
 
     @Test
-    public void removeSensorsWhereValueOlderThanTest() throws Exception {
+    public void removeSensorsWhereValueOlderThanTest() {
         List<Sensor> sensors = new ArrayList<>();
         SensorList sensorList = new SensorList(sensors);
 
@@ -153,14 +153,14 @@ public class StationListTestInstrumented {
         sensors.add(sensor2);
         sensors.add(sensor3);
         sensors.add(sensor4);
-        Assert.assertTrue(sensors.size() == 4);
+        Assert.assertEquals(4, sensors.size());
 
         //TODO: move test to Sensor class tests
         sensorList.removeSensorsWhereValueOlderThan(2);
 
-        Assert.assertTrue(sensors.size() == 3);
-        Assert.assertTrue(sensors.get(0).getId() == 1);
-        Assert.assertTrue(sensors.get(1).getId() == 2);
-        Assert.assertTrue(sensors.get(2).getId() == 4);
+        Assert.assertEquals(3, sensors.size());
+        Assert.assertEquals(1, sensors.get(0).getId());
+        Assert.assertEquals(2, sensors.get(1).getId());
+        Assert.assertEquals(4, sensors.get(2).getId());
     }
 }

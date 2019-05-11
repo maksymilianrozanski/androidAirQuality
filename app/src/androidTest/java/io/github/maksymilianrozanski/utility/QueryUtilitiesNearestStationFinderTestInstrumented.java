@@ -36,7 +36,7 @@ public class QueryUtilitiesNearestStationFinderTestInstrumented  {
     }
 
     @Test
-    public void findNearestStation1() throws Exception {
+    public void findNearestStation1() {
         //coordinates for Kraków - Plac Centralny, nearest to station3
         userLatitude = 50.071879;
         userLongitude = 20.037260;
@@ -46,7 +46,7 @@ public class QueryUtilitiesNearestStationFinderTestInstrumented  {
     }
 
     @Test
-    public void findNearestStation2() throws Exception {
+    public void findNearestStation2() {
         //coordinates for Warszawa - Pałac Kultury, nearest to station5
         userLatitude = 52.231474;
         userLongitude = 21.005868;

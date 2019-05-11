@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -18,6 +19,6 @@ public class QueryUtilitiesTestInstrumented2 {
 
         String obtainedValue = QueryUtilities.getStringFromJSONObject(jsonObject, "key1");
         String expectedValue = jsonObject.getString("key1");
-        assertTrue(obtainedValue.equals(expectedValue));
+        assertEquals(obtainedValue, expectedValue);
     }
 }

@@ -23,7 +23,7 @@ public class LocationSaverTestInstrumented  {
     private Context context;
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         sharedPrefs = Mockito.mock(SharedPreferences.class);
         context = Mockito.mock(Context.class);
         editor = Mockito.mock(SharedPreferences.Editor.class);
@@ -32,7 +32,7 @@ public class LocationSaverTestInstrumented  {
     }
 
     @Test
-    public void saveLocationTest() throws Exception {
+    public void saveLocationTest() {
         double exampleLatitude = 30d;
         double exampleLongitude = 40d;
 
@@ -48,7 +48,7 @@ public class LocationSaverTestInstrumented  {
     }
 
     @Test
-    public void getLocationTest() throws Exception {
+    public void getLocationTest() {
         String exampleLatitude = "31.0";
         String exampleLongitude = "32.0";
 
@@ -57,7 +57,7 @@ public class LocationSaverTestInstrumented  {
 
         LocationSaver locationSaver = new LocationSaver(context);
         Location receivedLocation = locationSaver.getLocation();
-        Assert.assertTrue(receivedLocation.getLatitude() == Double.parseDouble(exampleLatitude));
-        Assert.assertTrue(receivedLocation.getLongitude() == Double.parseDouble(exampleLongitude));
+        Assert.assertEquals(receivedLocation.getLatitude(), Double.parseDouble(exampleLatitude), 0.0);
+        Assert.assertEquals(receivedLocation.getLongitude(), Double.parseDouble(exampleLongitude), 0.0);
     }
 }

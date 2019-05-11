@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -68,31 +66,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
 
         //OnClickListener - redirects to SingleStationActivity
-        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Station station = stationAdapter.getItem(position);
+        stationListView.setOnItemClickListener((parent, view, position, id) -> {
+            Station station = stationAdapter.getItem(position);
 
-                int currentStationId;
-                try {
-                    currentStationId = Integer.parseInt(station.getId());
-                } catch (NullPointerException e) {
-                    currentStationId = 0;
-                    Log.e(LOG_TAG, "Error when getting station.getId", e);
-                }
-                String currentStationName;
-                try {
-                    currentStationName = station.getName();
-                } catch (NullPointerException e) {
-                    currentStationName = "";
-                    Log.e(LOG_TAG, "Error when getting station.getName", e);
-                }
-
-                Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
-                intent.putExtra("StationId", currentStationId);
-                intent.putExtra("StationName", currentStationName);
-                startActivity(intent);
+            int currentStationId;
+            try {
+                currentStationId = Integer.parseInt(station.getId());
+            } catch (NullPointerException e) {
+                currentStationId = 0;
+                Log.e(LOG_TAG, "Error when getting station.getId", e);
             }
+            String currentStationName;
+            try {
+                currentStationName = station.getName();
+            } catch (NullPointerException e) {
+                currentStationName = "";
+                Log.e(LOG_TAG, "Error when getting station.getName", e);
+            }
+
+            Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
+            intent.putExtra("StationId", currentStationId);
+            intent.putExtra("StationName", currentStationName);
+            startActivity(intent);
         });
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
@@ -139,9 +134,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Log.e(LOG_TAG, "NullPointerException: " + e);
             return false;
         }
-        boolean isConnected = activeNetwork != null &&
+        return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-        return isConnected;
     }
 
     //show three dot menu

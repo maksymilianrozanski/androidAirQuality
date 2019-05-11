@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class WidgetModelModule() {
+class WidgetModelModule {
 
     @Provides
     fun provideModelProvider(): ModelProvider {

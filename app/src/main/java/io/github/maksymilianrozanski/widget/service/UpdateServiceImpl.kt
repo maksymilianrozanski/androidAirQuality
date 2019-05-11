@@ -66,8 +66,8 @@ class UpdateServiceImpl(var context: Context,
     }
 
     companion object {
-        val multipleStationSharedPrefsKey = "multiple_station_widget_shared_prefs_key"
-        val listTag = "io.github.maksymilianrozanski.widgetItemList"
+        const val multipleStationSharedPrefsKey = "multiple_station_widget_shared_prefs_key"
+        const val listTag = "io.github.maksymilianrozanski.widgetItemList"
 
         var widgetModelComponent: WidgetModelComponent = DaggerWidgetModelComponent.builder()
                 .widgetModelModule(WidgetModelModule()).build()

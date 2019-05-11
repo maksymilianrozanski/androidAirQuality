@@ -4,11 +4,12 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
 
         ListView sensorListView = (ListView) findViewById(R.id.listViewOfSensors);
 
-        sensorAdapter = new SensorAdapter(this, new ArrayList<Sensor>());
+        sensorAdapter = new SensorAdapter(this, new ArrayList<>());
 
         sensorListView.setAdapter(sensorAdapter);
 
@@ -55,13 +56,10 @@ public class SingleStationActivity extends AppCompatActivity implements LoaderMa
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshSingleStation);
         swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        reloadSensors();
-                        if (swipeRefreshLayout.isRefreshing()) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                () -> {
+                    reloadSensors();
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 }
         );
