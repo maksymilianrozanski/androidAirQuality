@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -28,7 +27,6 @@ import io.github.maksymilianrozanski.vieweditors.StationLoader;
 
 public class SingleStationWidgetConfigActivity extends Activity implements LoaderManager.LoaderCallbacks<List<Station>>, View.OnClickListener {
 
-    private static final String LOG_TAG = SingleStationWidgetConfigActivity.class.getName();
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final int STATION_LOADER_ID = 1;
     public static final String SHARED_PREF_KEY_WIDGET = "io.github.maksymilianrozanski.singleStationWidget";
@@ -60,7 +58,6 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
                 currentStationId = Integer.parseInt(station.getId());
             } catch (NullPointerException e) {
                 currentStationId = 0;
-                Log.e(LOG_TAG, "Error when getting station.getId", e);
             }
 
             saveWidgetIdAndStationId(appWidgetId, currentStationId);

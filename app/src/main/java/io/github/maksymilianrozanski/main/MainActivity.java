@@ -10,7 +10,6 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,8 +39,6 @@ import io.github.maksymilianrozanski.vieweditors.StationLoader;
 import xdroid.toaster.Toaster;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Station>> {
-
-    private static final String LOG_TAG = MainActivity.class.getName();
 
     //id of loader, only matter when multiple loaders
     private static final int STATION_LOADER_ID = 1;
@@ -77,14 +74,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 currentStationId = Integer.parseInt(station.getId());
             } catch (NullPointerException e) {
                 currentStationId = 0;
-                Log.e(LOG_TAG, "Error when getting station.getId", e);
             }
             String currentStationName;
             try {
                 currentStationName = station.getName();
             } catch (NullPointerException e) {
                 currentStationName = "";
-                Log.e(LOG_TAG, "Error when getting station.getName", e);
             }
 
             Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
@@ -134,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         try {
             activeNetwork = connectivityManager.getActiveNetworkInfo();
         } catch (NullPointerException e) {
-            Log.e(LOG_TAG, "NullPointerException: " + e);
+
             return false;
         }
         return activeNetwork != null &&

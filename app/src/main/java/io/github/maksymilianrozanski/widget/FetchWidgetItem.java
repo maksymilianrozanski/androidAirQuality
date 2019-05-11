@@ -1,8 +1,8 @@
 package io.github.maksymilianrozanski.widget;
 
 import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import io.github.maksymilianrozanski.utility.QueryStationSensors;
 
 public class FetchWidgetItem extends Thread {
 
-    private static final String LOG_TAG = FetchWidgetItem.class.getSimpleName();
     private int indexNumber;
     private Context context;
     private ArrayList<WidgetItem> widgetItems;
@@ -39,8 +38,7 @@ public class FetchWidgetItem extends Thread {
         try {
             tempSensor = fetchSensorWithHighestPercentValue(context, indexNumber, isWidgetItemUpToDate);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Fetching data not succeed.");
-            return;
+                        return;
         }
         currentWidgetItem = widgetItems.get(indexNumber);
         String paramType = tempSensor.getParam();

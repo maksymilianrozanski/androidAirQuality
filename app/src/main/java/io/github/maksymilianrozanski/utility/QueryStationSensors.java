@@ -1,8 +1,8 @@
 package io.github.maksymilianrozanski.utility;
 
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
-import android.util.Log;
+
+import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +36,6 @@ public class QueryStationSensors {
                 jsonResponse = getResponseListOfSensors(stationId);
                 break;
             } catch (IOException | NullPointerException e) {
-                Log.e(LOG_TAG, "Problem making the HTTP request");
                 j++;
             }
         }
@@ -83,7 +82,6 @@ public class QueryStationSensors {
                 sensors.add(createSensor(sensorArray, i));
             }
         } catch (JSONException e) {
-            Log.e("QueryUtilities", "Problem parsing the JSON results");
             Toaster.toast(R.string.error_occurred);
         }
         return sensors;
@@ -108,7 +106,6 @@ public class QueryStationSensors {
                     jsonResponse = getResponseSensorData(currentSensorId);
                     break;
                 } catch (IOException | NullPointerException e) {
-                    Log.e(LOG_TAG, "Problem making the HTTP request");
                     j++;
                 }
             }
@@ -129,7 +126,7 @@ public class QueryStationSensors {
         }
         try {
             String value = "no data to display";
-            String date =  "no data to display";
+            String date = "no data to display";
             JSONObject jsonObject = new JSONObject(jsonResponse);
             //get an array of JSONObjects
             JSONArray jsonDataValueArray = jsonObject.getJSONArray("values");
@@ -148,8 +145,7 @@ public class QueryStationSensors {
             } catch (NumberFormatException f) {
                 inputSensor.setValue(0);
             }
-        } catch (JSONException | NumberFormatException e) {
-            Log.e(LOG_TAG, "Error occurred");
+        } catch (JSONException | NumberFormatException ignored) {
         }
         return inputSensor;
     }

@@ -191,11 +191,9 @@ public class MultipleStationWidgetInstrumentedTest {
                             return new MockResponse().setResponseCode(200)
                                     .setBody(RestServiceTestHelper.getStringFromFile(getInstrumentation().getContext(), sensor3736FileName));
                         default:
-                            Log.e("Inside_Test", "Requested url other than specified: " + request.getPath());
                             break;
                     }
                 } catch (Exception e) {
-                    Log.e("Log", "exception" + e);
                     e.printStackTrace();
                 }
                 return null;

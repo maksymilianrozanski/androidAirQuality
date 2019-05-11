@@ -1,7 +1,5 @@
 package io.github.maksymilianrozanski.utility;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,12 +13,10 @@ import java.nio.charset.Charset;
 
 public class QueryUtilities {
 
-    private static final String LOG_TAG = QueryUtilities.class.getSimpleName();
-
     private QueryUtilities() {
     }
 
-    public static String retryMakingHttpRequestIfException(URL url) throws IOException {
+    static String retryMakingHttpRequestIfException(URL url) throws IOException {
         String jsonResponse;
         for (int i = 0; i < 5; ) {
             try {
@@ -30,7 +26,6 @@ public class QueryUtilities {
                 i++;
             }
         }
-        Log.e(LOG_TAG, "http request not succeed, after retrying.");
         throw new IOException();
     }
 
@@ -54,12 +49,8 @@ public class QueryUtilities {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
                 throw new IOException("Response code !=200");
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the JSON results.");
-            throw e;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -97,7 +88,6 @@ public class QueryUtilities {
                 stringToReturn = "not specified";
             }
         } catch (JSONException e) {
-            Log.v("getStringFromJSONObject", "JSONException when passing string");
             stringToReturn = "not specified";
             return stringToReturn;
         }

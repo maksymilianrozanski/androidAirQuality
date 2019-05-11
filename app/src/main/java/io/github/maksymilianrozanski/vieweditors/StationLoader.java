@@ -10,8 +10,6 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 
 public class StationLoader extends AsyncTaskLoader<List<Station>> {
 
-    private static final String LOG_TAG = StationLoader.class.getName();
-
     public StationLoader(Context context) {
         super(context);
     }

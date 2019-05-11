@@ -2,8 +2,8 @@ package io.github.maksymilianrozanski.dataholders;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
-import android.util.Log;
 
 import io.github.maksymilianrozanski.utility.NearestStationFinder;
 
@@ -90,7 +90,6 @@ public class Station implements Comparable<Station>, Parcelable {
             this.distanceFromUser = NearestStationFinder.calculateDistance(userLatitude, userLongitude,
                     Double.parseDouble(gegrLat), Double.parseDouble(gegrLon));
         }catch (NumberFormatException e){
-            Log.e("Log", "NumberFormatException: " + e + ", Station name: " + this.name + ", Station id: " + this.getId());
             this.distanceFromUser = Double.MAX_VALUE;
         }
     }

@@ -22,7 +22,6 @@ import io.github.maksymilianrozanski.vieweditors.SensorLoader;
 public class SingleStationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Sensor>> {
 
     private static final int SENSOR_LOADER_ID = 2;
-    private static final String LOG_TAG = MainActivity.class.getName();
     private SensorAdapter sensorAdapter;
     private LoaderManager loaderManager;
 

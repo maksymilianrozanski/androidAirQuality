@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
@@ -121,7 +121,6 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
 
     private void sendIntentRefreshButtonVisibility() {
         CheckBox checkBox = (CheckBox) findViewById(R.id.displayRefreshButtonCheckBox);
-        Log.v("LOG", "state of checkbox: " + checkBox.isChecked());
         Intent refreshButtonVisibility = new Intent(getApplicationContext(), MultipleStationWidgetProvider.class);
         refreshButtonVisibility.setAction(MultipleStationWidgetConfigActivity.SHOW_REFRESH_BUTTON);
         refreshButtonVisibility.putExtra(VISIBILITY_KEY, checkBox.isChecked());

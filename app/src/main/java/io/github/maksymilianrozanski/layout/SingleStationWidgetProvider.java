@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import io.github.maksymilianrozanski.R;
@@ -17,8 +16,6 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
 
 public class SingleStationWidgetProvider extends AppWidgetProvider {
-
-    private static final String LOG_TAG = SingleStationWidgetProvider.class.getName();
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -37,8 +34,7 @@ public class SingleStationWidgetProvider extends AppWidgetProvider {
         Intent refreshIntent = createRefreshIntent(context, appWidgetId);
         try {
             PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT).send();
-        } catch (PendingIntent.CanceledException e) {
-            Log.e(LOG_TAG, "exception canceledException: " + e);
+        } catch (PendingIntent.CanceledException ignored) {
         }
     }
 

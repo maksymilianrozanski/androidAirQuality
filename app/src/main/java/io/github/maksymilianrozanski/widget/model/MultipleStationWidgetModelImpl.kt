@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.widget.model
 
 import android.content.Context
 import android.location.Location
-import android.util.Log
 import io.github.maksymilianrozanski.dataholders.StationList
 import io.github.maksymilianrozanski.widget.*
 import java.util.*
@@ -50,7 +49,6 @@ class MultipleStationWidgetModelImpl(var context: Context,
             try {
                 thread?.join()
             } catch (e: InterruptedException) {
-                Log.e("Log", "Exception: $e")
                 onFinishedListener.onFailure(e)
             }
         }

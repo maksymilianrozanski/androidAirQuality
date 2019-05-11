@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.vieweditors;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,11 @@ import java.util.Map;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Sensor;
-import io.github.maksymilianrozanski.main.MainActivity;
 
 import static io.github.maksymilianrozanski.R.id.sensorType;
 
 public class SensorAdapter extends ArrayAdapter<Sensor> {
-    private static final String LOG_TAG = MainActivity.class.getName();
+
     private static final Map<String, Integer> MAX_CONCENTRATIONS;
     private static int acceptableDelayInHours = 5;
 
@@ -123,11 +121,9 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
         if (sensorTime <= oldestAcceptableTime) {
             int greyColor = ContextCompat.getColor(getContext(), R.color.noData);
-            Log.d(LOG_TAG, "setting background to grey: " + greyColor);
             dateView.setBackgroundColor(greyColor);
         } else {
             int whiteColor = ContextCompat.getColor(getContext(), R.color.white);
-            Log.d(LOG_TAG, "setting background to white: " + whiteColor);
             dateView.setBackgroundColor(whiteColor);
         }
     }

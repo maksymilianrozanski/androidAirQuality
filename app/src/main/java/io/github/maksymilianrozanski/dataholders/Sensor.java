@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.dataholders;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -103,7 +102,6 @@ public class Sensor implements Parcelable {
         try {
             percentValue = (this.getValue() / SensorAdapter.getMaxConcentrations().get(this.getParam()) * 100);
         } catch (NumberFormatException | NullPointerException e) {
-            Log.e(LOG_TAG, "exception: " + e);
             return -1;
         }
         return percentValue;
@@ -114,12 +112,7 @@ public class Sensor implements Parcelable {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date;
-        try {
-            date = simpleDateFormat.parse(this.getLastDate());
-        } catch (ParseException e) {
-            Log.e(LOG_TAG, "ParseException: " + e);
-            throw e;
-        }
+        date = simpleDateFormat.parse(this.getLastDate());
         return date.getTime();
     }
 

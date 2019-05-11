@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -26,19 +25,13 @@ class ListProvider implements
     private Context context;
     private BroadcastReceiver intentListener;
 
-    @SuppressWarnings("unchecked")
     ListProvider(Context context) {
-        Log.d("LOG", "inside constructor of ListProvider.");
         this.context = context;
-        if (listItemList == null) {
-            try {
-                listItemList = getWidgetItemListFromSharedPreferences(context);
-            } catch (Exception e) {
-                if (e.getMessage().equals("no value saved")) {
-                    Log.d("Log", "No widgetList saved");
-                } else {
-                    throw e;
-                }
+        if (listItemList == null) try {
+            listItemList = getWidgetItemListFromSharedPreferences(context);
+        } catch (Exception e) {
+            if (!e.getMessage().equals("no value saved")) {
+                throw e;
             }
         }
         setupIntentListener();
@@ -54,7 +47,6 @@ class ListProvider implements
             };
             IntentFilter filter = new IntentFilter();
             filter.addAction(MultipleStationWidgetProvider.INTENT_ACTION_FOR_LIST_PROVIDER);
-            Log.d("LOG", "Registering broadcast receiver inside ListProvider");
             context.registerReceiver(intentListener, filter);
         }
     }
@@ -117,10 +109,7 @@ class ListProvider implements
 
     @Override
     public void onDataSetChanged() {
-        if (listItemList != null) {
-            Log.d("LOG", "Inside onDataSetChanged, listItemList size: " + listItemList.size());
-        } else {
-            Log.d("LOG", "Inside onDataSetChanged, listItemList is null. Requesting update. ");
+        if (listItemList == null) {
             requestUpdate();
         }
     }
@@ -130,18 +119,15 @@ class ListProvider implements
         Map<String, ?> allWidgetIds = preferences.getAll();
 
         for (Map.Entry<String, ?> entry : allWidgetIds.entrySet()) {
-            Log.d("Log", "inside requestUpdate of ListProvider. Id from preferences: " + entry.getKey());
             try {
                 MultipleStationWidgetProvider.sendIntentToUpdatingService(context, Integer.parseInt(entry.getKey()));
-            } catch (NumberFormatException e) {
-                Log.e("Log", "NumberFormatException " + e.getMessage());
+            } catch (NumberFormatException ignored) {
             }
         }
     }
 
     @Override
     public void onDestroy() {
-        Log.d("LOG", "Inside onDestroy, tearing down Intent Listener");
         teardownIntentListener();
     }
 

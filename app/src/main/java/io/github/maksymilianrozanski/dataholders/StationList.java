@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.VisibleForTesting;
@@ -41,7 +40,6 @@ public class StationList {
     @VisibleForTesting
     public static String STATIONS_BASE_URL = "http://api.gios.gov.pl/";
     private static boolean requestedUpdate = false;
-    private static final String LOG_TAG = StationList.class.getSimpleName();
     private List<Station> stations;
     private static StationList instance = null;
     private StationsRestService stationsRestService;
@@ -88,7 +86,6 @@ public class StationList {
         try {
             stations = extractFeatureFromJson(jsonResponse, context);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Corrupted data loaded from SharedPreferences", e);
         }
         return stations;
     }
@@ -102,7 +99,6 @@ public class StationList {
                 saveStationsToSharedPreferences(jsonResponse, context);
                 return stations;
             } catch (JSONException | IOException | NullPointerException e) {
-                Log.e(LOG_TAG, "Problem making the HTTP request", e);
                 j++;
             }
         }
@@ -140,7 +136,6 @@ public class StationList {
                 stations.add(createStation(stationsArray, i));
             }
         } catch (JSONException e) {
-            Log.e("QueryUtilities", "Problem parsing the JSON results", e);
             deleteStationsFromSharedPreferences(context);
             Toaster.toast(R.string.error_occurred);
             throw e;
@@ -181,7 +176,7 @@ public class StationList {
         return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
     }
 
-    public void sortByDistanceAndUpdateAdapter(ArrayAdapter<Station> stationAdapter, Activity activity, int permissionRequest){
+    public void sortByDistanceAndUpdateAdapter(ArrayAdapter<Station> stationAdapter, Activity activity, int permissionRequest) {
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(activity);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             client.getLastLocation().addOnCompleteListener(task -> {
@@ -211,7 +206,6 @@ public class StationList {
                 userLatitude = location.getLatitude();
                 userLongitude = location.getLongitude();
             } catch (NullPointerException e) {
-                Log.e(LOG_TAG, "Null pointer exception" + e);
                 throw e;
             }
             for (Station station : stations) {
@@ -246,8 +240,7 @@ public class StationList {
                 city.put("name", stations.get(i).getCityName());
                 jsonObject.put("city", city);
                 jsonArray.put(jsonObject);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, "JSONException" + e);
+            } catch (JSONException ignored) {
             }
         }
         return jsonArray;

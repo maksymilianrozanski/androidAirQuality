@@ -5,8 +5,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import androidx.annotation.Nullable;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,6 @@ public class SingleStationWidgetUpdateService extends IntentService {
     public static final String OUTPUT_SENSOR = "omsg";
     public static final String OUTPUT_STATION_NAME = "outputStationName";
     public static final String APP_WIDGET_ID_KEY = "widgetData:";
-    private static final String LOG_TAG = SingleStationWidgetUpdateService.class.getName();
 
     public SingleStationWidgetUpdateService() {
         super(SingleStationWidgetUpdateService.class.getName());
@@ -37,11 +36,9 @@ public class SingleStationWidgetUpdateService extends IntentService {
         int appWidgetId;
         try {
             appWidgetId = intent.getIntExtra(SingleStationWidgetUpdateService.APP_WIDGET_ID_TO_UPDATE, 0);
-            Log.d(LOG_TAG, "inside onHandleIntent, requested update of widget id: " + appWidgetId);
-            idOfStation = getStationIdFromSharedPref(appWidgetId);
+                        idOfStation = getStationIdFromSharedPref(appWidgetId);
         } catch (NullPointerException e) {
-            Log.e(LOG_TAG, "No IntExtra in intent" + e);
-            return;
+                        return;
         }
         StationList stationList = StationList.getStationListInstance(getApplicationContext());
 
@@ -61,8 +58,6 @@ public class SingleStationWidgetUpdateService extends IntentService {
             intentSendBackToWidget.putExtra(OUTPUT_STATION_NAME, stationList.findStationName(idOfStation));
         } catch (IOException e) {
             Toaster.toast(R.string.error_occurred);
-            Log.e(LOG_TAG, "IOException, couldn't find station name, station id = "
-                    + idOfStation + "exception:" + e);
             return;
         }
         sendBroadcast(intentSendBackToWidget);
