@@ -30,27 +30,27 @@
         android:orientation="horizontal">
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/sortStationsByCityNameSingleWidgetConfig"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_background_rounded_corners"
             android:gravity="center"
             android:text="@string/sort_by_city_name"
-            android:textColor="@color/black"
-            android:background="@drawable/button_background_rounded_corners"/>
+            android:textColor="?android:attr/textColorPrimary" />
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/sortStationsByDistanceSingleWidgetConfig"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_background_rounded_corners"
             android:text="@string/sort_by_distance"
-            android:textColor="@color/black"
-            android:background="@drawable/button_background_rounded_corners" />
+            android:textColor="?android:attr/textColorPrimary" />
     </LinearLayout>
 
 </LinearLayout>

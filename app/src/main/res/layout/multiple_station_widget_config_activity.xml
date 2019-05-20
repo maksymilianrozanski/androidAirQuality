@@ -2,28 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/card_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/multiple_station_widget_config"
-        android:textColor="@android:color/primary_text_light" />
+        android:textColor="?android:attr/textColorPrimary" />
 
     <CheckBox
         android:id="@+id/requestPermissionCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/request_location_permission"
-        android:textColor="@android:color/primary_text_light"/>
+        android:textColor="?android:attr/textColorPrimary" />
 
     <CheckBox
         android:id="@+id/displayRefreshButtonCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/display_refresh_button"
-        android:textColor="@android:color/primary_text_light" />
+        android:textColor="?android:attr/textColorPrimary" />
 
     <Button
         android:id="@+id/widgetStartButton"
@@ -36,5 +36,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/multiple_station_widget_config_activity_explanation"
-        android:textColor="@android:color/primary_text_light"/>
+        android:textColor="?android:attr/textColorPrimary" />
 </LinearLayout>

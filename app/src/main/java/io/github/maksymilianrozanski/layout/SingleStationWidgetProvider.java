@@ -16,7 +16,7 @@ import io.github.maksymilianrozanski.vieweditors.SensorAdapter;
 
 
 public class SingleStationWidgetProvider extends AppWidgetProvider {
-
+    //TODO: adjust colors in single station widget
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {

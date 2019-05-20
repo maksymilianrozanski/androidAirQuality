@@ -3,16 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_card_background"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="2dp"
-    android:gravity="center_vertical">
+    android:padding="2dp">
 
     <TextView
         android:id="@+id/widgetStationNameSingleStation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/station_name"
-        android:textColor="#000000"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="12sp"
         android:textStyle="bold" />
 
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/no_data"
-        android:textColor="#000000"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="12sp" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:text=" "
-        android:textColor="#000000"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="8sp" />
 
 </LinearLayout>

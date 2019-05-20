@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="6dp"
-    android:layout_marginRight="6dp"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    android:layout_marginRight="6dp"
+    android:layout_marginBottom="4dp"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/sensorsViewStationName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="stationName"
-        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"
-        android:textColor="@android:color/primary_text_light" />
+        android:textStyle="bold" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshSingleStation"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -28,6 +30,6 @@
             android:layout_marginRight="16dp"
             android:divider="@null"
             android:dividerHeight="0dp"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

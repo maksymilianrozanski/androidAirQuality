@@ -119,13 +119,13 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         } catch (ParseException e) {
             sensorTime = 1;
         }
-        if (sensorTime <= oldestAcceptableTime) {
-            int greyColor = ContextCompat.getColor(getContext(), R.color.noData);
-            dateView.setBackgroundColor(greyColor);
-        } else {
-            int whiteColor = ContextCompat.getColor(getContext(), R.color.white);
-            dateView.setBackgroundColor(whiteColor);
-        }
+//        if (sensorTime <= oldestAcceptableTime) {   //TODO: adjust to the dark theme
+//            int greyColor = ContextCompat.getColor(getContext(), R.color.noData);
+//            dateView.setBackgroundColor(greyColor);
+//        } else {
+//            int whiteColor = ContextCompat.getColor(getContext(), R.color.white);
+//            dateView.setBackgroundColor(whiteColor);
+//        }
     }
 
     private void setPercentViewText(View listItemView, Sensor sensor) {

@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:id="@+id/multiple_station_list_item"
-    android:background="@drawable/widget_card_background">
-        <TextView
-            android:id="@+id/widgetStationNameListItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/station_name"
-            android:textColor="#000000"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+    style="@style/AppTheme"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/widget_card_background"
+    android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/widgetNameAndValueOfParam"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_data"
-            android:textColor="#000000"
-            android:textSize="12sp" />
+    <TextView
+        android:id="@+id/widgetStationNameListItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/station_name"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/widgetUpdateDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:text=" "
-            android:textColor="#000000"
-            android:textSize="8sp" />
+    <TextView
+        android:id="@+id/widgetNameAndValueOfParam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_data"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/widgetUpdateDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardDarkBackground"
+        android:gravity="bottom"
+        android:text=" "
+        android:textColor="@color/white"
+        android:textSize="8sp" />
 </LinearLayout>

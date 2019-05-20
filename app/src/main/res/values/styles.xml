@@ -1,17 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="dialog_light" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@color/colorPrimary</item>
+    <style name="day_night_dialog" parent="Theme.AppCompat.DayNight">
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="listPreferredItemPaddingLeft">10dip</item>
+        <item name="listPreferredItemPaddingRight">10dip</item>
+        <item name="android:listPreferredItemPaddingStart">10dip</item>
+        <item name="android:listPreferredItemPaddingEnd">10dip</item>
     </style>
 </resources>

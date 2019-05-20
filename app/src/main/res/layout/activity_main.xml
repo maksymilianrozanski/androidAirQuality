@@ -4,22 +4,23 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.maksymilianrozanski.main.MainActivity"
+    android:background="?android:attr/colorBackground"
     android:orientation="vertical"
-    android:background="#e5e5e5">
+    tools:context="io.github.maksymilianrozanski.main.MainActivity">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshMainActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ListView
-        android:id="@+id/list"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:divider="@null"
-        android:dividerHeight="4dp"
-        android:orientation="vertical">
-    </ListView>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:divider="@null"
+            android:dividerHeight="4dp"
+            android:orientation="vertical" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
