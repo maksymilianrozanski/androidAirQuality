@@ -25,16 +25,11 @@ public class ServiceGenerator {
     }
 
     public static String getResponseBody(retrofit2.Call<ResponseBody> call) throws IOException {
-        try {
-            Response<ResponseBody> response = call.execute();
-            if (response.code() == 200) {
-                return response.body().string();
-            } else {
-                throw new IOException("server response code: " + response.code());
-            }
-        } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
-            throw e;
+        Response<ResponseBody> response = call.execute();
+        if (response.code() == 200) {
+            return response.body().string();
+        } else {
+            throw new IOException("server response code: " + response.code());
         }
     }
 }
