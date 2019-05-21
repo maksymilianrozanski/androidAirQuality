@@ -1,10 +1,7 @@
 package io.github.maksymilianrozanski.vieweditors;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +22,7 @@ import java.util.Map;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Sensor;
+import io.github.maksymilianrozanski.utility.ResourcesUtilitiesKt;
 
 import static io.github.maksymilianrozanski.R.id.sensorType;
 
@@ -126,23 +124,8 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
             int orangeColor = ContextCompat.getColor(getContext(), R.color.orange);
             dateView.setTextColor(orangeColor);
         } else {
-            int defaultTextColor = getTextColorPrimary(getContext());
+            int defaultTextColor = ResourcesUtilitiesKt.getTextColorPrimary(getContext());
             dateView.setTextColor(defaultTextColor);
-        }
-    }
-
-    //TODO: move to another class
-    private static int getTextColorPrimary(Context context) {
-        TypedArray arr = null;
-        try {
-            TypedValue typedValue = new TypedValue();
-            Resources.Theme theme = context.getTheme();
-            theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true);
-            arr = context.obtainStyledAttributes(typedValue.data, new int[]{
-                    android.R.attr.textColorPrimary});
-            return arr.getColor(0, -1);
-        } finally {
-            if (arr != null) arr.recycle();
         }
     }
 
