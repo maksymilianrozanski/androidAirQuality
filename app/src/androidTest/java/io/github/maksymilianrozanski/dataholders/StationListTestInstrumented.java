@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.dataholders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Assert;
@@ -12,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.text.Collator;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -113,54 +113,5 @@ public class StationListTestInstrumented {
         String returnedStationName = stationList.findStationName(idOfStation);
 
         Assert.assertEquals(returnedStationName, expectedName);
-    }
-
-    @Test
-    public void removeSensorsWhereValueOlderThanTest() {
-        List<Sensor> sensors = new ArrayList<>();
-        SensorList sensorList = new SensorList(sensors);
-
-        //time = "1999-01-01 09:45:00
-        Mockito.when(mockedCalendar.getTimeInMillis()).thenReturn(915183900L * 1000);
-
-        sensorList.calendar = mockedCalendar;
-
-        Sensor sensor1 = new Sensor();
-        sensor1.setId(1);
-        sensor1.setParam("PM10");
-        sensor1.setValue(100);
-        sensor1.setLastDate("1999-01-01 09:30:10");
-
-        Sensor sensor2 = new Sensor();
-        sensor2.setId(2);
-        sensor2.setParam("PM10");
-        sensor2.setValue(80);
-        sensor2.setLastDate("1999-01-01 09:30:10");
-
-        Sensor sensor3 = new Sensor();
-        sensor3.setId(3);
-        sensor3.setParam("PM10");
-        sensor3.setValue(110);
-        sensor3.setLastDate("1999-01-01 02:10:10");
-
-        Sensor sensor4 = new Sensor();
-        sensor4.setId(4);
-        sensor4.setParam("PM10");
-        sensor4.setValue(110);
-        sensor4.setLastDate("1999-01-01 09:30:10");
-
-        sensors.add(sensor1);
-        sensors.add(sensor2);
-        sensors.add(sensor3);
-        sensors.add(sensor4);
-        Assert.assertEquals(4, sensors.size());
-
-        //TODO: move test to Sensor class tests
-        sensorList.removeSensorsWhereValueOlderThan(2);
-
-        Assert.assertEquals(3, sensors.size());
-        Assert.assertEquals(1, sensors.get(0).getId());
-        Assert.assertEquals(2, sensors.get(1).getId());
-        Assert.assertEquals(4, sensors.get(2).getId());
     }
 }

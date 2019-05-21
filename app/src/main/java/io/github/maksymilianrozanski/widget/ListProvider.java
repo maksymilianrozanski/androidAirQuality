@@ -77,7 +77,7 @@ class ListProvider implements
         rv.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
 
-        if (widgetItem.isUpToDate()) {  //TODO: change white to primary text color
+        if (widgetItem.isUpToDate()) {
             rv.setTextColor(R.id.widgetStationNameListItem, ContextCompat.getColor(context, R.color.white));
             rv.setTextColor(R.id.widgetUpdateDate, ContextCompat.getColor(context, R.color.white));
         } else {
