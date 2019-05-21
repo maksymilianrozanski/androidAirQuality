@@ -27,7 +27,6 @@ public class ServiceGenerator {
     public static String getResponseBody(retrofit2.Call<ResponseBody> call) throws IOException {
         try {
             Response<ResponseBody> response = call.execute();
-            System.out.println("response code: " + response.code());
             if (response.code() == 200) {
                 return response.body().string();
             } else {
