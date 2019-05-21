@@ -6,17 +6,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.test.espresso.intent.Checks;
 import androidx.test.espresso.matcher.BoundedMatcher;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +28,12 @@ import okhttp3.mockwebserver.RecordedRequest;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasTextColor;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class SingleStationActivityInstrumentedTest {
@@ -53,7 +53,6 @@ public class SingleStationActivityInstrumentedTest {
         StationList.STATIONS_BASE_URL = server.url("/").toString();
     }
 
-    @Ignore("TODO: change the way of displaying data")
     @Test
     public void checkDisplayingDataTest() {
         String sensorsFileName = "sensorsPiastow10139.json";
@@ -95,9 +94,8 @@ public class SingleStationActivityInstrumentedTest {
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
                 .onChildView(withId(R.id.date)).check(matches(withText("2025-12-05 18:00:00")));
 
-        int whiteColor = ContextCompat.getColor(activityRule.getActivity(), R.color.white);
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
-                .onChildView(withId(R.id.date)).check(matches(withBackGroundColor(whiteColor)));
+                .onChildView(withId(R.id.date)).check(matches(not(hasTextColor(R.color.orange))));
 
         onData(anything()).inAdapterView(withId(R.id.listViewOfSensors)).atPosition(0)
                 .onChildView(withId(R.id.percentValue)).check(matches(withText("200%")));

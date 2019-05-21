@@ -1,7 +1,10 @@
 package io.github.maksymilianrozanski.vieweditors;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,13 +122,28 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         } catch (ParseException e) {
             sensorTime = 1;
         }
-//        if (sensorTime <= oldestAcceptableTime) {   //TODO: adjust to the dark theme
-//            int greyColor = ContextCompat.getColor(getContext(), R.color.noData);
-//            dateView.setBackgroundColor(greyColor);
-//        } else {
-//            int whiteColor = ContextCompat.getColor(getContext(), R.color.white);
-//            dateView.setBackgroundColor(whiteColor);
-//        }
+        if (sensorTime <= oldestAcceptableTime) {
+            int orangeColor = ContextCompat.getColor(getContext(), R.color.orange);
+            dateView.setTextColor(orangeColor);
+        } else {
+            int defaultTextColor = getTextColorPrimary(getContext());
+            dateView.setTextColor(defaultTextColor);
+        }
+    }
+
+    //TODO: move to another class
+    private static int getTextColorPrimary(Context context) {
+        TypedArray arr = null;
+        try {
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true);
+            arr = context.obtainStyledAttributes(typedValue.data, new int[]{
+                    android.R.attr.textColorPrimary});
+            return arr.getColor(0, -1);
+        } finally {
+            if (arr != null) arr.recycle();
+        }
     }
 
     private void setPercentViewText(View listItemView, Sensor sensor) {
