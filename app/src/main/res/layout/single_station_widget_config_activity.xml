@@ -14,7 +14,7 @@
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="18sp" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/station_list_widget_config"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
