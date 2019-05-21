@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.List;
 import java.util.Map;
 
@@ -75,11 +77,13 @@ class ListProvider implements
         rv.setInt(R.id.widgetNameAndValueOfParam, "setBackgroundColor", colorOfValueBackground);
         rv.setTextViewText(R.id.widgetUpdateDate, widgetItem.getUpdateDate());
 
-//        if (widgetItem.isUpToDate()) {  //TODO: adjust to the dark theme
-//            rv.setInt(R.id.widgetStationNameListItem, "setBackgroundColor", ContextCompat.getColor(context, R.color.white));
-//        } else {
-//            rv.setInt(R.id.widgetStationNameListItem, "setBackgroundColor", ContextCompat.getColor(context, R.color.noData));
-//        }
+        if (widgetItem.isUpToDate()) {
+            rv.setTextColor(R.id.widgetStationNameListItem, ContextCompat.getColor(context, R.color.white));
+            rv.setTextColor(R.id.widgetUpdateDate, ContextCompat.getColor(context, R.color.white));
+        } else {
+            rv.setTextColor(R.id.widgetStationNameListItem, ContextCompat.getColor(context, R.color.orange));
+            rv.setTextColor(R.id.widgetUpdateDate, ContextCompat.getColor(context, R.color.orange));
+        }
 
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra("StationId", widgetItem.getStationId());

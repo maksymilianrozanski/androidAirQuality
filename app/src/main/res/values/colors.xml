@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#fafafa</color>
     <color name="black">#000000</color>
+    <color name="orange">#FF8C67</color>
     <color name="cardDarkBackground">#424242</color>
 
     <!-- Color values to display pollution level-->

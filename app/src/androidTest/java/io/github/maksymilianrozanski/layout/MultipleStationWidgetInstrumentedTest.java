@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.layout;
 
 import android.Manifest;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
