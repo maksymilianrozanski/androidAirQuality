@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -24,16 +25,16 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.anything;
+import static io.github.maksymilianrozanski.TestHelperKt.atPosition;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -176,14 +177,15 @@ public class MainActivityMenuInstrumentedTest {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.sort_stations_by_city_name)).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.stationname)).check(matches(withText("Augustów - mobilne ")));
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).onChildView(withId(R.id.cityname)).check(matches(withText("Augustów")));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0, hasDescendant(withText("Augustów - mobilne ")))));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0, hasDescendant(withText("Augustów")))));
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(1).onChildView(withId(R.id.stationname)).check(matches(withText("Belsk-IGFPAN")));
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(1).onChildView(withId(R.id.cityname)).check(matches(withText("Belsk Duży")));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(1, hasDescendant(withText("Belsk-IGFPAN")))));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(1, hasDescendant(withText("Belsk Duży")))));
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(19).onChildView(withId(R.id.stationname)).check(matches(withText("KMŚ Puszcza Borecka")));
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(19).onChildView(withId(R.id.cityname)).check(matches(withText("Diabla Góra")));
+        onView(withId(R.id.stationsRecyclerView)).perform(RecyclerViewActions.scrollToPosition(19));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(19, hasDescendant(withText("KMŚ Puszcza Borecka")))));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(19, hasDescendant(withText("Diabla Góra")))));
     }
 
     @After

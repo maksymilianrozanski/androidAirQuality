@@ -13,13 +13,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -34,7 +35,7 @@ import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
 import io.github.maksymilianrozanski.utility.LocationSaver;
 import io.github.maksymilianrozanski.utility.NearestStationFinder;
-import io.github.maksymilianrozanski.vieweditors.StationAdapter;
+import io.github.maksymilianrozanski.vieweditors.StationAdapterRecycler;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
 import xdroid.toaster.Toaster;
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOCATION_PERMISSION_CALLED_BY_FIND_NEAREST_STATION = 0;
     private static final int LOCATION_PERMISSION_CALLED_BY_SORT_STATIONS = 1;
 
-    private StationAdapter stationAdapter;
+    private StationAdapterRecycler stationAdapterRecycler;
     private AtomicBoolean isStationListLoaded = new AtomicBoolean(false);
 
     LoaderManager loaderManager = getLoaderManager();
@@ -57,36 +58,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView stationListView = (ListView) findViewById(R.id.list);
-
-        stationAdapter = new StationAdapter(this, new ArrayList<>());
-
-        stationListView.setAdapter(stationAdapter);
+        RecyclerView.LayoutManager stationsLayoutManager = new LinearLayoutManager(this);
+        stationAdapterRecycler = new StationAdapterRecycler(this, new ArrayList<>());
+        RecyclerView recyclerView = findViewById(R.id.stationsRecyclerView);
+        recyclerView.setLayoutManager(stationsLayoutManager);
+        recyclerView.setAdapter(stationAdapterRecycler);
 
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
-
-        //OnClickListener - redirects to SingleStationActivity
-        stationListView.setOnItemClickListener((parent, view, position, id) -> {
-            Station station = stationAdapter.getItem(position);
-
-            int currentStationId;
-            try {
-                currentStationId = Integer.parseInt(station.getId());
-            } catch (NullPointerException e) {
-                currentStationId = 0;
-            }
-            String currentStationName;
-            try {
-                currentStationName = station.getName();
-            } catch (NullPointerException e) {
-                currentStationName = "";
-            }
-
-            Intent intent = new Intent(getApplicationContext(), SingleStationActivity.class);
-            intent.putExtra("StationId", currentStationId);
-            intent.putExtra("StationName", currentStationName);
-            startActivity(intent);
-        });
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -107,9 +85,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Station>> loader, List<Station> data) {
-        stationAdapter.clear();
         if (data != null && !data.isEmpty()) {
-            stationAdapter.addAll(data);
+            stationAdapterRecycler.setData(data);
             isStationListLoaded.set(true);
         }
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshMainActivity);
@@ -119,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
         isStationListLoaded.set(false);
-        stationAdapter.clear();
+        stationAdapterRecycler.setData(new ArrayList<>());
     }
 
     public static boolean isConnected(Context context) {
@@ -241,14 +218,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void sortStationsByDistance() {
         StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
-                stationAdapter,
+                stationAdapterRecycler,
                 this,
                 LOCATION_PERMISSION_CALLED_BY_SORT_STATIONS);
     }
 
     private void sortStationsByCityName() {
         StationList stationListInstance = StationList.getStationListInstance(getApplicationContext());
-        stationAdapter.clear();
-        stationAdapter.addAll(stationListInstance.getStationsSortedByCityName());
+        stationAdapterRecycler.setData(stationListInstance.getStationsSortedByCityName());
     }
 }

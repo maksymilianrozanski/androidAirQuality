@@ -32,6 +32,7 @@ import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.utility.QueryUtilities;
 import io.github.maksymilianrozanski.utility.ServiceGenerator;
 import io.github.maksymilianrozanski.utility.StationsRestService;
+import io.github.maksymilianrozanski.vieweditors.StationAdapterRecycler;
 import okhttp3.ResponseBody;
 import xdroid.toaster.Toaster;
 
@@ -191,6 +192,25 @@ public class StationList {
                 this.sortStationsByDistance(activity, location);
                 stationAdapter.clear();
                 stationAdapter.addAll(this.getStations());
+            });
+        } else
+            NearestStationFinder.askForLocationPermissionIfNoPermission(activity, permissionRequest);
+    }
+
+    public void sortByDistanceAndUpdateAdapter(StationAdapterRecycler stationAdapter, Activity activity, int permissionRequest) {
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(activity);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            client.getLastLocation().addOnCompleteListener(task -> {
+                LocationSaver locationSaver = new LocationSaver(activity);
+                Location location;
+                if (task.isSuccessful() && task.getResult() != null) {
+                    location = task.getResult();
+                    locationSaver.saveLocation(location);
+                } else {
+                    location = locationSaver.getLocation();
+                }
+                this.sortStationsByDistance(activity, location);
+                stationAdapter.setData(this.getStations());
             });
         } else
             NearestStationFinder.askForLocationPermissionIfNoPermission(activity, permissionRequest);

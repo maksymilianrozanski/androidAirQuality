@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.main;
 import android.Manifest;
 import android.content.Intent;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
@@ -18,7 +19,7 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
@@ -27,7 +28,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static io.github.maksymilianrozanski.TestHelperKt.stubAllIntents;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityIntentsInstrumentedTest {
@@ -65,9 +65,7 @@ public class MainActivityIntentsInstrumentedTest {
         activityRule.launchActivity(intent);
 
         stubAllIntents();
-
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0).perform(click());
-
+        onView(withId(R.id.stationsRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_0_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_0_NAME),
                 toPackage("io.github.maksymilianrozanski")));
     }
@@ -83,9 +81,7 @@ public class MainActivityIntentsInstrumentedTest {
         activityRule.launchActivity(intent);
 
         stubAllIntents();
-
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(5).perform(click());
-
+        onView(withId(R.id.stationsRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(5, click()));
         intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_5_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_5_NAME),
                 toPackage("io.github.maksymilianrozanski")));
     }
@@ -101,9 +97,7 @@ public class MainActivityIntentsInstrumentedTest {
         activityRule.launchActivity(intent);
 
         stubAllIntents();
-
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(25).perform(click());
-
+        onView(withId(R.id.stationsRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(25, click()));
         intended(allOf(hasExtra("StationId", EXPECTED_STATION_INDEX_25_ID), hasExtra("StationName", EXPECTED_STATION_INDEX_25_NAME),
                 toPackage("io.github.maksymilianrozanski")));
     }

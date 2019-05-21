@@ -18,7 +18,6 @@ import io.github.maksymilianrozanski.dataholders.StationList;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -27,12 +26,14 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static io.github.maksymilianrozanski.TestHelperKt.atPosition;
 import static io.github.maksymilianrozanski.TestHelperKt.stubAllIntents;
-import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -65,13 +66,11 @@ public class MainActivityInstrumentedTest {
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation0Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString(expectedStation0Name))))));
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(1)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation1Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(1,
+                hasDescendant(withText(containsString(expectedStation1Name))))));
     }
 
     @Test
@@ -98,9 +97,8 @@ public class MainActivityInstrumentedTest {
 
         mainActivityRule.launchActivity(null);
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation0Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString(expectedStation0Name))))));
 
         mainActivityRule.getActivity().goToNearestStation();
         stubAllIntents();
@@ -122,9 +120,8 @@ public class MainActivityInstrumentedTest {
 
         mainActivityRule.launchActivity(null);
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation0Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString(expectedStation0Name))))));
 
         mainActivityRule.getActivity().goToNearestStation();
         uiDevice.findObject(new UiSelector().text("DENY")).click();
@@ -139,9 +136,8 @@ public class MainActivityInstrumentedTest {
 
         mainActivityRule.launchActivity(null);
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation0Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString(expectedStation0Name))))));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.sort_stations_by_distance)).perform(click());
@@ -149,9 +145,8 @@ public class MainActivityInstrumentedTest {
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
         uiDevice.findObject(new UiSelector().text("ALLOW")).click();
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText("Warszawa-Marszałkowska")));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString("Warszawa-Marszałkowska"))))));
     }
 
     @Test
@@ -163,9 +158,8 @@ public class MainActivityInstrumentedTest {
 
         mainActivityRule.launchActivity(null);
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation0Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString(expectedStation0Name))))));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.sort_stations_by_distance)).perform(click());
@@ -173,9 +167,8 @@ public class MainActivityInstrumentedTest {
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
         uiDevice.findObject(new UiSelector().text("DENY")).click();
 
-        onData(anything()).inAdapterView(withId(R.id.list)).atPosition(0)
-                .onChildView(withId(R.id.stationListItemLinearLayout))
-                .onChildView(withId(R.id.stationname)).check(matches(withText(expectedStation0Name)));
+        onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
+                hasDescendant(withText(containsString(expectedStation0Name))))));
     }
 
     @After
