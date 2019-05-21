@@ -18,7 +18,7 @@ import java.util.List;
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
 import io.github.maksymilianrozanski.dataholders.StationList;
-import io.github.maksymilianrozanski.vieweditors.StationAdapterRecyclerWidgetConfig;
+import io.github.maksymilianrozanski.vieweditors.StationAdapter;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
 
 public class SingleStationWidgetConfigActivity extends Activity implements LoaderManager.LoaderCallbacks<List<Station>>, View.OnClickListener {
@@ -28,7 +28,7 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     public static final String SHARED_PREF_KEY_WIDGET = "io.github.maksymilianrozanski.singleStationWidget";
 
     private static final int MY_PERMISSION_REQUEST = 0;
-    private StationAdapterRecyclerWidgetConfig stationAdapterRecycler;
+    private StationAdapter stationAdapter;
     LoaderManager loaderManager = getLoaderManager();
 
     @Override
@@ -39,10 +39,13 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
         assignAppWidgetId();
 
         RecyclerView.LayoutManager stationsLayoutManager = new LinearLayoutManager(this);
-        stationAdapterRecycler = new StationAdapterRecyclerWidgetConfig(this, getApplicationContext(), appWidgetId, new ArrayList<>());
+        stationAdapter = new StationAdapter(getApplication(), this,
+                new ArrayList<>(),
+                StationAdapter.singleStationWidgetConfigViewHolder,
+                appWidgetId);
         RecyclerView recyclerView = findViewById(R.id.station_list_widget_config);
         recyclerView.setLayoutManager(stationsLayoutManager);
-        recyclerView.setAdapter(stationAdapterRecycler);
+        recyclerView.setAdapter(stationAdapter);
 
         loaderManager.initLoader(STATION_LOADER_ID, null, this);
         setButtons();
@@ -64,13 +67,13 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
     @Override
     public void onLoadFinished(Loader<List<Station>> loader, List<Station> data) {
         if (data != null && !data.isEmpty()) {
-            stationAdapterRecycler.setData(data);
+            stationAdapter.setData(data);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Station>> loader) {
-        stationAdapterRecycler.setData(new ArrayList<>());
+        stationAdapter.setData(new ArrayList<>());
     }
 
     private void setButtons() {
@@ -94,12 +97,12 @@ public class SingleStationWidgetConfigActivity extends Activity implements Loade
 
     private void sortByCityName() {
         StationList stationList = StationList.getStationListInstance(getApplicationContext());
-        stationAdapterRecycler.setData(stationList.getStationsSortedByCityName());
+        stationAdapter.setData(stationList.getStationsSortedByCityName());
     }
 
     private void sortByDistance() {
         StationList.getStationListInstance(this).sortByDistanceAndUpdateAdapter(
-                stationAdapterRecycler,
+                stationAdapter,
                 this,
                 MY_PERMISSION_REQUEST
         );
