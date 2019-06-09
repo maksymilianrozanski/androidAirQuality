@@ -1,5 +1,6 @@
 package io.github.maksymilianrozanski.widget;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
@@ -13,7 +14,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BuildCompat;
 
 import java.util.List;
 
@@ -44,8 +47,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
 
         CheckBox requestPermissionCheckBox = (CheckBox) findViewById(R.id.requestPermissionCheckBox);
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (isLocationPermissionGranted()) {
             requestPermissionCheckBox.setChecked(true);
             requestPermissionCheckBox.setEnabled(false);
         } else {
@@ -54,6 +56,20 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
 
         Button startButton = (Button) findViewById(R.id.widgetStartButton);
         startButton.setOnClickListener(this);
+    }
+
+    private boolean isLocationPermissionGranted() {
+        return isForegroundPermissionGranted() && isBackgroundPermissionGranted();
+    }
+
+    private boolean isForegroundPermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean isBackgroundPermissionGranted() {
+        if (BuildCompat.isAtLeastQ()) {
+            return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        } else return true;
     }
 
     /**
@@ -76,6 +92,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
                 startWidget();
                 break;
             case R.id.requestPermissionCheckBox:
+                //TODO: ask for background permission if Android Q
                 NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
                 break;
         }
@@ -84,8 +101,7 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         CheckBox requestPermissionCheckBox = (CheckBox) findViewById(R.id.requestPermissionCheckBox);
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (isLocationPermissionGranted()) {
             requestPermissionCheckBox.setChecked(true);
             requestPermissionCheckBox.setEnabled(false);
         } else {
