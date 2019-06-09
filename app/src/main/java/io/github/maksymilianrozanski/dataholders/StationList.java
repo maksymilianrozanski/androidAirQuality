@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.text.TextUtils;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
@@ -175,26 +174,6 @@ public class StationList {
             cityName = "not specified";
         }
         return new Station(id, name, gegrLat, gegrLon, cityId, cityName);
-    }
-
-    public void sortByDistanceAndUpdateAdapter(ArrayAdapter<Station> stationAdapter, Activity activity, int permissionRequest) {
-        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(activity);
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            client.getLastLocation().addOnCompleteListener(task -> {
-                LocationSaver locationSaver = new LocationSaver(activity);
-                Location location;
-                if (task.isSuccessful() && task.getResult() != null) {
-                    location = task.getResult();
-                    locationSaver.saveLocation(location);
-                } else {
-                    location = locationSaver.getLocation();
-                }
-                this.sortStationsByDistance(activity, location);
-                stationAdapter.clear();
-                stationAdapter.addAll(this.getStations());
-            });
-        } else
-            NearestStationFinder.askForLocationPermissionIfNoPermission(activity, permissionRequest);
     }
 
     public void sortByDistanceAndUpdateAdapter(StationAdapter stationAdapter, Activity activity, int permissionRequest) {
