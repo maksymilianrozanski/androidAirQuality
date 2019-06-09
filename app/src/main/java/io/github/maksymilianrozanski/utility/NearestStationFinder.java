@@ -17,6 +17,7 @@ public class NearestStationFinder {
         double userDistance = Double.MAX_VALUE;
         Integer closestStationId = null;
         for (Station station : stations) {
+            //TODO: crashing Android Q, NumberFormatException: For input string: "54.194364"
             double stationLatitude = Double.parseDouble(station.getGegrLat());
             double stationLongitude = Double.parseDouble(station.getGegrLon());
             double currentDistance = calculateDistance(userLatitude, userLongitude, stationLatitude, stationLongitude);

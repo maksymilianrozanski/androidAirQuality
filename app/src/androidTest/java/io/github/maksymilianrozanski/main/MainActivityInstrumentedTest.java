@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.main;
 
 import android.content.Intent;
 
+import androidx.core.os.BuildCompat;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
@@ -103,7 +104,12 @@ public class MainActivityInstrumentedTest {
         mainActivityRule.getActivity().goToNearestStation();
         stubAllIntents();
 
-        uiDevice.findObject(new UiSelector().text("ALLOW")).click();
+        //TODO: remove repeated code of setting Allow/Deny text
+        String allowText;
+        if (BuildCompat.isAtLeastQ()) allowText = "Allow only while using the app";
+        else allowText = "ALLOW";
+
+        uiDevice.findObject(new UiSelector().text(allowText)).click();
 
         intended(allOf(hasExtra("StationId", 544), hasExtra("StationName", "Warszawa-Marszałkowska"),
                 toPackage("io.github.maksymilianrozanski")));
@@ -124,7 +130,11 @@ public class MainActivityInstrumentedTest {
                 hasDescendant(withText(containsString(expectedStation0Name))))));
 
         mainActivityRule.getActivity().goToNearestStation();
-        uiDevice.findObject(new UiSelector().text("DENY")).click();
+
+        String denyText;
+        if (BuildCompat.isAtLeastQ()) denyText = "Deny";
+        else denyText = "DENY";
+        uiDevice.findObject(new UiSelector().text(denyText)).click();
     }
 
     @Test
@@ -143,7 +153,11 @@ public class MainActivityInstrumentedTest {
         onView(withText(R.string.sort_stations_by_distance)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        uiDevice.findObject(new UiSelector().text("ALLOW")).click();
+
+        String allowText;
+        if (BuildCompat.isAtLeastQ()) allowText = "Allow only while using the app";
+        else allowText = "ALLOW";
+        uiDevice.findObject(new UiSelector().text(allowText)).click();
 
         onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
                 hasDescendant(withText(containsString("Warszawa-Marszałkowska"))))));
@@ -165,7 +179,11 @@ public class MainActivityInstrumentedTest {
         onView(withText(R.string.sort_stations_by_distance)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        uiDevice.findObject(new UiSelector().text("DENY")).click();
+
+        String denyText;
+        if (BuildCompat.isAtLeastQ()) denyText = "Deny";
+        else denyText = "DENY";
+        uiDevice.findObject(new UiSelector().text(denyText)).click();
 
         onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
                 hasDescendant(withText(containsString(expectedStation0Name))))));
