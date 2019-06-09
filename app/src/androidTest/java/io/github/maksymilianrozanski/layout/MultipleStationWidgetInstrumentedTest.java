@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.layout;
 import android.Manifest;
 import android.content.Intent;
 
+import androidx.core.os.BuildCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -215,7 +216,6 @@ public class MultipleStationWidgetInstrumentedTest {
 
     //Before test mock location to: Pałac Kultury, Warszawa 52.231964, 21.005927,
     //place multiple station widget on home screen,set refresh button  to visible
-    //TODO: isn't passing if stations are not sorted by distance before test
     @Test
     public void widgetTest() throws Exception {
         mainActivityRule.launchActivity(new Intent());
@@ -224,7 +224,14 @@ public class MultipleStationWidgetInstrumentedTest {
 
         device.pressHome();
 
-        String refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh).toUpperCase();
+        String refreshButtonText;
+        if (BuildCompat.isAtLeastQ()) {
+            refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh);
+        } else {
+            refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh)
+                    .toUpperCase();
+        }
+
         UiObject2 refreshButton = device.findObject(By.text(refreshButtonText));
 
         refreshButton.click();
