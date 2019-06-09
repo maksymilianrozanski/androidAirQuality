@@ -49,7 +49,15 @@ public class MultipleStationWidgetInstrumentedTest2 {
             = new ActivityTestRule<>(MainActivity.class, true, false);
 
     @Rule
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+    public GrantPermissionRule permissionRule =  GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @Rule
+    public GrantPermissionRule backgroundPermissionRule = backGroundLocationPermissionRule();
+
+    private GrantPermissionRule backGroundLocationPermissionRule(){
+        if (BuildCompat.isAtLeastQ()) return GrantPermissionRule.grant(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        else return null;
+    }
 
     @Before
     public void serverSetup() throws Exception {

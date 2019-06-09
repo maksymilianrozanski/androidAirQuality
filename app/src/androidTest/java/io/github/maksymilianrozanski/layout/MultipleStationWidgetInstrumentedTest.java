@@ -50,6 +50,14 @@ public class MultipleStationWidgetInstrumentedTest {
     @Rule
     public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
+    @Rule
+    public GrantPermissionRule backgroundPermissionRule = backGroundLocationPermissionRule();
+
+    private GrantPermissionRule backGroundLocationPermissionRule(){
+        if (BuildCompat.isAtLeastQ()) return GrantPermissionRule.grant(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        else return null;
+    }
+
     @Before
     public void serverSetup() throws Exception {
         String fileName = "stationsResponse.json";
