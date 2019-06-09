@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "io.github.maksymilianrozanski"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 28
-        versionName "1.28"
+        targetSdkVersion 29
+        versionCode 29
+        versionName "1.29"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        jackOptions {
 //            enabled true
