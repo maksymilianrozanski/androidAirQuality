@@ -22,14 +22,13 @@ import java.util.List;
 
 import io.github.maksymilianrozanski.R;
 import io.github.maksymilianrozanski.dataholders.Station;
-import io.github.maksymilianrozanski.utility.NearestStationFinder;
 import io.github.maksymilianrozanski.vieweditors.StationLoader;
 import io.github.maksymilianrozanski.widget.service.MultipleStationWidgetUpdateIntentService;
 
 public class MultipleStationWidgetConfigActivity extends Activity implements OnClickListener, LoaderManager.LoaderCallbacks<List<Station>> {
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    private static final int MY_PERMISSION_REQUEST = 0;
+    private static final int FOREGROUND_AND_BACKGROUND_LOCATION_REQUEST = 2;
     private static final int STATION_LOADER_ID = 1;
     public static final String SHOW_REFRESH_BUTTON = "SHOW_REFRESH_BUTTON";
     public static final String VISIBILITY_KEY = "VISIBILITY_KEY";
@@ -92,15 +91,29 @@ public class MultipleStationWidgetConfigActivity extends Activity implements OnC
                 startWidget();
                 break;
             case R.id.requestPermissionCheckBox:
-                //TODO: ask for background permission if Android Q
-                NearestStationFinder.askForLocationPermissionIfNoPermission(this, MY_PERMISSION_REQUEST);
+                askForForegroundAndBackgroundLocationPermission();
                 break;
+        }
+    }
+
+    private void askForForegroundAndBackgroundLocationPermission() {
+        if (!isLocationPermissionGranted()) {
+            String[] permissionRequests;
+            String fineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
+            if (BuildCompat.isAtLeastQ()) {
+                String backgroundLocation = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+                permissionRequests = new String[]{fineLocation, backgroundLocation};
+            } else {
+                permissionRequests = new String[]{fineLocation};
+            }
+            ActivityCompat.requestPermissions(this, permissionRequests, FOREGROUND_AND_BACKGROUND_LOCATION_REQUEST);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         CheckBox requestPermissionCheckBox = (CheckBox) findViewById(R.id.requestPermissionCheckBox);
+        //TODO: display additional info if only foreground location access granted (Android Q)
         if (isLocationPermissionGranted()) {
             requestPermissionCheckBox.setChecked(true);
             requestPermissionCheckBox.setEnabled(false);
