@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -104,12 +105,7 @@ public class MainActivityInstrumentedTest {
         mainActivityRule.getActivity().goToNearestStation();
         stubAllIntents();
 
-        //TODO: remove repeated code of setting Allow/Deny text
-        String allowText;
-        if (BuildCompat.isAtLeastQ()) allowText = "Allow only while using the app";
-        else allowText = "ALLOW";
-
-        uiDevice.findObject(new UiSelector().text(allowText)).click();
+        uiDevice.findObject(new UiSelector().text(allowText())).click();
 
         intended(allOf(hasExtra("StationId", 544), hasExtra("StationName", "Warszawa-Marszałkowska"),
                 toPackage("io.github.maksymilianrozanski")));
@@ -131,10 +127,7 @@ public class MainActivityInstrumentedTest {
 
         mainActivityRule.getActivity().goToNearestStation();
 
-        String denyText;
-        if (BuildCompat.isAtLeastQ()) denyText = "Deny";
-        else denyText = "DENY";
-        uiDevice.findObject(new UiSelector().text(denyText)).click();
+        uiDevice.findObject(new UiSelector().text(denyText())).click();
     }
 
     @Test
@@ -154,10 +147,7 @@ public class MainActivityInstrumentedTest {
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 
-        String allowText;
-        if (BuildCompat.isAtLeastQ()) allowText = "Allow only while using the app";
-        else allowText = "ALLOW";
-        uiDevice.findObject(new UiSelector().text(allowText)).click();
+        uiDevice.findObject(new UiSelector().text(allowText())).click();
 
         onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
                 hasDescendant(withText(containsString("Warszawa-Marszałkowska"))))));
@@ -180,13 +170,22 @@ public class MainActivityInstrumentedTest {
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 
-        String denyText;
-        if (BuildCompat.isAtLeastQ()) denyText = "Deny";
-        else denyText = "DENY";
-        uiDevice.findObject(new UiSelector().text(denyText)).click();
+        uiDevice.findObject(new UiSelector().text(denyText())).click();
 
         onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
                 hasDescendant(withText(containsString(expectedStation0Name))))));
+    }
+
+    @Ignore("Not a test")
+    private String denyText() {
+        if (BuildCompat.isAtLeastQ()) return "Deny";
+        return "DENY";
+    }
+
+    @Ignore("Not a test")
+    private String allowText() {
+        if (BuildCompat.isAtLeastQ()) return "Allow only while using the app";
+        else return "ALLOW";
     }
 
     @After
