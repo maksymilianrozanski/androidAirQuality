@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.utility;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -17,10 +18,14 @@ public class NearestStationFinder {
         double userDistance = Double.MAX_VALUE;
         Integer closestStationId = null;
         for (Station station : stations) {
-            //TODO: crashing Android Q, NumberFormatException: For input string: "54.194364"
-            double stationLatitude = Double.parseDouble(station.getGegrLat());
-            double stationLongitude = Double.parseDouble(station.getGegrLon());
-            double currentDistance = calculateDistance(userLatitude, userLongitude, stationLatitude, stationLongitude);
+            double currentDistance;
+            try {//parse is sometimes crashing Android Q, NumberFormatException: For input string: "54.194364"
+                double stationLatitude = Double.parseDouble(station.getGegrLat());
+                double stationLongitude = Double.parseDouble(station.getGegrLon());
+                currentDistance = calculateDistance(userLatitude, userLongitude, stationLatitude, stationLongitude);
+            } catch (NumberFormatException e) {
+                currentDistance = 5000000.0;
+            }
             if (currentDistance < userDistance) {
                 userDistance = currentDistance;
                 closestStationId = Integer.parseInt(station.getId());
@@ -31,10 +36,11 @@ public class NearestStationFinder {
 
     /**
      * Calculate distance between user and station using Haversine method, height is omitted
+     *
      * @return distance in meters
      */
     public static double calculateDistance(double userLatitude, double userLongitude,
-                                            double stationLatitude, double stationLongitude) {
+                                           double stationLatitude, double stationLongitude) {
         final int R = 6371000; // Radius of the earth in meters
         double userLatitudeRadian = Math.toRadians(userLatitude);
         double userLongitudeRadian = Math.toRadians(userLongitude);
@@ -48,7 +54,7 @@ public class NearestStationFinder {
         )));
     }
 
-    public static boolean askForLocationPermissionIfNoPermission(Activity activity, int permissionRequest ) {
+    public static boolean askForLocationPermissionIfNoPermission(Activity activity, int permissionRequest) {
         if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, permissionRequest);
