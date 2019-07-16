@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.core.os.BuildCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -48,7 +49,15 @@ public class MultipleStationWidgetInstrumentedTest2 {
             = new ActivityTestRule<>(MainActivity.class, true, false);
 
     @Rule
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+    public GrantPermissionRule permissionRule =  GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @Rule
+    public GrantPermissionRule backgroundPermissionRule = backGroundLocationPermissionRule();
+
+    private GrantPermissionRule backGroundLocationPermissionRule(){
+        if (BuildCompat.isAtLeastQ()) return GrantPermissionRule.grant(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        else return null;
+    }
 
     @Before
     public void serverSetup() throws Exception {
@@ -226,7 +235,14 @@ public class MultipleStationWidgetInstrumentedTest2 {
 
         device.pressHome();
 
-        String refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh).toUpperCase();
+        String refreshButtonText;
+        if (BuildCompat.isAtLeastQ()) {
+            refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh);
+        } else {
+            refreshButtonText = getInstrumentation().getTargetContext().getString(R.string.refresh)
+                    .toUpperCase();
+        }
+
         UiObject2 refreshButton = device.findObject(By.text(refreshButtonText));
 
         refreshButton.click();

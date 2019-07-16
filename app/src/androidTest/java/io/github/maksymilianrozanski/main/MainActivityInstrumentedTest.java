@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.main;
 
 import android.content.Intent;
 
+import androidx.core.os.BuildCompat;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
@@ -9,6 +10,7 @@ import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,7 +105,7 @@ public class MainActivityInstrumentedTest {
         mainActivityRule.getActivity().goToNearestStation();
         stubAllIntents();
 
-        uiDevice.findObject(new UiSelector().text("ALLOW")).click();
+        uiDevice.findObject(new UiSelector().text(allowText())).click();
 
         intended(allOf(hasExtra("StationId", 544), hasExtra("StationName", "Warszawa-Marszałkowska"),
                 toPackage("io.github.maksymilianrozanski")));
@@ -124,7 +126,8 @@ public class MainActivityInstrumentedTest {
                 hasDescendant(withText(containsString(expectedStation0Name))))));
 
         mainActivityRule.getActivity().goToNearestStation();
-        uiDevice.findObject(new UiSelector().text("DENY")).click();
+
+        uiDevice.findObject(new UiSelector().text(denyText())).click();
     }
 
     @Test
@@ -143,7 +146,8 @@ public class MainActivityInstrumentedTest {
         onView(withText(R.string.sort_stations_by_distance)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        uiDevice.findObject(new UiSelector().text("ALLOW")).click();
+
+        uiDevice.findObject(new UiSelector().text(allowText())).click();
 
         onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
                 hasDescendant(withText(containsString("Warszawa-Marszałkowska"))))));
@@ -165,10 +169,23 @@ public class MainActivityInstrumentedTest {
         onView(withText(R.string.sort_stations_by_distance)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        uiDevice.findObject(new UiSelector().text("DENY")).click();
+
+        uiDevice.findObject(new UiSelector().text(denyText())).click();
 
         onView(withId(R.id.stationsRecyclerView)).check(matches(atPosition(0,
                 hasDescendant(withText(containsString(expectedStation0Name))))));
+    }
+
+    @Ignore("Not a test")
+    private String denyText() {
+        if (BuildCompat.isAtLeastQ()) return "Deny";
+        return "DENY";
+    }
+
+    @Ignore("Not a test")
+    private String allowText() {
+        if (BuildCompat.isAtLeastQ()) return "Allow only while using the app";
+        else return "ALLOW";
     }
 
     @After

@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.layout
 
 import android.content.Context
 import android.content.Intent
+import androidx.core.os.BuildCompat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
@@ -58,7 +59,12 @@ class WidgetUITest {
 
         device!!.pressHome()
 
-        val refreshButtonText = getInstrumentation().targetContext.getString(R.string.refresh).toUpperCase()
+        val refreshButtonText: String = if (BuildCompat.isAtLeastQ()) {
+            getInstrumentation().targetContext.getString(R.string.refresh);
+        } else {
+            getInstrumentation().targetContext.getString(R.string.refresh).toUpperCase()
+        }
+
         val refreshButton = device!!.findObject(By.text(refreshButtonText))
 
         refreshButton.click()

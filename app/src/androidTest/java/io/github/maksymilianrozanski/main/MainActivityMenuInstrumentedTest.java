@@ -86,6 +86,8 @@ public class MainActivityMenuInstrumentedTest {
         Intent intent = new Intent();
         mainActivityRule.launchActivity(intent);
 
+        for (int i = 1; i <= 5; i++) server.enqueue(new MockResponse().setResponseCode(500));
+
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.find_nearest_station)).perform(click());
         onView(withId(R.id.sensorsViewStationName)).check(matches(withText("Warszawa-Marszałkowska")));
